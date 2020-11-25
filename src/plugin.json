@@ -1,0 +1,41 @@
+{
+  "$schema": "https://github.com/grafana/grafana/raw/master/docs/sources/developers/plugins/plugin.schema.json",
+  "type": "datasource",
+  "name": "CSV",
+  "id": "marcusolsson-csv-datasource",
+  "metrics": true,
+  "backend": true,
+  "logs": true,
+  "alerting": true,
+  "executable": "gpx_csv-datasource",
+  "info": {
+    "description": "A data source for loading CSV data",
+    "author": {
+      "name": "Marcus Olsson",
+      "url": "https://github.com/marcusolsson"
+    },
+    "keywords": ["csv"],
+    "logos": {
+      "small": "img/logo.svg",
+      "large": "img/logo.svg"
+    },
+    "links": [
+      {
+        "name": "Website",
+        "url": "https://github.com/marcusolsson/grafana-csv-datasource"
+      },
+      {
+        "name": "License",
+        "url": "https://github.com/marcusolsson/grafana-csv-datasource/blob/master/LICENSE"
+      }
+    ],
+    "screenshots": [],
+    "version": "%VERSION%",
+    "updated": "%TODAY%"
+  },
+  "dependencies": {
+    "grafanaVersion": "7.x.x",
+    "grafanaDependency": ">=7.0.0",
+    "plugins": []
+  }
+}
