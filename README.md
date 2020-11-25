@@ -5,6 +5,6 @@
 
 A data source for loading CSV data into [Grafana](https://grafana.com).
 
-![Screenshot](https://github.com/marcusolsson/grafana-csv-datasource/raw/master/src/img/screenshot.png)
-
 **Important:** This plugin is still in early development. Only use it if you intend to contribute to its development, by providing feedback.
+
+![Screenshot](https://github.com/marcusolsson/grafana-csv-datasource/raw/master/src/img/screenshot.png)
