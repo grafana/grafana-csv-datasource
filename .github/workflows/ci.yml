@@ -53,18 +53,19 @@ jobs:
         run: yarn build
 
       - name: Check for backend
+        id: check-for-backend
         run: |
           [[ -f "Magefile.go" ]] && echo "::set-output name=has-backend::true"
 
       - name: Build backend
-        if: has-backend
+        if: steps.check-for-backend.outputs.has-backend
         uses: magefile/mage-action@v1
         with:
           version: latest
           args: buildAll
 
       - name: Test backend
-        if: has-backend
+        if: steps.check-for-backend.outputs.has-backend
         uses: magefile/mage-action@v1
         with:
           version: latest
