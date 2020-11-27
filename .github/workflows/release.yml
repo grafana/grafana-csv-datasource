@@ -53,13 +53,19 @@ jobs:
       - name: Build and test frontend
         run: yarn build
 
+      - name: Check for backend
+        run: |
+          [[ -f "Magefile.go" ]] && echo "::set-output name=has-backend::true"
+
       - name: Build backend
+        if: has-backend
         uses: magefile/mage-action@v1
         with:
           version: latest
           args: buildAll
 
       - name: Test backend
+        if: has-backend
         uses: magefile/mage-action@v1
         with:
           version: latest
@@ -102,11 +108,11 @@ jobs:
 
       - name: Lint plugin
         run: |
-          git clone https://github.com/grafana/plugin-validator;
-          pushd ./plugin-validator/cmd/plugincheck;
+          git clone https://github.com/grafana/plugin-validator
+          pushd ./plugin-validator/cmd/plugincheck
           go install
           popd
-          plugincheck ${{ steps.metadata.outputs.archive }};
+          plugincheck ${{ steps.metadata.outputs.archive }}
 
       - name: Create release
         id: create_release
