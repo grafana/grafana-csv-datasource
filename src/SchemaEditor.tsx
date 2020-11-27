@@ -18,10 +18,10 @@ export const SchemaEditor = ({ value, onChange }: Props) => {
   }, [value]);
 
   const onNameChange = (idx: number) => (e: FormEvent<HTMLInputElement>) => {
-    setInternalValue(internalValue.map((field, i) => (i == idx ? { ...field, name: e.currentTarget.value } : field)));
+    setInternalValue(internalValue.map((field, i) => (i === idx ? { ...field, name: e.currentTarget.value } : field)));
   };
   const onTypeChange = (idx: number) => (selectableValue: SelectableValue<string>) => {
-    const res = internalValue.map((field, i) => (i == idx ? { ...field, type: selectableValue.value! } : field));
+    const res = internalValue.map((field, i) => (i === idx ? { ...field, type: selectableValue.value! } : field));
     setInternalValue(res);
     onChange(res);
   };
@@ -36,7 +36,7 @@ export const SchemaEditor = ({ value, onChange }: Props) => {
     onChange(res);
   };
   const onRemoveField = (idx: number) => {
-    const res = internalValue.filter((_, i) => i != idx);
+    const res = internalValue.filter((_, i) => i !== idx);
     setInternalValue(res);
     onChange(res);
   };
@@ -68,7 +68,7 @@ export const SchemaEditor = ({ value, onChange }: Props) => {
           </a>
         </InlineFieldRow>
       ))}
-      {internalValue.length == 0 ? (
+      {internalValue.length === 0 ? (
         <InlineFieldRow>
           <Button variant="secondary" icon="plus" onClick={onAppendField}>
             Add field

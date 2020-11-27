@@ -50,7 +50,7 @@ export const QueryEditor = ({ onRunQuery, onChange, query }: Props) => {
         <InlineField label="Delimiter" tooltip="Character used to separate columns">
           <Select
             width={15}
-            value={delimOptions.find(_ => _.value == delimiter)}
+            value={delimOptions.find(_ => _.value === delimiter)}
             onChange={onDelimiterChange}
             options={delimOptions}
           />
@@ -61,7 +61,7 @@ export const QueryEditor = ({ onRunQuery, onChange, query }: Props) => {
             value={numSkipRows}
             onChange={onSkipRowsChange}
             onBlur={() => {
-              onChange({ ...query, skipRows: parseInt(numSkipRows) });
+              onChange({ ...query, skipRows: parseInt(numSkipRows, 10) });
               onRunQuery();
             }}
           />
