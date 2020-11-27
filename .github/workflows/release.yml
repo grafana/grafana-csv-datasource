@@ -24,6 +24,6 @@ jobs:
         run: yarn build
 
       - name: 'Release plugin'
-        uses: https://github.com/marcusolsson/grafana-plugin-action
+        uses: marcusolsson/grafana-plugin-action@master
         with:
           api-key: 'foobar'
