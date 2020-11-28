@@ -56,6 +56,7 @@ export const SchemaEditor = ({ value, onChange }: Props) => {
               options={[
                 { label: 'String', value: 'string' },
                 { label: 'Number', value: 'number' },
+                { label: 'Time', value: 'time' },
                 { label: 'Boolean', value: 'boolean' },
               ]}
             />

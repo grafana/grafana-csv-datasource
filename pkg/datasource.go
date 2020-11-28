@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/csv"
 	"encoding/json"
+	"errors"
 	"io"
 	"net/http"
 	"path/filepath"
@@ -138,11 +139,13 @@ func parseCSV(query queryModel, r io.Reader) ([]*data.Field, error) {
 	fieldType := func(str string) data.FieldType {
 		switch str {
 		case "number":
-			return data.FieldTypeFloat64
+			return data.FieldTypeNullableFloat64
 		case "boolean":
-			return data.FieldTypeBool
+			return data.FieldTypeNullableBool
+		case "time":
+			return data.FieldTypeNullableTime
 		default:
-			return data.FieldTypeString
+			return data.FieldTypeNullableString
 		}
 	}
 
@@ -180,26 +183,50 @@ func parseCSV(query queryModel, r io.Reader) ([]*data.Field, error) {
 				return
 			}
 
+			var timeLayout string
+			if f.Type() == data.FieldTypeTime {
+				layout, err := detectTimeLayoutNaive(rows[0][fieldIdx])
+				if err == nil {
+					timeLayout = layout
+				}
+			}
+
 			for rowIdx := 0; rowIdx < f.Len(); rowIdx++ {
 				value := rows[rowIdx][fieldIdx]
 
 				switch f.Type() {
-				case data.FieldTypeFloat64:
+				case data.FieldTypeNullableFloat64:
 					n, err := strconv.ParseFloat(value, 10)
 					if err != nil {
 						f.Set(rowIdx, nil)
 						continue
 					}
-					f.Set(rowIdx, n)
-				case data.FieldTypeBool:
+					f.Set(rowIdx, &n)
+				case data.FieldTypeNullableBool:
 					n, err := strconv.ParseBool(value)
 					if err != nil {
 						f.Set(rowIdx, nil)
 						continue
 					}
-					f.Set(rowIdx, n)
+					f.Set(rowIdx, &n)
+				case data.FieldTypeNullableTime:
+					n, err := strconv.ParseInt(value, 10, 64)
+					if err == nil {
+						t := time.Unix(n, 0)
+						f.Set(rowIdx, &t)
+						continue
+					}
+
+					var t time.Time
+					t, err = time.Parse(timeLayout, value)
+					if err == nil {
+						f.Set(rowIdx, &t)
+						continue
+					}
+
+					f.Set(rowIdx, nil)
 				default:
-					f.Set(rowIdx, value)
+					f.Set(rowIdx, &value)
 				}
 			}
 		}(fieldIdx)
@@ -288,20 +315,6 @@ func newDataSourceSettings(instanceSettings backend.DataSourceInstanceSettings) 
 	return settings, nil
 }
 
-// toColumns converts rows into columns.
-func toColumns(rows [][]string) [][]string {
-	cols := make([][]string, len(rows[0]))
-	for i := range cols {
-		cols[i] = make([]string, len(rows))
-	}
-	for i, row := range rows {
-		for j, cell := range row {
-			cols[j][i] = cell
-		}
-	}
-	return cols
-}
-
 func schemaContains(fields []fieldSchema, name string) (fieldSchema, bool) {
 	for _, sch := range fields {
 		if sch.Name == name {
@@ -311,29 +324,50 @@ func schemaContains(fields []fieldSchema, name string) (fieldSchema, bool) {
 	return fieldSchema{}, false
 }
 
-func newFieldFromSchema(sch fieldSchema, values []string) (*data.Field, error) {
-	switch sch.Type {
-	case "number":
-		var res []float64
-		for _, val := range values {
-			n, err := strconv.ParseFloat(val, 10)
-			if err != nil {
-				return nil, err
-			}
-			res = append(res, n)
-		}
-		return data.NewField(sch.Name, nil, res), nil
-	case "boolean":
-		var res []bool
-		for _, val := range values {
-			n, err := strconv.ParseBool(val)
-			if err != nil {
-				return nil, err
-			}
-			res = append(res, n)
-		}
-		return data.NewField(sch.Name, nil, res), nil
-	default:
-		return data.NewField(sch.Name, nil, values), nil
+// detectTimeLayoutNaive attempts to parse the string from a set of layouts, and
+// returns the first one that matched.
+func detectTimeLayoutNaive(str string) (string, error) {
+	layouts := []string{
+		"2006-01-02",
+		"2006-01-02 15:04",
+		"2006-01-02 15:04:05 MST",
+		"2006-01-02 15:04:05.999999",
+		"2006-01-02 15:04:05.999999 -07:00",
+		"2006-01-02 15:04:05.999999Z",
+		"2006-01-02T15:04",
+		"2006-01-02T15:04:05 MST",
+		"2006-01-02T15:04:05.999999",
+		"2006-01-02T15:04:05.999999 -07:00",
+		"2006-01-02T15:04:05.999999Z",
+		"2006/01/02",
+		"2006/01/02 15:04",
+		"2006/01/02 15:04:05 MST",
+		"2006/01/02 15:04:05.999999",
+		"2006/01/02 15:04:05.999999 -07:00",
+		"2006/01/02 15:04:05.999999Z",
+		"2006/01/02T15:04",
+		"2006/01/02T15:04:05 MST",
+		"2006/01/02T15:04:05.999999",
+		"2006/01/02T15:04:05.999999 -07:00",
+		"2006/01/02T15:04:05.999999Z",
+		"01/02/2006",
+		"01/02/2006 15:04",
+		"01/02/2006 15:04:05 MST",
+		"01/02/2006 15:04:05.999999",
+		"01/02/2006 15:04:05.999999 -07:00",
+		"01/02/2006 15:04:05.999999Z",
+		"01/02/2006T15:04",
+		"01/02/2006T15:04:05 MST",
+		"01/02/2006T15:04:05.999999",
+		"01/02/2006T15:04:05.999999 -07:00",
+		"01/02/2006T15:04:05.999999Z",
 	}
+
+	for _, layout := range layouts {
+		if _, err := time.Parse(layout, str); err == nil {
+			return layout, nil
+		}
+	}
+
+	return "", errors.New("unsupported time format")
 }
