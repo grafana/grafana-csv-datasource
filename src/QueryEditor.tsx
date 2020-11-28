@@ -55,7 +55,7 @@ export const QueryEditor = ({ onRunQuery, onChange, query }: Props) => {
             options={delimOptions}
           />
         </InlineField>
-        <InlineField label="Skip rows" tooltip="Number of rows to skip before looking for header">
+        <InlineField label="Skip leading rows" tooltip="Number of rows to skip before looking for header">
           <Input
             width={5}
             value={numSkipRows}
