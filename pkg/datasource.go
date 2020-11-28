@@ -5,6 +5,7 @@ import (
 	"encoding/csv"
 	"encoding/json"
 	"errors"
+	"fmt"
 	"io"
 	"net/http"
 	"path/filepath"
@@ -136,21 +137,20 @@ func parseCSV(query queryModel, r io.Reader) ([]*data.Field, error) {
 		return nil, err
 	}
 
-	fieldType := func(str string) data.FieldType {
-		switch str {
-		case "number":
-			return data.FieldTypeNullableFloat64
-		case "boolean":
-			return data.FieldTypeNullableBool
-		case "time":
-			return data.FieldTypeNullableTime
-		default:
-			return data.FieldTypeNullableString
-		}
-	}
+	var rows [][]string
+	var header []string
 
-	header := records[0]
-	rows := records[1:]
+	if query.Header {
+		header = records[0]
+		rows = records[1:]
+	} else {
+		if len(records) > 0 {
+			for i := 0; i < len(records[0]); i++ {
+				header = append(header, fmt.Sprintf("Field %d", i+1))
+			}
+		}
+		rows = records
+	}
 
 	fields := make([]*data.Field, 0)
 
@@ -244,6 +244,19 @@ func parseCSV(query queryModel, r io.Reader) ([]*data.Field, error) {
 	}
 
 	return res, nil
+}
+
+func fieldType(str string) data.FieldType {
+	switch str {
+	case "number":
+		return data.FieldTypeNullableFloat64
+	case "boolean":
+		return data.FieldTypeNullableBool
+	case "time":
+		return data.FieldTypeNullableTime
+	default:
+		return data.FieldTypeNullableString
+	}
 }
 
 // CheckHealth returns the current health of the backend.
