@@ -12,7 +12,8 @@
     "description": "A data source for loading CSV data",
     "author": {
       "name": "Marcus Olsson",
-      "url": "https://github.com/marcusolsson"
+      "email": "marcus.olsson@hey.com",
+      "url": "https://marcus.se.net"
     },
     "keywords": ["csv"],
     "logos": {
