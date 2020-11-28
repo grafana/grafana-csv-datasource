@@ -2,13 +2,13 @@ import React, { ChangeEvent } from 'react';
 
 import { LegacyForms, DataSourceHttpSettings } from '@grafana/ui';
 import { DataSourcePluginOptionsEditorProps } from '@grafana/data';
-import { MyDataSourceOptions } from './types';
+import { CSVDataSourceOptions } from './types';
 
 import {} from '@emotion/core';
 
 const { Input, FormField } = LegacyForms;
 
-interface Props extends DataSourcePluginOptionsEditorProps<MyDataSourceOptions> {}
+interface Props extends DataSourcePluginOptionsEditorProps<CSVDataSourceOptions> {}
 
 /**
  * ConfigEditor lets the user configure connection details like the URL or

@@ -5,7 +5,7 @@ export type FieldSchema = {
   type: string;
 };
 
-export interface MyQuery extends DataQuery {
+export interface CSVQuery extends DataQuery {
   delimiter: string;
   schema: FieldSchema[];
   header: boolean;
@@ -13,7 +13,7 @@ export interface MyQuery extends DataQuery {
   skipRows: number;
 }
 
-export const defaultQuery: Partial<MyQuery> = {
+export const defaultQuery: Partial<CSVQuery> = {
   delimiter: ',',
   header: true,
   ignoreUnknown: false,
@@ -21,6 +21,6 @@ export const defaultQuery: Partial<MyQuery> = {
   schema: [],
 };
 
-export interface MyDataSourceOptions extends DataSourceJsonData {
+export interface CSVDataSourceOptions extends DataSourceJsonData {
   queryParams?: string;
 }

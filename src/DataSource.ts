@@ -1,13 +1,13 @@
 import { DataSourceInstanceSettings, ScopedVars } from '@grafana/data';
 import { DataSourceWithBackend, getTemplateSrv } from '@grafana/runtime';
-import { MyDataSourceOptions, MyQuery } from './types';
+import { CSVDataSourceOptions, CSVQuery } from './types';
 
-export class DataSource extends DataSourceWithBackend<MyQuery, MyDataSourceOptions> {
-  constructor(instanceSettings: DataSourceInstanceSettings<MyDataSourceOptions>) {
+export class DataSource extends DataSourceWithBackend<CSVQuery, CSVDataSourceOptions> {
+  constructor(instanceSettings: DataSourceInstanceSettings<CSVDataSourceOptions>) {
     super(instanceSettings);
   }
 
-  applyTemplateVariables(query: MyQuery, scopedVars: ScopedVars): Record<string, any> {
+  applyTemplateVariables(query: CSVQuery, scopedVars: ScopedVars): Record<string, any> {
     return {
       ...query,
       schema: query.schema.map(({ name, type }) => ({

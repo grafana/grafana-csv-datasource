@@ -8,6 +8,7 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	"net/url"
 	"path/filepath"
 	"strconv"
 	"sync"
@@ -56,10 +57,15 @@ func (ds *dataSource) QueryData(ctx context.Context, req *backend.QueryDataReque
 		return nil, err
 	}
 
+	customInstanceSettings, err := instance.Settings()
+	if err != nil {
+		return nil, err
+	}
+
 	responses := make(backend.Responses)
 
 	for _, q := range req.Queries {
-		responses[q.RefID] = ds.query(ctx, q, &instance.settings)
+		responses[q.RefID] = ds.query(ctx, q, &instance.settings, customInstanceSettings)
 	}
 
 	return &backend.QueryDataResponse{
@@ -68,7 +74,7 @@ func (ds *dataSource) QueryData(ctx context.Context, req *backend.QueryDataReque
 }
 
 // query is a helper that performs the actual data source query.
-func (ds *dataSource) query(ctx context.Context, query backend.DataQuery, settings *backend.DataSourceInstanceSettings) backend.DataResponse {
+func (ds *dataSource) query(ctx context.Context, query backend.DataQuery, settings *backend.DataSourceInstanceSettings, customSettings dataSourceSettings) backend.DataResponse {
 	httpClient, err := httpclient.New(settings, 10*time.Second, ds.logger)
 	if err != nil {
 		return backend.DataResponse{
@@ -76,7 +82,22 @@ func (ds *dataSource) query(ctx context.Context, query backend.DataQuery, settin
 		}
 	}
 
-	req, err := http.NewRequest("GET", settings.URL, nil)
+	u, err := url.Parse(settings.URL)
+	if err != nil {
+		return backend.DataResponse{
+			Error: err,
+		}
+	}
+
+	values, err := url.ParseQuery(customSettings.QueryParams)
+	if err != nil {
+		return backend.DataResponse{
+			Error: err,
+		}
+	}
+	u.RawQuery = values.Encode()
+
+	req, err := http.NewRequest("GET", u.String(), nil)
 	if err != nil {
 		return backend.DataResponse{
 			Error: err,
@@ -318,7 +339,7 @@ func (s *dataSourceInstance) Settings() (dataSourceSettings, error) {
 }
 
 type dataSourceSettings struct {
-	URL string `json:"url"`
+	QueryParams string `json:"queryParams"`
 }
 
 func newDataSourceSettings(instanceSettings backend.DataSourceInstanceSettings) (dataSourceSettings, error) {
