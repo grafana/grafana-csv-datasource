@@ -184,7 +184,7 @@ func parseCSV(query queryModel, r io.Reader) ([]*data.Field, error) {
 			}
 
 			var timeLayout string
-			if f.Type() == data.FieldTypeTime {
+			if f.Type() == data.FieldTypeNullableTime {
 				layout, err := detectTimeLayoutNaive(rows[0][fieldIdx])
 				if err == nil {
 					timeLayout = layout
@@ -217,11 +217,12 @@ func parseCSV(query queryModel, r io.Reader) ([]*data.Field, error) {
 						continue
 					}
 
-					var t time.Time
-					t, err = time.Parse(timeLayout, value)
-					if err == nil {
-						f.Set(rowIdx, &t)
-						continue
+					if timeLayout != "" {
+						t, err := time.Parse(timeLayout, value)
+						if err == nil {
+							f.Set(rowIdx, &t)
+							continue
+						}
 					}
 
 					f.Set(rowIdx, nil)
