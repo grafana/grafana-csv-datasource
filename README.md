@@ -8,7 +8,9 @@
 
 A data source for loading CSV data into [Grafana](https://grafana.com).
 
-**Important:** This plugin is still in early development. Only use it if you intend to contribute to its development, by providing feedback.
+Local CSV files are currently not supported. If this is important to you, let your voice be heard in [#6](https://github.com/marcusolsson/grafana-csv-datasource/issues/6).
+
+> **Important:** This plugin is still in early development. Only use it if you intend to contribute to its development, by providing feedback.
 
 ![Screenshot](https://github.com/marcusolsson/grafana-csv-datasource/raw/master/src/img/screenshot.png)
 
