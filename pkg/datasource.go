@@ -2,39 +2,16 @@ package main
 
 import (
 	"context"
-	"encoding/csv"
 	"encoding/json"
-	"errors"
-	"fmt"
-	"io"
 	"net/http"
-	"net/url"
 	"path/filepath"
-	"strconv"
-	"sync"
-	"time"
 
 	"github.com/grafana/grafana-plugin-sdk-go/backend"
 	"github.com/grafana/grafana-plugin-sdk-go/backend/datasource"
 	"github.com/grafana/grafana-plugin-sdk-go/backend/instancemgmt"
 	"github.com/grafana/grafana-plugin-sdk-go/backend/log"
 	"github.com/grafana/grafana-plugin-sdk-go/data"
-
-	"github.com/marcusolsson/grafana-csv-datasource/pkg/httpclient"
 )
-
-type fieldSchema struct {
-	Name string `json:"name"`
-	Type string `json:"type"`
-}
-
-type queryModel struct {
-	Delimiter     string        `json:"delimiter"`
-	Header        bool          `json:"header"`
-	IgnoreUnknown bool          `json:"ignoreUnknown"`
-	Schema        []fieldSchema `json:"schema"`
-	SkipRows      int           `json:"skipRows"`
-}
 
 // dataSource defines common operations for all instances of this data source.
 type dataSource struct {
@@ -57,15 +34,10 @@ func (ds *dataSource) QueryData(ctx context.Context, req *backend.QueryDataReque
 		return nil, err
 	}
 
-	customInstanceSettings, err := instance.Settings()
-	if err != nil {
-		return nil, err
-	}
-
 	responses := make(backend.Responses)
 
 	for _, q := range req.Queries {
-		responses[q.RefID] = ds.query(ctx, q, &instance.settings, customInstanceSettings)
+		responses[q.RefID] = ds.query(ctx, q, instance)
 	}
 
 	return &backend.QueryDataResponse{
@@ -74,209 +46,33 @@ func (ds *dataSource) QueryData(ctx context.Context, req *backend.QueryDataReque
 }
 
 // query is a helper that performs the actual data source query.
-func (ds *dataSource) query(ctx context.Context, query backend.DataQuery, settings *backend.DataSourceInstanceSettings, customSettings dataSourceSettings) backend.DataResponse {
-	httpClient, err := httpclient.New(settings, 10*time.Second, ds.logger)
-	if err != nil {
-		return backend.DataResponse{
-			Error: err,
-		}
+func (ds *dataSource) query(ctx context.Context, query backend.DataQuery, instance *dataSourceInstance) backend.DataResponse {
+	var opts csvOptions
+	if err := json.Unmarshal(query.JSON, &opts); err != nil {
+		return backend.DataResponse{Error: err}
 	}
 
-	u, err := url.Parse(settings.URL)
+	c, err := newHTTPStorage(instance, ds.logger)
 	if err != nil {
-		return backend.DataResponse{
-			Error: err,
-		}
+		return backend.DataResponse{Error: err}
 	}
 
-	values, err := url.ParseQuery(customSettings.QueryParams)
+	f, err := c.open()
 	if err != nil {
-		return backend.DataResponse{
-			Error: err,
-		}
+		return backend.DataResponse{Error: err}
 	}
-	u.RawQuery = values.Encode()
+	defer f.Close()
 
-	req, err := http.NewRequest("GET", u.String(), nil)
+	fields, err := parseCSV(opts, f)
 	if err != nil {
-		return backend.DataResponse{
-			Error: err,
-		}
-	}
-
-	resp, err := httpClient.Do(req)
-	if err != nil {
-		return backend.DataResponse{
-			Error: err,
-		}
-	}
-	defer resp.Body.Close()
-
-	var q queryModel
-	if err := json.Unmarshal(query.JSON, &q); err != nil {
-		return backend.DataResponse{
-			Error: err,
-		}
-	}
-
-	fields, err := parseCSV(q, resp.Body)
-	if err != nil {
-		return backend.DataResponse{
-			Error: err,
-		}
+		return backend.DataResponse{Error: err}
 	}
 
 	return backend.DataResponse{
 		Frames: []*data.Frame{{
-			Name:   filepath.Base(settings.URL),
+			Name:   filepath.Base(instance.settings.URL),
 			Fields: fields,
 		}},
-	}
-}
-
-func parseCSV(query queryModel, r io.Reader) ([]*data.Field, error) {
-	// Read one byte at a time until we've counted newlines equal to the number
-	// of skipped rows.
-	for i := 0; i < query.SkipRows; i++ {
-		buf := make([]byte, 1)
-		for {
-			_, err := r.Read(buf)
-			if err != nil || buf[0] == '\n' {
-				break
-			}
-		}
-	}
-
-	rd := csv.NewReader(r)
-
-	if len(query.Delimiter) == 1 {
-		rd.Comma = rune(query.Delimiter[0])
-	}
-
-	records, err := rd.ReadAll()
-	if err != nil {
-		return nil, err
-	}
-
-	var rows [][]string
-	var header []string
-
-	if query.Header {
-		header = records[0]
-		rows = records[1:]
-	} else {
-		if len(records) > 0 {
-			for i := 0; i < len(records[0]); i++ {
-				header = append(header, fmt.Sprintf("Field %d", i+1))
-			}
-		}
-		rows = records
-	}
-
-	fields := make([]*data.Field, 0)
-
-	// Create fields from schema.
-	for _, name := range header {
-		sch, ok := schemaContains(query.Schema, name)
-		if !ok {
-			if query.IgnoreUnknown {
-				// Add a null field to maintain index.
-				fields = append(fields, nil)
-				continue
-			} else {
-				sch = fieldSchema{Name: name, Type: "string"}
-			}
-		}
-		f := data.NewFieldFromFieldType(fieldType(sch.Type), len(rows))
-		f.Name = name
-		fields = append(fields, f)
-	}
-
-	wg := sync.WaitGroup{}
-	wg.Add(len(fields))
-
-	for fieldIdx := range fields {
-		go func(fieldIdx int) {
-			defer wg.Done()
-
-			f := fields[fieldIdx]
-			if f == nil {
-				return
-			}
-
-			var timeLayout string
-			if f.Type() == data.FieldTypeNullableTime {
-				layout, err := detectTimeLayoutNaive(rows[0][fieldIdx])
-				if err == nil {
-					timeLayout = layout
-				}
-			}
-
-			for rowIdx := 0; rowIdx < f.Len(); rowIdx++ {
-				value := rows[rowIdx][fieldIdx]
-
-				switch f.Type() {
-				case data.FieldTypeNullableFloat64:
-					n, err := strconv.ParseFloat(value, 10)
-					if err != nil {
-						f.Set(rowIdx, nil)
-						continue
-					}
-					f.Set(rowIdx, &n)
-				case data.FieldTypeNullableBool:
-					n, err := strconv.ParseBool(value)
-					if err != nil {
-						f.Set(rowIdx, nil)
-						continue
-					}
-					f.Set(rowIdx, &n)
-				case data.FieldTypeNullableTime:
-					n, err := strconv.ParseInt(value, 10, 64)
-					if err == nil {
-						t := time.Unix(n, 0)
-						f.Set(rowIdx, &t)
-						continue
-					}
-
-					if timeLayout != "" {
-						t, err := time.Parse(timeLayout, value)
-						if err == nil {
-							f.Set(rowIdx, &t)
-							continue
-						}
-					}
-
-					f.Set(rowIdx, nil)
-				default:
-					f.Set(rowIdx, &value)
-				}
-			}
-		}(fieldIdx)
-	}
-
-	wg.Wait()
-
-	// Remove ignored fields from result.
-	var res []*data.Field
-	for _, f := range fields {
-		if f != nil {
-			res = append(res, f)
-		}
-	}
-
-	return res, nil
-}
-
-func fieldType(str string) data.FieldType {
-	switch str {
-	case "number":
-		return data.FieldTypeNullableFloat64
-	case "boolean":
-		return data.FieldTypeNullableBool
-	case "time":
-		return data.FieldTypeNullableTime
-	default:
-		return data.FieldTypeNullableString
 	}
 }
 
@@ -290,7 +86,7 @@ func (ds *dataSource) CheckHealth(ctx context.Context, req *backend.CheckHealthR
 		}, nil
 	}
 
-	resp, err := http.Get(instance.settings.URL)
+	c, err := newHTTPStorage(instance, ds.logger)
 	if err != nil {
 		return &backend.CheckHealthResult{
 			Status:  backend.HealthStatusError,
@@ -298,10 +94,10 @@ func (ds *dataSource) CheckHealth(ctx context.Context, req *backend.CheckHealthR
 		}, nil
 	}
 
-	if resp.StatusCode != 200 {
+	if err := c.stat(); err != nil {
 		return &backend.CheckHealthResult{
 			Status:  backend.HealthStatusError,
-			Message: resp.Status,
+			Message: err.Error(),
 		}, nil
 	}
 
@@ -325,10 +121,10 @@ type dataSourceInstance struct {
 	settings   backend.DataSourceInstanceSettings
 }
 
-func newDataSourceInstance(setting backend.DataSourceInstanceSettings) (instancemgmt.Instance, error) {
+func newDataSourceInstance(settings backend.DataSourceInstanceSettings) (instancemgmt.Instance, error) {
 	return &dataSourceInstance{
 		httpClient: &http.Client{},
-		settings:   setting,
+		settings:   settings,
 	}, nil
 }
 
@@ -348,61 +144,4 @@ func newDataSourceSettings(instanceSettings backend.DataSourceInstanceSettings) 
 		return dataSourceSettings{}, err
 	}
 	return settings, nil
-}
-
-func schemaContains(fields []fieldSchema, name string) (fieldSchema, bool) {
-	for _, sch := range fields {
-		if sch.Name == name {
-			return sch, true
-		}
-	}
-	return fieldSchema{}, false
-}
-
-// detectTimeLayoutNaive attempts to parse the string from a set of layouts, and
-// returns the first one that matched.
-func detectTimeLayoutNaive(str string) (string, error) {
-	layouts := []string{
-		"2006-01-02",
-		"2006-01-02 15:04",
-		"2006-01-02 15:04:05 MST",
-		"2006-01-02 15:04:05.999999",
-		"2006-01-02 15:04:05.999999 -07:00",
-		"2006-01-02 15:04:05.999999Z",
-		"2006-01-02T15:04",
-		"2006-01-02T15:04:05 MST",
-		"2006-01-02T15:04:05.999999",
-		"2006-01-02T15:04:05.999999 -07:00",
-		"2006-01-02T15:04:05.999999Z",
-		"2006/01/02",
-		"2006/01/02 15:04",
-		"2006/01/02 15:04:05 MST",
-		"2006/01/02 15:04:05.999999",
-		"2006/01/02 15:04:05.999999 -07:00",
-		"2006/01/02 15:04:05.999999Z",
-		"2006/01/02T15:04",
-		"2006/01/02T15:04:05 MST",
-		"2006/01/02T15:04:05.999999",
-		"2006/01/02T15:04:05.999999 -07:00",
-		"2006/01/02T15:04:05.999999Z",
-		"01/02/2006",
-		"01/02/2006 15:04",
-		"01/02/2006 15:04:05 MST",
-		"01/02/2006 15:04:05.999999",
-		"01/02/2006 15:04:05.999999 -07:00",
-		"01/02/2006 15:04:05.999999Z",
-		"01/02/2006T15:04",
-		"01/02/2006T15:04:05 MST",
-		"01/02/2006T15:04:05.999999",
-		"01/02/2006T15:04:05.999999 -07:00",
-		"01/02/2006T15:04:05.999999Z",
-	}
-
-	for _, layout := range layouts {
-		if _, err := time.Parse(layout, str); err == nil {
-			return layout, nil
-		}
-	}
-
-	return "", errors.New("unsupported time format")
 }

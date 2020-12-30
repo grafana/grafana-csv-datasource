@@ -10,11 +10,11 @@ import (
 
 func TestParseCSV(t *testing.T) {
 	for _, tt := range []struct {
-		query  queryModel
+		query  csvOptions
 		input  string
 		output []*data.Field
 	}{
-		{query: queryModel{}, input: "foo,bar,baz\n1,2,3", output: []*data.Field{
+		{query: csvOptions{}, input: "foo,bar,baz\n1,2,3", output: []*data.Field{
 			data.NewField("foo", nil, []string{"1"}),
 		}},
 	} {
