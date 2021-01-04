@@ -6,7 +6,7 @@
 
 ### Enhancements
 
-- Add support for local CSV files
+- Add support for local CSV files ([#6](https://github.com/marcusolsson/grafana-csv-datasource/issues/6))
 - Add a default Accept header for text/csv
 
 ## 0.1.0
