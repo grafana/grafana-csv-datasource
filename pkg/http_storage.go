@@ -52,6 +52,7 @@ func (c *httpStorage) do() (*http.Response, error) {
 	if err != nil {
 		return nil, err
 	}
+	req.Header.Set("Accept", "text/csv")
 
 	return c.httpClient.Do(req)
 }
