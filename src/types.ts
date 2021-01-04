@@ -22,5 +22,10 @@ export const defaultQuery: Partial<CSVQuery> = {
 };
 
 export interface CSVDataSourceOptions extends DataSourceJsonData {
+  storage?: string;
   queryParams?: string;
 }
+
+export const defaultOptions: Partial<CSVDataSourceOptions> = {
+  storage: 'http',
+};

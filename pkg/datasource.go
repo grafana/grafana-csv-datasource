@@ -3,6 +3,8 @@ package main
 import (
 	"context"
 	"encoding/json"
+	"errors"
+	"io"
 	"net/http"
 	"path/filepath"
 
@@ -52,12 +54,12 @@ func (ds *dataSource) query(ctx context.Context, query backend.DataQuery, instan
 		return backend.DataResponse{Error: err}
 	}
 
-	c, err := newHTTPStorage(instance, ds.logger)
+	store, err := newStorage(instance, ds.logger)
 	if err != nil {
 		return backend.DataResponse{Error: err}
 	}
 
-	f, err := c.open()
+	f, err := store.Open()
 	if err != nil {
 		return backend.DataResponse{Error: err}
 	}
@@ -86,7 +88,7 @@ func (ds *dataSource) CheckHealth(ctx context.Context, req *backend.CheckHealthR
 		}, nil
 	}
 
-	c, err := newHTTPStorage(instance, ds.logger)
+	store, err := newStorage(instance, ds.logger)
 	if err != nil {
 		return &backend.CheckHealthResult{
 			Status:  backend.HealthStatusError,
@@ -94,7 +96,7 @@ func (ds *dataSource) CheckHealth(ctx context.Context, req *backend.CheckHealthR
 		}, nil
 	}
 
-	if err := c.stat(); err != nil {
+	if err := store.Stat(); err != nil {
 		return &backend.CheckHealthResult{
 			Status:  backend.HealthStatusError,
 			Message: err.Error(),
@@ -136,6 +138,7 @@ func (s *dataSourceInstance) Settings() (dataSourceSettings, error) {
 
 type dataSourceSettings struct {
 	QueryParams string `json:"queryParams"`
+	Storage     string `json:"storage"`
 }
 
 func newDataSourceSettings(instanceSettings backend.DataSourceInstanceSettings) (dataSourceSettings, error) {
@@ -144,4 +147,25 @@ func newDataSourceSettings(instanceSettings backend.DataSourceInstanceSettings) 
 		return dataSourceSettings{}, err
 	}
 	return settings, nil
+}
+
+type storage interface {
+	Open() (io.ReadCloser, error)
+	Stat() error
+}
+
+func newStorage(instance *dataSourceInstance, logger log.Logger) (storage, error) {
+	sett, err := instance.Settings()
+	if err != nil {
+		return nil, err
+	}
+
+	switch sett.Storage {
+	case "http":
+		return newHTTPStorage(instance, logger)
+	case "local":
+		return newLocalStorage(instance, logger)
+	default:
+		return nil, errors.New("unsupported storage type")
+	}
 }

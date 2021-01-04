@@ -56,27 +56,27 @@ func (c *httpStorage) do() (*http.Response, error) {
 	return c.httpClient.Do(req)
 }
 
-func (c *httpStorage) open() (io.ReadCloser, error) {
+func (c *httpStorage) Open() (io.ReadCloser, error) {
 	resp, err := c.do()
 	if err != nil {
 		return nil, err
 	}
 
-	if resp.StatusCode >= 200 && resp.StatusCode < 300 {
+	if resp.StatusCode < 200 && resp.StatusCode >= 300 {
 		return nil, fmt.Errorf("unexpected response status: %s", resp.Status)
 	}
 
 	return resp.Body, nil
 }
 
-func (c *httpStorage) stat() error {
+func (c *httpStorage) Stat() error {
 	resp, err := c.do()
 	if err != nil {
 		return err
 	}
 	defer resp.Body.Close()
 
-	if resp.StatusCode >= 200 && resp.StatusCode < 300 {
+	if resp.StatusCode < 200 && resp.StatusCode >= 300 {
 		return fmt.Errorf("unexpected response status: %s", resp.Status)
 	}
 
