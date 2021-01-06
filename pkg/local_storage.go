@@ -3,6 +3,7 @@ package main
 import (
 	"io"
 	"os"
+	"path/filepath"
 
 	"github.com/grafana/grafana-plugin-sdk-go/backend"
 	"github.com/grafana/grafana-plugin-sdk-go/backend/log"
@@ -26,10 +27,10 @@ func newLocalStorage(instance *dataSourceInstance, logger log.Logger) (*localSto
 }
 
 func (c *localStorage) Open() (io.ReadCloser, error) {
-	return os.Open(c.settings.URL)
+	return os.Open(filepath.ToSlash(c.settings.URL))
 }
 
 func (c *localStorage) Stat() error {
-	_, err := os.Stat(c.settings.URL)
+	_, err := os.Stat(filepath.ToSlash(c.settings.URL))
 	return err
 }
