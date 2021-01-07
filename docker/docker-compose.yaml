@@ -1,0 +1,12 @@
+version: '3'
+services:
+  grafana:
+    image: grafana/grafana:7.3.6
+    ports:
+      - 3000:3000
+    volumes:
+      - ./grafana.ini:/etc/grafana/grafana.ini
+      - ./dashboards/dist:/etc/grafana/dashboards
+      - ./provisioning:/etc/grafana/provisioning
+      - ./testdata:/opt/testdata
+      - ../dist:/var/lib/grafana/plugins
