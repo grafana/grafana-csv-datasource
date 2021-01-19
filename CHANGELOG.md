@@ -1,5 +1,18 @@
 # Changelog
 
+## 0.3.1
+
+[Full changelog](https://github.com/marcusolsson/grafana-csv-datasource/compare/v0.3.0...v0.3.1)
+
+### Enhancements
+
+- Update grafana-plugin-sdk-go to v0.83.0
+
+### Bug fixes
+
+- Ignore empty custom HTTP headers
+- Fix duplicate JSON tag for TLS skip verify
+
 ## 0.3.0
 
 [Full changelog](https://github.com/marcusolsson/grafana-csv-datasource/compare/v0.2.0...v0.3.0)
