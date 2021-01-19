@@ -84,8 +84,10 @@ func customHeaders(ds *backend.DataSourceInstanceSettings) map[string]string {
 			break
 		}
 
-		if value, ok := ds.DecryptedSecureJSONData[keyValue]; ok {
-			headers[key] = value
+		if key != "" {
+			if value, ok := ds.DecryptedSecureJSONData[keyValue]; ok {
+				headers[key] = value
+			}
 		}
 
 		index++
