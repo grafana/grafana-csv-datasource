@@ -100,7 +100,7 @@ func tlsConfig(ds *backend.DataSourceInstanceSettings) (*tls.Config, error) {
 	var jsonData struct {
 		TLSClientAuth     bool `json:"tlsAuth"`
 		TLSAuthWithCACert bool `json:"tlsAuthWithCACert"`
-		TLSSkipVerify     bool `json:"tlsAuthWithCACert"`
+		TLSSkipVerify     bool `json:"tlsSkipVerify"`
 	}
 	if err := json.Unmarshal(ds.JSONData, &jsonData); err != nil {
 		return nil, err
