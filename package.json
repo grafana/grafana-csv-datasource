@@ -18,7 +18,7 @@
     "@types/lodash": "latest"
   },
   "engines": {
-    "node": ">=12 <13"
+    "node": ">=14"
   },
   "resolutions": {
     "rxjs": "6.6.3"
