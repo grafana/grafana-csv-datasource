@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.3.2 (2021-02-03)
+
+[Full changelog](https://github.com/marcusolsson/grafana-csv-datasource/compare/v0.3.1...v0.3.2)
+
+### Bug fixes
+
+- Allow lazy quotes ([#17](https://github.com/marcusolsson/grafana-csv-datasource/issues/17))
+
 ## 0.3.1
 
 [Full changelog](https://github.com/marcusolsson/grafana-csv-datasource/compare/v0.3.0...v0.3.1)
