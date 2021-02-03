@@ -39,6 +39,7 @@ func parseCSV(opts csvOptions, r io.Reader) ([]*data.Field, error) {
 	}
 
 	rd := csv.NewReader(r)
+	rd.LazyQuotes = true
 
 	if len(opts.Delimiter) == 1 {
 		rd.Comma = rune(opts.Delimiter[0])

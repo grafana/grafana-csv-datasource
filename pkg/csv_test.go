@@ -67,3 +67,25 @@ func TestParseTimeNaive(t *testing.T) {
 		})
 	}
 }
+
+func TestParseLazyQuotes(t *testing.T) {
+	opts := csvOptions{
+		Delimiter: ",",
+	}
+
+	for _, tt := range []struct {
+		In string
+	}{
+		{In: `"I","can't","even"`},
+		{In: `'I','can"t','even'`},
+		{In: `I,can't,even`},
+		{In: `I,can"t,even`},
+	} {
+		t.Run("", func(t *testing.T) {
+			_, err := parseCSV(opts, strings.NewReader(tt.In))
+			if err != nil {
+				t.Fatal(err)
+			}
+		})
+	}
+}
