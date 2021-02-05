@@ -160,6 +160,11 @@ func newStorage(instance *dataSourceInstance, logger log.Logger) (storage, error
 		return nil, err
 	}
 
+	// Default to HTTP storage for backwards compatibility.
+	if sett.Storage == "" {
+		return newHTTPStorage(instance, logger)
+	}
+
 	switch sett.Storage {
 	case "http":
 		return newHTTPStorage(instance, logger)
