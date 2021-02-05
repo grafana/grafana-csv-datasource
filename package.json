@@ -1,6 +1,6 @@
 {
   "name": "marcusolsson-csv-datasource",
-  "version": "0.3.2",
+  "version": "0.3.3",
   "description": "A Grafana data source for loading CSV data",
   "scripts": {
     "build": "grafana-toolkit plugin:build",

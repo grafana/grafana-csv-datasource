@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.3.3 (2021-02-05)
+
+[Full changelog](https://github.com/marcusolsson/grafana-csv-datasource/compare/v0.3.2...v0.3.3)
+
+### Bug fixes
+
+- Default to HTTP if no storage type has been set
+
 ## 0.3.2 (2021-02-03)
 
 [Full changelog](https://github.com/marcusolsson/grafana-csv-datasource/compare/v0.3.1...v0.3.2)
