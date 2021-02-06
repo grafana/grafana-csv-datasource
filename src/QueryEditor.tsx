@@ -1,13 +1,16 @@
 import defaults from 'lodash/defaults';
 import React, { FormEvent, useState } from 'react';
-import { QueryEditorProps, SelectableValue } from '@grafana/data';
+import { SelectableValue } from '@grafana/data';
 import { SchemaEditor } from './SchemaEditor';
-import { DataSource } from './DataSource';
-import { CSVDataSourceOptions, CSVQuery } from './types';
+import { CSVQuery } from './types';
 import { defaultQuery, FieldSchema } from './types';
 import { InlineFieldRow, InlineField, Select, Switch, Input } from '@grafana/ui';
 
-type Props = QueryEditorProps<DataSource, CSVQuery, CSVDataSourceOptions>;
+interface Props {
+  query: CSVQuery;
+  onChange: (query: CSVQuery) => void;
+  onRunQuery: () => void;
+}
 
 export const QueryEditor = ({ onRunQuery, onChange, query }: Props) => {
   const { header, skipRows, delimiter, ignoreUnknown, schema } = defaults(query, defaultQuery);

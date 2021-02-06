@@ -1,9 +1,11 @@
 import { DataSourcePlugin } from '@grafana/data';
-import { DataSource } from './DataSource';
+import { DataSource } from './datasource';
 import { ConfigEditor } from './ConfigEditor';
-import { QueryEditor } from './QueryEditor';
+import { DashboardQueryEditor } from './DashboardQueryEditor';
+import { VariableQueryEditor } from './VariableQueryEditor';
 import { CSVQuery, CSVDataSourceOptions } from './types';
 
 export const plugin = new DataSourcePlugin<DataSource, CSVQuery, CSVDataSourceOptions>(DataSource)
   .setConfigEditor(ConfigEditor)
-  .setQueryEditor(QueryEditor);
+  .setQueryEditor(DashboardQueryEditor)
+  .setVariableQueryEditor(VariableQueryEditor);
