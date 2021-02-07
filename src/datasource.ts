@@ -24,29 +24,6 @@ export class DataSource extends DataSourceWithBackend<CSVQuery, CSVDataSourceOpt
     };
   }
 
-  async getChoices(query: CSVQuery): Promise<string[]> {
-    const request = {
-      targets: [
-        {
-          ...query,
-          refId: 'metricFindQuery',
-        },
-      ],
-      range: {
-        to: {},
-        from: {},
-      },
-    } as DataQueryRequest<CSVQuery>;
-
-    try {
-      const res = await this.query(request).toPromise();
-      const columns = res.data[0]?.fields.map((f: any) => f.name) || [];
-      return columns;
-    } catch (err) {
-      return Promise.reject(err);
-    }
-  }
-
   async metricFindQuery?(query: CSVQuery, options: any): Promise<MetricFindValue[]> {
     const request = {
       targets: [
