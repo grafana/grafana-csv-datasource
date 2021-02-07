@@ -48,8 +48,6 @@ export class DataSource extends DataSourceWithBackend<CSVQuery, CSVDataSourceOpt
       return [];
     }
 
-    console.log(res.data[0]);
-
     return (res.data[0] as DataFrame).fields[0].values.toArray().map((_) => ({ text: _.toString() }));
   }
 }
