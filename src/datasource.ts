@@ -17,11 +17,34 @@ export class DataSource extends DataSourceWithBackend<CSVQuery, CSVDataSourceOpt
   applyTemplateVariables(query: CSVQuery, scopedVars: ScopedVars): Record<string, any> {
     return {
       ...query,
-      schema: query.schema.map(({ name, type }) => ({
+      schema: query.schema?.map(({ name, type }) => ({
         name: getTemplateSrv().replace(name, scopedVars),
         type,
       })),
     };
+  }
+
+  async getChoices(query: CSVQuery): Promise<string[]> {
+    const request = {
+      targets: [
+        {
+          ...query,
+          refId: 'metricFindQuery',
+        },
+      ],
+      range: {
+        to: {},
+        from: {},
+      },
+    } as DataQueryRequest<CSVQuery>;
+
+    try {
+      const res = await this.query(request).toPromise();
+      const columns = res.data[0]?.fields.map((f: any) => f.name) || [];
+      return columns;
+    } catch (err) {
+      return Promise.reject(err);
+    }
   }
 
   async metricFindQuery?(query: CSVQuery, options: any): Promise<MetricFindValue[]> {
@@ -50,6 +73,6 @@ export class DataSource extends DataSourceWithBackend<CSVQuery, CSVDataSourceOpt
 
     console.log(res.data[0]);
 
-    return (res.data[0] as DataFrame).fields[0].values.toArray().map(_ => ({ text: _.toString() }));
+    return (res.data[0] as DataFrame).fields[0].values.toArray().map((_) => ({ text: _.toString() }));
   }
 }

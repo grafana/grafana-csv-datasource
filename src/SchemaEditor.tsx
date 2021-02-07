@@ -1,5 +1,5 @@
 import React, { FormEvent, useState, useEffect } from 'react';
-import { InlineFieldRow, InlineField, Icon, Input, Select, Button } from '@grafana/ui';
+import { InlineFieldRow, InlineField, Icon, Select, Button, Input } from '@grafana/ui';
 
 import { FieldSchema } from './types';
 import {} from '@emotion/core';
@@ -17,9 +17,12 @@ export const SchemaEditor = ({ value, onChange }: Props) => {
     setInternalValue(value);
   }, [value]);
 
-  const onNameChange = (idx: number) => (e: FormEvent<HTMLInputElement>) => {
-    setInternalValue(internalValue.map((field, i) => (i === idx ? { ...field, name: e.currentTarget.value } : field)));
-  };
+  const onNameChange = (idx: number) =>
+    function (e: FormEvent<HTMLInputElement>) {
+      setInternalValue(
+        internalValue.map((field, i) => (i === idx ? { ...field, name: e.currentTarget.value } : field))
+      );
+    };
   const onTypeChange = (idx: number) => (selectableValue: SelectableValue<string>) => {
     const res = internalValue.map((field, i) => (i === idx ? { ...field, type: selectableValue.value! } : field));
     setInternalValue(res);
@@ -44,7 +47,7 @@ export const SchemaEditor = ({ value, onChange }: Props) => {
   return (
     <>
       {internalValue.map((_, i) => (
-        <InlineFieldRow>
+        <InlineFieldRow key={i}>
           <InlineField label="Name">
             <Input width={25} value={_.name} onChange={onNameChange(i)} onBlur={() => onChange(internalValue)} />
           </InlineField>

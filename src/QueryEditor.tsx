@@ -53,7 +53,7 @@ export const QueryEditor = ({ onRunQuery, onChange, query }: Props) => {
         <InlineField label="Delimiter" tooltip="Character used to separate columns">
           <Select
             width={15}
-            value={delimOptions.find(_ => _.value === delimiter)}
+            value={delimOptions.find((_) => _.value === delimiter)}
             onChange={onDelimiterChange}
             options={delimOptions}
           />

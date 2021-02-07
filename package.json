@@ -13,10 +13,10 @@
   "license": "Apache-2.0",
   "devDependencies": {
     "@grafana/data": "^7.3.0",
-    "@grafana/toolkit": "^7.3.0",
     "@grafana/runtime": "^7.3.0",
+    "@grafana/toolkit": "^7.3.0",
     "@grafana/ui": "^7.3.0",
-    "@types/lodash": "latest"
+    "@types/lodash": "^4.14.168"
   },
   "engines": {
     "node": ">=14"

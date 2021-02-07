@@ -9,5 +9,5 @@ interface Props {
 }
 
 export const VariableQueryEditor = ({ onChange, query }: Props) => {
-  return <QueryEditor onRunQuery={() => {}} onChange={query => onChange(query)} query={query} />;
+  return <QueryEditor onRunQuery={() => {}} onChange={(query) => onChange(query)} query={query} />;
 };
