@@ -8,6 +8,7 @@ import (
 	"github.com/grafana/grafana-plugin-sdk-go/backend/log"
 )
 
+// New returns a new HTTP client.
 func New(dsInfo *backend.DataSourceInstanceSettings, timeout time.Duration, logger log.Logger) (*http.Client, error) {
 	transport, err := newTransport(dsInfo)
 	if err != nil {
