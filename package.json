@@ -2,6 +2,11 @@
   "name": "marcusolsson-csv-datasource",
   "version": "0.3.3",
   "description": "A Grafana data source for loading CSV data",
+  "keywords": [
+    "grafana",
+    "csv"
+  ],
+  "license": "Apache-2.0",
   "scripts": {
     "build": "grafana-toolkit plugin:build",
     "test": "grafana-toolkit plugin:test",
@@ -9,8 +14,14 @@
     "watch": "grafana-toolkit plugin:dev --watch",
     "sign": "grafana-toolkit plugin:sign"
   },
-  "author": "Marcus Olsson",
-  "license": "Apache-2.0",
+  "homepage": "https://grafana.com/plugins/marcusolsson-csv-datasource",
+  "bugs": "https://github.com/marcusolsson/grafana-csv-datasource/issues",
+  "repository": "github:marcusolsson/grafana-csv-datasource",
+  "author": {
+    "name": "Marcus Olsson",
+    "email": "marcus.olsson@hey.com",
+    "url": "https://marcus.se.net"
+  },
   "devDependencies": {
     "@grafana/data": "^7.3.0",
     "@grafana/runtime": "^7.3.0",
