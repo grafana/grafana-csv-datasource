@@ -41,7 +41,7 @@ func TestHTTPStorage_Stat(t *testing.T) {
 func TestHTTPStorage_Open(t *testing.T) {
 	csv := "time,value\n1609754451933,12"
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		fmt.Fprintln(w, csv)
+		fmt.Fprint(w, csv)
 	}))
 
 	instance := &dataSourceInstance{
