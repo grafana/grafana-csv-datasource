@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.4.0 (2021-02-08)
+
+[Full changelog](https://github.com/marcusolsson/grafana-csv-datasource/compare/v0.3.3...v0.4.0)
+
+### Enhancements
+
+- Add support for variables queries ([#30](https://github.com/marcusolsson/grafana-csv-datasource/issues/30))
+- Upgrade @grafana/* packages
+
 ## 0.3.3 (2021-02-05)
 
 [Full changelog](https://github.com/marcusolsson/grafana-csv-datasource/compare/v0.3.2...v0.3.3)
