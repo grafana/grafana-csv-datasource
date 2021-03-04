@@ -24,6 +24,11 @@ export class DataSource extends DataSourceWithBackend<CSVQuery, CSVDataSourceOpt
     };
   }
 
+  /**
+   * This line adds support for annotation queries in >=7.2.
+   */
+  annotations = {};
+
   async metricFindQuery?(query: CSVQuery, options: any): Promise<MetricFindValue[]> {
     const request = {
       targets: [

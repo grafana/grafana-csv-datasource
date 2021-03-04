@@ -7,6 +7,7 @@
   "backend": true,
   "logs": true,
   "alerting": true,
+  "annotations": true,
   "executable": "gpx_csv-datasource",
   "info": {
     "description": "A data source for loading CSV data",
