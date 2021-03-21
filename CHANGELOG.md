@@ -1,6 +1,14 @@
 # Changelog
 
-## 0.4.0 (2021-02-08)
+## 0.4.1 (2021-03-21)
+
+[Full changelog](https://github.com/marcusolsson/grafana-csv-datasource/compare/v0.4.0...v0.4.1)
+
+### Bug fixes
+
+- Wrong data format is detected
+
+## 0.4.0 (2021-03-21)
 
 [Full changelog](https://github.com/marcusolsson/grafana-csv-datasource/compare/v0.3.3...v0.4.0)
 
