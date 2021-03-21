@@ -6,8 +6,10 @@
 
 ### Enhancements
 
+- Add support for annotation queries
 - Add support for variables queries ([#30](https://github.com/marcusolsson/grafana-csv-datasource/issues/30))
 - Upgrade @grafana/* packages
+- Upgrade Grafana Go SDK
 
 ## 0.3.3 (2021-02-05)
 
