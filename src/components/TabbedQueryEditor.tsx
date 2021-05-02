@@ -140,26 +140,31 @@ export const TabbedQueryEditor = ({ query, onChange, onRunQuery, fieldsTab, expe
     },
     {
       title: 'Experimental',
+      disabled: true,
       content: experimentalTab,
     },
   ].filter((tab) => !tab.disabled);
 
   return (
     <>
-      <InlineFieldRow>
-        <InlineField>
-          <RadioButtonGroup
-            onChange={(e) => setTabIndex(e ?? 0)}
-            value={tabIndex}
-            options={tabs.map((tab, idx) => ({ label: tab.title, value: idx }))}
-          />
-        </InlineField>
-      </InlineFieldRow>
+      {tabs.length > 1 && (
+        <InlineFieldRow>
+          <InlineField>
+            <RadioButtonGroup
+              onChange={(e) => setTabIndex(e ?? 0)}
+              value={tabIndex}
+              options={tabs.map((tab, idx) => ({ label: tab.title, value: idx }))}
+            />
+          </InlineField>
+        </InlineFieldRow>
+      )}
+
       {q.method === 'GET' && q.body && (
         <InfoBox severity="warning" style={{ maxWidth: '700px', whiteSpace: 'normal' }}>
           {"GET requests can't have a body. The body you've defined will be ignored."}
         </InfoBox>
       )}
+
       {(q.headers ?? []).map(([key, _]) => key.toLowerCase()).find((_) => sensitiveHeaders.includes(_)) && (
         <InfoBox severity="warning" style={{ maxWidth: '700px', whiteSpace: 'normal' }}>
           {
@@ -167,6 +172,7 @@ export const TabbedQueryEditor = ({ query, onChange, onRunQuery, fieldsTab, expe
           }
         </InfoBox>
       )}
+
       {tabs[tabIndex].content}
     </>
   );

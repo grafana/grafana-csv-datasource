@@ -18,7 +18,7 @@ export const QueryEditor = (props: Props) => {
     <TabbedQueryEditor
       {...props}
       fieldsTab={<FieldEditor query={query} onChange={onChange} onRunQuery={onRunQuery} />}
-      experimentalTab={<div>Heyllo</div>}
+      experimentalTab={<div></div>}
     />
   );
 };
