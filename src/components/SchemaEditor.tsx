@@ -1,9 +1,9 @@
-import React, { FormEvent, useState, useEffect } from 'react';
-import { InlineFieldRow, InlineField, Icon, Select, Button, Input } from '@grafana/ui';
+import React, { useState, useEffect } from 'react';
 
 import { FieldSchema } from '../types';
 import {} from '@emotion/core';
-import { SelectableValue } from '@grafana/data';
+import { CSVQueryField } from './CSVQueryField';
+import { Icon, InlineFieldRow } from '@grafana/ui';
 
 interface Props {
   value: FieldSchema[];
@@ -17,14 +17,8 @@ export const SchemaEditor = ({ value, onChange }: Props) => {
     setInternalValue(value);
   }, [value]);
 
-  const onNameChange = (idx: number) =>
-    function (e: FormEvent<HTMLInputElement>) {
-      setInternalValue(
-        internalValue.map((field, i) => (i === idx ? { ...field, name: e.currentTarget.value } : field))
-      );
-    };
-  const onTypeChange = (idx: number) => (selectableValue: SelectableValue<string>) => {
-    const res = internalValue.map((field, i) => (i === idx ? { ...field, type: selectableValue.value! } : field));
+  const onFieldChange = (idx: number) => (fieldSchema: FieldSchema) => {
+    const res = internalValue.map((field, i) => (i === idx ? fieldSchema : field));
     setInternalValue(res);
     onChange(res);
   };
@@ -44,41 +38,26 @@ export const SchemaEditor = ({ value, onChange }: Props) => {
     onChange(res);
   };
 
+  if (!internalValue.length) {
+    onAppendField();
+  }
+
   return (
     <>
       {internalValue.map((_, i) => (
         <InlineFieldRow key={i}>
-          <InlineField label="Name">
-            <Input width={25} value={_.name} onChange={onNameChange(i)} onBlur={() => onChange(internalValue)} />
-          </InlineField>
-          <InlineField label="Type">
-            <Select
-              width={12}
-              value={_.type}
-              onChange={onTypeChange(i)}
-              options={[
-                { label: 'String', value: 'string' },
-                { label: 'Number', value: 'number' },
-                { label: 'Time', value: 'time' },
-                { label: 'Boolean', value: 'boolean' },
-              ]}
-            />
-          </InlineField>
+          <CSVQueryField field={_} onFieldChange={onFieldChange(i)} />
+
           <a className="gf-form-label">
             <Icon name="plus" size="lg" onClick={() => onAddField(i)} />
           </a>
-          <a className="gf-form-label">
-            <Icon name="minus" size="lg" onClick={() => onRemoveField(i)} />
-          </a>
+          {internalValue.length > 1 && (
+            <a className="gf-form-label">
+              <Icon name="minus" size="lg" onClick={() => onRemoveField(i)} />
+            </a>
+          )}
         </InlineFieldRow>
       ))}
-      {internalValue.length === 0 ? (
-        <InlineFieldRow>
-          <Button variant="secondary" icon="plus" onClick={onAppendField}>
-            Add field
-          </Button>
-        </InlineFieldRow>
-      ) : null}
     </>
   );
 };
