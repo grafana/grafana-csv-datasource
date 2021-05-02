@@ -7,6 +7,7 @@ import (
 	"io/ioutil"
 	"net/http"
 	"net/http/httptest"
+	"reflect"
 	"testing"
 
 	"github.com/grafana/grafana-plugin-sdk-go/backend"
@@ -28,7 +29,8 @@ func TestHTTPStorage_Stat(t *testing.T) {
 
 	logger := log.New()
 
-	storage, err := newHTTPStorage(instance, logger)
+	var opts dataSourceQuery
+	storage, err := newHTTPStorage(instance, opts, logger)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -54,7 +56,8 @@ func TestHTTPStorage_Open(t *testing.T) {
 
 	logger := log.New()
 
-	storage, err := newHTTPStorage(instance, logger)
+	var opts dataSourceQuery
+	storage, err := newHTTPStorage(instance, opts, logger)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -103,7 +106,8 @@ func TestHTTPStorage_Settings(t *testing.T) {
 
 	logger := log.New()
 
-	storage, err := newHTTPStorage(instance, logger)
+	var opts dataSourceQuery
+	storage, err := newHTTPStorage(instance, opts, logger)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -115,5 +119,74 @@ func TestHTTPStorage_Settings(t *testing.T) {
 
 	if err := storage.Stat(); err != nil {
 		t.Error(err)
+	}
+}
+
+func TestHTTPStorage_Options(t *testing.T) {
+	opts := dataSourceQuery{
+		Method:  "POST",
+		Path:    "/orders",
+		Params:  [][2]string{[2]string{"foo", "bar"}},
+		Headers: [][2]string{[2]string{"baz", "test"}},
+		Body:    `{"something": "anything"}`,
+	}
+
+	var invoked bool
+
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != opts.Method {
+			t.Errorf("unexpected method: %s", r.Method)
+		}
+		if r.URL.Path != opts.Path {
+			t.Errorf("unexpected path: %s", r.URL.Path)
+		}
+		if r.URL.RawQuery != "foo=bar" {
+			t.Errorf("unexpected query: %s", r.URL.RawQuery)
+		}
+
+		for _, p := range opts.Headers {
+			val := r.Header.Get(p[0])
+			if val != "" {
+				if !reflect.DeepEqual(val, p[1]) {
+					t.Errorf("unexpected header value: %s", p[1])
+				}
+			} else {
+				t.Errorf("missing header key: %s", p[0])
+			}
+		}
+
+		b, err := ioutil.ReadAll(r.Body)
+		if err != nil {
+			t.Fatal(err)
+		}
+
+		if opts.Body != string(b) {
+			t.Errorf("unexpected body: %s", b)
+		}
+
+		invoked = true
+	}))
+
+	instance := &dataSourceInstance{
+		httpClient: &http.Client{},
+		settings: backend.DataSourceInstanceSettings{
+			URL:      srv.URL,
+			JSONData: json.RawMessage(`{}`),
+		},
+	}
+
+	logger := log.New()
+
+	storage, err := newHTTPStorage(instance, opts, logger)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	if err := storage.Stat(); err != nil {
+		t.Fatal(err)
+	}
+
+	if !invoked {
+		t.Fatal("server didn't receive any requests")
 	}
 }

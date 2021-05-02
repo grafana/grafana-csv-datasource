@@ -11,6 +11,13 @@ export interface CSVQuery extends DataQuery {
   header: boolean;
   ignoreUnknown: boolean;
   skipRows: number;
+
+  method: string;
+  urlPath: string;
+  queryParams: string;
+  params: Array<Pair<string, string>>;
+  headers: Array<Pair<string, string>>;
+  body: string;
 }
 
 export const defaultQuery: Partial<CSVQuery> = {
@@ -29,3 +36,5 @@ export interface CSVDataSourceOptions extends DataSourceJsonData {
 export const defaultOptions: Partial<CSVDataSourceOptions> = {
   storage: 'http',
 };
+
+export type Pair<T, K> = [T, K];

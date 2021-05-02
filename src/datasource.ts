@@ -10,8 +10,12 @@ import { DataSourceWithBackend, getTemplateSrv } from '@grafana/runtime';
 import { CSVDataSourceOptions, CSVQuery } from './types';
 
 export class DataSource extends DataSourceWithBackend<CSVQuery, CSVDataSourceOptions> {
+  jsonData: CSVDataSourceOptions;
+
   constructor(instanceSettings: DataSourceInstanceSettings<CSVDataSourceOptions>) {
     super(instanceSettings);
+
+    this.jsonData = instanceSettings.jsonData;
   }
 
   applyTemplateVariables(query: CSVQuery, scopedVars: ScopedVars): Record<string, any> {

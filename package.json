@@ -27,7 +27,9 @@
     "@grafana/runtime": "latest",
     "@grafana/toolkit": "latest",
     "@grafana/ui": "latest",
-    "@types/lodash": "^4.14.168"
+    "@types/lodash": "^4.14.168",
+    "@types/react-virtualized-auto-sizer": "^1.0.0",
+    "react-virtualized-auto-sizer": "^1.0.4"
   },
   "engines": {
     "node": ">=14"

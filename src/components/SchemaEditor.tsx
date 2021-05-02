@@ -1,7 +1,7 @@
 import React, { FormEvent, useState, useEffect } from 'react';
 import { InlineFieldRow, InlineField, Icon, Select, Button, Input } from '@grafana/ui';
 
-import { FieldSchema } from './types';
+import { FieldSchema } from '../types';
 import {} from '@emotion/core';
 import { SelectableValue } from '@grafana/data';
 

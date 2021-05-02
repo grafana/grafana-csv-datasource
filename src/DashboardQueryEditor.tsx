@@ -7,6 +7,6 @@ import { QueryEditor } from './QueryEditor';
 
 type Props = QueryEditorProps<DataSource, CSVQuery, CSVDataSourceOptions>;
 
-export const DashboardQueryEditor = ({ onRunQuery, onChange, query }: Props) => {
-  return <QueryEditor onRunQuery={onRunQuery} onChange={onChange} query={query} />;
+export const DashboardQueryEditor = ({ onRunQuery, onChange, query, datasource }: Props) => {
+  return <QueryEditor onRunQuery={onRunQuery} onChange={onChange} query={query} datasource={datasource} />;
 };
