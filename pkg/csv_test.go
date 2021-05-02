@@ -5,10 +5,13 @@ import (
 	"strings"
 	"testing"
 
+	"github.com/grafana/grafana-plugin-sdk-go/backend/log"
 	"github.com/grafana/grafana-plugin-sdk-go/data"
 )
 
 func TestParseCSV(t *testing.T) {
+	logger := log.New()
+
 	for _, tt := range []struct {
 		query  csvOptions
 		input  string
@@ -19,7 +22,7 @@ func TestParseCSV(t *testing.T) {
 		}},
 	} {
 		t.Run("", func(t *testing.T) {
-			fields, err := parseCSV(tt.query, strings.NewReader(tt.input))
+			fields, err := parseCSV(tt.query, strings.NewReader(tt.input), logger)
 			if err != nil {
 				t.Fatal(err)
 			}
@@ -70,6 +73,8 @@ func TestParseTimeNaive(t *testing.T) {
 }
 
 func TestParseLazyQuotes(t *testing.T) {
+	logger := log.New()
+
 	opts := csvOptions{
 		Delimiter: ",",
 	}
@@ -83,7 +88,7 @@ func TestParseLazyQuotes(t *testing.T) {
 		{In: `I,can"t,even`},
 	} {
 		t.Run("", func(t *testing.T) {
-			_, err := parseCSV(opts, strings.NewReader(tt.In))
+			_, err := parseCSV(opts, strings.NewReader(tt.In), logger)
 			if err != nil {
 				t.Fatal(err)
 			}
