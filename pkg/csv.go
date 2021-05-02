@@ -13,8 +13,6 @@ import (
 	"github.com/grafana/grafana-plugin-sdk-go/data"
 )
 
-var logger = log.New()
-
 type fieldSchema struct {
 	Name string `json:"name"`
 	Type string `json:"type"`
@@ -28,7 +26,7 @@ type csvOptions struct {
 	SkipRows      int           `json:"skipRows"`
 }
 
-func parseCSV(opts csvOptions, r io.Reader) ([]*data.Field, error) {
+func parseCSV(opts csvOptions, r io.Reader, logger log.Logger) ([]*data.Field, error) {
 	// Read one byte at a time until we've counted newlines equal to the number
 	// of skipped rows.
 	for i := 0; i < opts.SkipRows; i++ {
@@ -101,15 +99,14 @@ func parseCSV(opts csvOptions, r io.Reader) ([]*data.Field, error) {
 
 			var timeLayout string
 			if f.Type() == data.FieldTypeNullableTime {
-				logger.Info(rows[0][fieldIdx])
 				layout, err := detectTimeLayoutNaive(rows[0][fieldIdx])
 				if err != nil {
+					// TODO: Handle error instead of sending it to the log.
 					logger.Error(err.Error())
+					return
 				}
-				if err == nil {
-					timeLayout = layout
-					logger.Info(timeLayout)
-				}
+
+				timeLayout = layout
 			}
 
 			for rowIdx := 0; rowIdx < f.Len(); rowIdx++ {

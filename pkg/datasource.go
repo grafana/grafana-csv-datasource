@@ -85,7 +85,7 @@ func (ds *dataSource) query(ctx context.Context, query backend.DataQuery, instan
 	}
 	defer f.Close()
 
-	fields, err := parseCSV(dsQuery.csvOptions, f)
+	fields, err := parseCSV(dsQuery.csvOptions, f, ds.logger)
 	if err != nil {
 		return backend.DataResponse{Error: err}
 	}
