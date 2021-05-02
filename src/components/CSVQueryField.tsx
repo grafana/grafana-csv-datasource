@@ -29,9 +29,8 @@ export const CSVQueryField = ({ field, onFieldChange }: Props) => {
           onChange={onNameChange}
           portalOrigin="csv"
         />
-        {/* <Input value={name} onChange={onNameChange} onBlur={() => onFieldChange({ ...field, name })} /> */}
       </InlineField>
-      <InlineField label="Type" tooltip={`something`}>
+      <InlineField label="Type" tooltip="Set the type of a field. By default, all fields have type String.">
         <Select
           width={12}
           value={field.type}
