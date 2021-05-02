@@ -19,12 +19,21 @@ export class DataSource extends DataSourceWithBackend<CSVQuery, CSVDataSourceOpt
   }
 
   applyTemplateVariables(query: CSVQuery, scopedVars: ScopedVars): Record<string, any> {
+    const apply = (text: string) => getTemplateSrv().replace(text, scopedVars);
+
     return {
       ...query,
       schema: query.schema?.map(({ name, type }) => ({
-        name: getTemplateSrv().replace(name, scopedVars),
+        name: apply(name),
         type,
       })),
+
+      // HTTP settings
+      urlPath: apply(query.urlPath),
+      queryParams: apply(query.queryParams),
+      params: query.params?.map((param) => param.map(apply)),
+      headers: query.headers?.map((header) => header.map(apply)),
+      body: apply(query.body),
     };
   }
 
