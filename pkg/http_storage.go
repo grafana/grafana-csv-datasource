@@ -109,8 +109,6 @@ func newRequestFromQuery(settings *backend.DataSourceInstanceSettings, customSet
 		return nil, err
 	}
 
-	req.Header.Set("Accept", "text/csv")
-
 	for _, p := range query.Headers {
 		req.Header.Set(p[0], p[1])
 	}
