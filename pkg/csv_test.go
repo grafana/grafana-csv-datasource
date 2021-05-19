@@ -2,6 +2,7 @@ package main
 
 import (
 	"bytes"
+	"math"
 	"strings"
 	"testing"
 
@@ -91,6 +92,69 @@ func TestParseLazyQuotes(t *testing.T) {
 			_, err := parseCSV(opts, strings.NewReader(tt.In), logger)
 			if err != nil {
 				t.Fatal(err)
+			}
+		})
+	}
+}
+
+func TestDecimalSeparator(t *testing.T) {
+	logger := log.New()
+
+	for _, tt := range []struct {
+		In  string
+		Out float64
+		Sep string
+	}{
+		{In: `10`, Out: 10, Sep: ","},
+		{In: `10.4`, Out: 10.4, Sep: "."},
+		{In: `10,4`, Out: 104, Sep: "."},
+		{In: `10,4`, Out: 10.4, Sep: ","},
+		{In: `10.4`, Out: 104, Sep: ","},
+		{In: `10 000,12`, Out: 10000.12, Sep: ","},
+		{In: `10.000,12`, Out: 10000.12, Sep: ","},
+		{In: `10.000.000,12`, Out: 10000000.12, Sep: ","},
+		{In: `10,000.12`, Out: 10000.12, Sep: ","},
+		{In: `10,000,000.12`, Out: 10000000.12, Sep: ","},
+		{In: `10,000,12`, Out: math.NaN(), Sep: ","},
+		{In: `10,000,12`, Out: 1000012, Sep: "."},
+		{In: `10.000.12`, Out: math.NaN(), Sep: "."},
+		{In: `10.000.12`, Out: 1000012, Sep: ","},
+	} {
+		t.Run(tt.In+"_"+tt.Sep, func(t *testing.T) {
+			opts := csvOptions{
+				Delimiter:        ";",
+				DecimalSeparator: tt.Sep,
+				Schema: []fieldSchema{
+					{Name: "Field 1", Type: "number"},
+				},
+			}
+
+			fields, err := parseCSV(opts, strings.NewReader(tt.In), logger)
+			if err != nil {
+				t.Fatal(err)
+			}
+
+			if len(fields) != 1 {
+				t.Fatalf("unexpected number of fields: %v", len(fields))
+			}
+
+			numberField := fields[0]
+
+			if numberField.Len() != 1 {
+				t.Fatalf("unexpected field size: %v", numberField.Len())
+			}
+
+			got, err := numberField.FloatAt(0)
+			if err != nil {
+				t.Fatal(err)
+			}
+
+			if !math.IsNaN(got) && math.IsNaN(tt.Out) {
+				t.Fatalf("want = %v; got = %v", tt.Out, got)
+			}
+
+			if !math.IsNaN(got) && tt.Out != got {
+				t.Errorf("want = %v; got = %v", tt.Out, got)
 			}
 		})
 	}

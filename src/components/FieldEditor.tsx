@@ -13,7 +13,7 @@ interface Props {
 }
 
 export const FieldEditor = ({ query, onChange, onRunQuery }: Props) => {
-  const { header, skipRows, delimiter, ignoreUnknown, schema } = defaults(query, defaultQuery);
+  const { header, skipRows, delimiter, decimalSeparator, ignoreUnknown, schema } = defaults(query, defaultQuery);
 
   const [numSkipRows, setNumSkipRows] = useState(skipRows?.toString());
 
@@ -24,7 +24,17 @@ export const FieldEditor = ({ query, onChange, onRunQuery }: Props) => {
   ];
 
   const onDelimiterChange = (value: SelectableValue<string>) => {
-    onChange({ ...query, delimiter: value.value! });
+    onChange({ ...query, delimiter: value.value ?? ',' });
+    onRunQuery();
+  };
+
+  const decimalSeparatorOptions = [
+    { label: 'Point', value: '.' },
+    { label: 'Comma', value: ',' },
+  ];
+
+  const onDecimalSeparatorChange = (value: SelectableValue<string>) => {
+    onChange({ ...query, decimalSeparator: value.value ?? '.' });
     onRunQuery();
   };
 
@@ -52,10 +62,21 @@ export const FieldEditor = ({ query, onChange, onRunQuery }: Props) => {
       <InlineFieldRow>
         <InlineField label="Delimiter" tooltip="Character used to separate columns">
           <Select
-            width={15}
+            width={13}
             value={delimOptions.find((_) => _.value === delimiter)}
             onChange={onDelimiterChange}
             options={delimOptions}
+          />
+        </InlineField>
+        <InlineField
+          label="Decimal separator"
+          tooltip="Character used to separate the integral part from the fractional part of numbers."
+        >
+          <Select
+            width={13}
+            value={decimalSeparatorOptions.find((_) => _.value === decimalSeparator)}
+            onChange={onDecimalSeparatorChange}
+            options={decimalSeparatorOptions}
           />
         </InlineField>
         <InlineField label="Skip leading rows" tooltip="Number of rows to skip before looking for header">

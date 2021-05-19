@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"io"
 	"strconv"
+	"strings"
 	"sync"
 	"time"
 
@@ -19,11 +20,12 @@ type fieldSchema struct {
 }
 
 type csvOptions struct {
-	Delimiter     string        `json:"delimiter"`
-	Header        bool          `json:"header"`
-	IgnoreUnknown bool          `json:"ignoreUnknown"`
-	Schema        []fieldSchema `json:"schema"`
-	SkipRows      int           `json:"skipRows"`
+	Delimiter        string        `json:"delimiter"`
+	Header           bool          `json:"header"`
+	IgnoreUnknown    bool          `json:"ignoreUnknown"`
+	Schema           []fieldSchema `json:"schema"`
+	SkipRows         int           `json:"skipRows"`
+	DecimalSeparator string        `json:"decimalSeparator"`
 }
 
 func parseCSV(opts csvOptions, r io.Reader, logger log.Logger) ([]*data.Field, error) {
@@ -114,7 +116,28 @@ func parseCSV(opts csvOptions, r io.Reader, logger log.Logger) ([]*data.Field, e
 
 				switch f.Type() {
 				case data.FieldTypeNullableFloat64:
-					n, err := strconv.ParseFloat(value, 10)
+					intPart, fracPart := splitNumberParts(value, opts.DecimalSeparator)
+
+					// Only one separator is allowed.
+					if strings.Contains(intPart, opts.DecimalSeparator) {
+						f.Set(rowIdx, nil)
+						continue
+					}
+
+					converted := strings.Map(func(r rune) rune {
+						switch r {
+						case ',', '.', ' ':
+							if string(r) == opts.DecimalSeparator {
+								return r
+							}
+							// Returning a negative value removes the character.
+							return -1
+						default:
+							return r
+						}
+					}, intPart) + "." + fracPart
+
+					n, err := strconv.ParseFloat(converted, 10)
 					if err != nil {
 						f.Set(rowIdx, nil)
 						continue
@@ -162,6 +185,16 @@ func parseCSV(opts csvOptions, r io.Reader, logger log.Logger) ([]*data.Field, e
 	}
 
 	return res, nil
+}
+
+func splitNumberParts(str string, sep string) (string, string) {
+	idx := strings.LastIndex(str, sep)
+
+	if idx < 0 {
+		return str, "0"
+	}
+
+	return str[:idx], str[idx+1:]
 }
 
 func fieldType(str string) data.FieldType {

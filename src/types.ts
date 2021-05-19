@@ -11,6 +11,7 @@ export interface CSVQuery extends DataQuery {
   header: boolean;
   ignoreUnknown: boolean;
   skipRows: number;
+  decimalSeparator: string;
 
   method: string;
   path: string;
@@ -22,6 +23,7 @@ export interface CSVQuery extends DataQuery {
 
 export const defaultQuery: Partial<CSVQuery> = {
   delimiter: ',',
+  decimalSeparator: '.',
   header: true,
   ignoreUnknown: false,
   skipRows: 0,
