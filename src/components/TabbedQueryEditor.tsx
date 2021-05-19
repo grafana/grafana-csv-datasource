@@ -1,6 +1,6 @@
 import defaults from 'lodash/defaults';
 import React, { useState } from 'react';
-import { InlineFieldRow, InlineField, RadioButtonGroup, CodeEditor, useTheme, InfoBox } from '@grafana/ui';
+import { InlineFieldRow, InlineField, RadioButtonGroup, CodeEditor, useTheme, InfoBox, Input } from '@grafana/ui';
 import { TimeRange } from '@grafana/data';
 import { CSVQuery, defaultQuery } from '../types';
 import { KeyValueEditor } from './KeyValueEditor';
@@ -55,21 +55,36 @@ export const TabbedQueryEditor = ({ query, onChange, onRunQuery, fieldsTab, expe
     },
     {
       title: 'Path',
-      disabled: datasource.jsonData.storage !== 'http',
-      content: (
-        <PathEditor
-          method={q.method ?? 'GET'}
-          onMethodChange={(method) => {
-            onChange({ ...q, method });
-            onRunQuery();
-          }}
-          path={q.urlPath ?? ''}
-          onPathChange={(path) => {
-            onChange({ ...q, urlPath: path });
-            onRunQuery();
-          }}
-        />
-      ),
+      disabled: false,
+      content:
+        datasource.jsonData.storage === 'http' ? (
+          <PathEditor
+            method={q.method ?? 'GET'}
+            onMethodChange={(method) => {
+              onChange({ ...q, method });
+              onRunQuery();
+            }}
+            path={q.path ?? ''}
+            onPathChange={(path) => {
+              onChange({ ...q, path: path });
+              onRunQuery();
+            }}
+          />
+        ) : (
+          <InlineField
+            label="Relative path"
+            tooltip={'The path here is relative to the URL defined in the data source configuration.'}
+          >
+            <Input
+              placeholder={'file.csv'}
+              value={q.path ?? ''}
+              onChange={(e) => {
+                onChange({ ...q, path: e.currentTarget.value });
+                onRunQuery();
+              }}
+            />
+          </InlineField>
+        ),
     },
     {
       title: 'Params',

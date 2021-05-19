@@ -13,7 +13,7 @@ export interface CSVQuery extends DataQuery {
   skipRows: number;
 
   method: string;
-  urlPath: string;
+  path: string;
   queryParams: string;
   params: Array<Pair<string, string>>;
   headers: Array<Pair<string, string>>;

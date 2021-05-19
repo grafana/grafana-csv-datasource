@@ -29,7 +29,7 @@ export class DataSource extends DataSourceWithBackend<CSVQuery, CSVDataSourceOpt
       })),
 
       // HTTP settings
-      urlPath: apply(query.urlPath),
+      path: apply(query.path),
       queryParams: apply(query.queryParams),
       params: query.params?.map((param) => param.map(apply)),
       headers: query.headers?.map((header) => header.map(apply)),

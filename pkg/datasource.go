@@ -20,7 +20,7 @@ type dataSourceQuery struct {
 	csvOptions
 
 	Method  string      `json:"method"`
-	Path    string      `json:"urlPath"`
+	Path    string      `json:"path"`
 	Params  [][2]string `json:"params"`
 	Headers [][2]string `json:"headers"`
 	Body    string      `json:"body"`
@@ -191,7 +191,7 @@ func newStorage(instance *dataSourceInstance, query dataSourceQuery, logger log.
 	case "http":
 		return newHTTPStorage(instance, query, logger)
 	case "local":
-		return newLocalStorage(instance, logger)
+		return newLocalStorage(instance, query, logger)
 	default:
 		return nil, errors.New("unsupported storage type")
 	}
