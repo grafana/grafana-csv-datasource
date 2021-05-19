@@ -1,5 +1,5 @@
 {
-  "$schema": "https://github.com/grafana/grafana/raw/master/docs/sources/developers/plugins/plugin.schema.json",
+  "$schema": "https://github.com/grafana/grafana/raw/main/docs/sources/developers/plugins/plugin.schema.json",
   "type": "datasource",
   "name": "CSV",
   "id": "marcusolsson-csv-datasource",
@@ -23,12 +23,16 @@
     },
     "links": [
       {
+        "name": "Documentation",
+        "url": "https://marcusolsson.github.io/grafana-csv-datasource"
+      },
+      {
         "name": "Website",
         "url": "https://github.com/marcusolsson/grafana-csv-datasource"
       },
       {
         "name": "License",
-        "url": "https://github.com/marcusolsson/grafana-csv-datasource/blob/master/LICENSE"
+        "url": "https://github.com/marcusolsson/grafana-csv-datasource/blob/main/LICENSE"
       }
     ],
     "screenshots": [

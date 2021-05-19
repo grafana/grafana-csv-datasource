@@ -11,22 +11,6 @@ A data source for loading CSV data into [Grafana](https://grafana.com).
 
 ![Screenshot](https://github.com/marcusolsson/grafana-csv-datasource/raw/main/src/img/screenshot.png)
 
-## Public data sets
+## Documentation
 
-Here are a few publicly available CSV data sets that you can try out.
-
-### Confirmed cases of COVID-19
-
-**Source:** [CSSE COVID-19 Data Repository](https://github.com/CSSEGISandData/COVID-19)
-
-#### Configuration
-
-- **URL:** https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_global.csv
-
-### Natural Gas Prices
-
-**Source:** [DataHub](https://datahub.io/core/natural-gas)
-
-#### Configuration
-
-- **URL:** https://datahub.io/core/natural-gas/r/daily.csv
+Full documentation for the plugin is available on the [website](https://marcusolsson.github.io/grafana-csv-datasource).
