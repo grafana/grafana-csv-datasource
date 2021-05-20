@@ -1,5 +1,20 @@
 # Changelog
 
+## 0.5.0 (2021-03-21)
+
+[Full changelog](https://github.com/marcusolsson/grafana-csv-datasource/compare/v0.4.1...v0.5.0)
+
+### Enhancements
+
+- Improved query editor with support for HTTP params, headers, and body.
+- Add support for relative paths ([#69](https://github.com/marcusolsson/grafana-csv-datasource/issues/69))
+- Add support for decimal separators ([#43](https://github.com/marcusolsson/grafana-csv-datasource/issues/43))
+- **EXPERIMENTAL:** Add support for regular expressions in field names ([#68](https://github.com/marcusolsson/grafana-csv-datasource/issues/68)). Must be enabled in the Experimental tab in the query editor.
+
+### Bug fixes
+
+- **BREAKING:** Remove default Accept header ([#56](https://github.com/marcusolsson/grafana-csv-datasource/issues/56)). If your data source expects `Accept: text/csv` on the request, you now need to add it yourself in the Params tab.
+
 ## 0.4.1 (2021-03-21)
 
 [Full changelog](https://github.com/marcusolsson/grafana-csv-datasource/compare/v0.4.0...v0.4.1)
