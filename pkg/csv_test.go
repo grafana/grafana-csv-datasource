@@ -23,7 +23,7 @@ func TestParseCSV(t *testing.T) {
 		}},
 	} {
 		t.Run("", func(t *testing.T) {
-			fields, err := parseCSV(tt.query, strings.NewReader(tt.input), logger)
+			fields, err := parseCSV(tt.query, false, strings.NewReader(tt.input), logger)
 			if err != nil {
 				t.Fatal(err)
 			}
@@ -89,7 +89,7 @@ func TestParseLazyQuotes(t *testing.T) {
 		{In: `I,can"t,even`},
 	} {
 		t.Run("", func(t *testing.T) {
-			_, err := parseCSV(opts, strings.NewReader(tt.In), logger)
+			_, err := parseCSV(opts, false, strings.NewReader(tt.In), logger)
 			if err != nil {
 				t.Fatal(err)
 			}
@@ -129,7 +129,7 @@ func TestDecimalSeparator(t *testing.T) {
 				},
 			}
 
-			fields, err := parseCSV(opts, strings.NewReader(tt.In), logger)
+			fields, err := parseCSV(opts, false, strings.NewReader(tt.In), logger)
 			if err != nil {
 				t.Fatal(err)
 			}
