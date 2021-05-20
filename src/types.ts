@@ -19,6 +19,10 @@ export interface CSVQuery extends DataQuery {
   params: Array<Pair<string, string>>;
   headers: Array<Pair<string, string>>;
   body: string;
+
+  experimental: {
+    regex: boolean;
+  };
 }
 
 export const defaultQuery: Partial<CSVQuery> = {

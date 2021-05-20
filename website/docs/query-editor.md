@@ -69,3 +69,13 @@ Sets the text to send as a request body.
 :::info
 Due to limitations in modern browsers, Grafana ignores the request body if the HTTP method is set to GET.
 :::
+
+### Experimental
+
+Try out features that are currently in development. Each feature has a link in its tooltip that takes you to the feature request on GitHub where you can share your feedback.
+
+:::danger
+Experimental features might be unstable and can be removed without notice.
+:::
+
+- **Enable regular expressions** lets you use regular expressions as field names in the schema. This lets you set the type for any field that matches the expression.

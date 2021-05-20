@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"io"
+	"regexp"
 	"strconv"
 	"strings"
 	"sync"
@@ -28,13 +29,13 @@ type csvOptions struct {
 	DecimalSeparator string        `json:"decimalSeparator"`
 }
 
-func parseCSV(opts csvOptions, r io.Reader, logger log.Logger) ([]*data.Field, error) {
+func parseCSV(opts csvOptions, regex bool, r io.Reader, logger log.Logger) ([]*data.Field, error) {
 	header, rows, err := readCSV(opts, r)
 	if err != nil {
 		return nil, err
 	}
 
-	fields := makeFieldsFromSchema(header, opts.Schema, opts.IgnoreUnknown, len(rows))
+	fields := makeFieldsFromSchema(header, opts.Schema, len(rows), opts.IgnoreUnknown, regex)
 
 	wg := sync.WaitGroup{}
 	wg.Add(len(fields))
@@ -186,27 +187,32 @@ func parseCell(value string, opts csvOptions, timeLayout string, rowIdx int, f *
 }
 
 // makeFieldsFromSchema returns a field for every column defined in the header.
-func makeFieldsFromSchema(header []string, schema []fieldSchema, ignoreUnknown bool, size int) []*data.Field {
+func makeFieldsFromSchema(header []string, schema []fieldSchema, size int, ignoreUnknown bool, regex bool) []*data.Field {
 	fields := make([]*data.Field, len(header))
 
 	for i, name := range header {
-		sch, ok := findSchema(schema, name)
+		t, ok := typeFromName(name, schema, regex)
 		if !ok {
 			if ignoreUnknown {
 				continue
 			}
-
-			// Fields without a schema defaults to a string type.
-			sch = fieldSchema{Name: name, Type: "string"}
+			t = data.FieldTypeNullableString
 		}
 
-		f := data.NewFieldFromFieldType(fieldType(sch.Type), size)
+		f := data.NewFieldFromFieldType(t, size)
 		f.Name = name
-
 		fields[i] = f
 	}
 
 	return fields
+}
+
+func typeFromName(name string, schemas []fieldSchema, regex bool) (data.FieldType, bool) {
+	sch, ok := findSchema(schemas, name, regex)
+	if !ok {
+		return data.FieldTypeUnknown, false
+	}
+	return fieldType(sch.Type), true
 }
 
 func fieldType(str string) data.FieldType {
@@ -222,13 +228,29 @@ func fieldType(str string) data.FieldType {
 	}
 }
 
-func findSchema(fields []fieldSchema, name string) (fieldSchema, bool) {
+func findSchema(fields []fieldSchema, name string, regex bool) (res fieldSchema, ok bool) {
 	for _, sch := range fields {
-		if sch.Name == name {
-			return sch, true
+		if sch.Name == "" {
+			continue
+		}
+
+		if regex {
+			re, err := regexp.Compile(sch.Name)
+			if err != nil {
+				return
+			}
+			if re.MatchString(name) {
+				res = sch
+				ok = true
+			}
+		} else {
+			if sch.Name == name {
+				res = sch
+				ok = true
+			}
 		}
 	}
-	return fieldSchema{}, false
+	return
 }
 
 func splitNumberParts(str string, sep string) (string, string) {

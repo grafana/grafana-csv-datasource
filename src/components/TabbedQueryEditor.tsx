@@ -155,7 +155,7 @@ export const TabbedQueryEditor = ({ query, onChange, onRunQuery, fieldsTab, expe
     },
     {
       title: 'Experimental',
-      disabled: true,
+      disabled: false,
       content: experimentalTab,
     },
   ].filter((tab) => !tab.disabled);

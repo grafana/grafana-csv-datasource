@@ -24,6 +24,10 @@ type dataSourceQuery struct {
 	Params  [][2]string `json:"params"`
 	Headers [][2]string `json:"headers"`
 	Body    string      `json:"body"`
+
+	Experimental struct {
+		Regex bool `json:"regex"`
+	} `json:"experimental"`
 }
 
 // dataSource defines common operations for all instances of this data source.
@@ -85,7 +89,7 @@ func (ds *dataSource) query(ctx context.Context, query backend.DataQuery, instan
 	}
 	defer f.Close()
 
-	fields, err := parseCSV(dsQuery.csvOptions, f, ds.logger)
+	fields, err := parseCSV(dsQuery.csvOptions, dsQuery.Experimental.Regex, f, ds.logger)
 	if err != nil {
 		return backend.DataResponse{Error: err}
 	}
