@@ -29,6 +29,61 @@ type csvOptions struct {
 }
 
 func parseCSV(opts csvOptions, r io.Reader, logger log.Logger) ([]*data.Field, error) {
+	header, rows, err := readCSV(opts, r)
+	if err != nil {
+		return nil, err
+	}
+
+	fields := makeFieldsFromSchema(header, opts.Schema, opts.IgnoreUnknown, len(rows))
+
+	wg := sync.WaitGroup{}
+	wg.Add(len(fields))
+
+	for fieldIdx := range fields {
+		go func(fieldIdx int) {
+			defer wg.Done()
+
+			f := fields[fieldIdx]
+			if f == nil {
+				// Ignoring unknown field.
+				return
+			}
+
+			var timeLayout string
+			if f.Type() == data.FieldTypeNullableTime {
+				layout, err := detectTimeLayoutNaive(rows[0][fieldIdx])
+				if err != nil {
+					// TODO: Handle error instead of sending it to the log.
+					logger.Error(err.Error())
+					return
+				}
+
+				timeLayout = layout
+			}
+
+			for rowIdx := 0; rowIdx < f.Len(); rowIdx++ {
+				if err := parseCell(rows[rowIdx][fieldIdx], opts, timeLayout, rowIdx, f); err != nil {
+					// Ignore any cells that couldn't be parsed.
+					f.Set(rowIdx, nil)
+				}
+			}
+		}(fieldIdx)
+	}
+
+	wg.Wait()
+
+	// Remove ignored fields from result.
+	var res []*data.Field
+	for _, f := range fields {
+		if f != nil {
+			res = append(res, f)
+		}
+	}
+
+	return res, nil
+}
+
+func readCSV(opts csvOptions, r io.Reader) ([]string, [][]string, error) {
 	// Read one byte at a time until we've counted newlines equal to the number
 	// of skipped rows.
 	for i := 0; i < opts.SkipRows; i++ {
@@ -50,7 +105,7 @@ func parseCSV(opts csvOptions, r io.Reader, logger log.Logger) ([]*data.Field, e
 
 	records, err := rd.ReadAll()
 	if err != nil {
-		return nil, err
+		return nil, nil, err
 	}
 
 	var rows [][]string
@@ -68,133 +123,90 @@ func parseCSV(opts csvOptions, r io.Reader, logger log.Logger) ([]*data.Field, e
 		rows = records
 	}
 
-	fields := make([]*data.Field, 0)
-
-	// Create fields from schema.
-	for _, name := range header {
-		sch, ok := schemaContains(opts.Schema, name)
-		if !ok {
-			if opts.IgnoreUnknown {
-				// Add a null field to maintain index.
-				fields = append(fields, nil)
-				continue
-			} else {
-				sch = fieldSchema{Name: name, Type: "string"}
-			}
-		}
-		f := data.NewFieldFromFieldType(fieldType(sch.Type), len(rows))
-		f.Name = name
-		fields = append(fields, f)
-	}
-
-	wg := sync.WaitGroup{}
-	wg.Add(len(fields))
-
-	for fieldIdx := range fields {
-		go func(fieldIdx int) {
-			defer wg.Done()
-
-			f := fields[fieldIdx]
-			if f == nil {
-				return
-			}
-
-			var timeLayout string
-			if f.Type() == data.FieldTypeNullableTime {
-				layout, err := detectTimeLayoutNaive(rows[0][fieldIdx])
-				if err != nil {
-					// TODO: Handle error instead of sending it to the log.
-					logger.Error(err.Error())
-					return
-				}
-
-				timeLayout = layout
-			}
-
-			for rowIdx := 0; rowIdx < f.Len(); rowIdx++ {
-				value := rows[rowIdx][fieldIdx]
-
-				switch f.Type() {
-				case data.FieldTypeNullableFloat64:
-					intPart, fracPart := splitNumberParts(value, opts.DecimalSeparator)
-
-					// Only one separator is allowed.
-					if strings.Contains(intPart, opts.DecimalSeparator) {
-						f.Set(rowIdx, nil)
-						continue
-					}
-
-					converted := strings.Map(func(r rune) rune {
-						switch r {
-						case ',', '.', ' ':
-							if string(r) == opts.DecimalSeparator {
-								return r
-							}
-							// Returning a negative value removes the character.
-							return -1
-						default:
-							return r
-						}
-					}, intPart) + "." + fracPart
-
-					n, err := strconv.ParseFloat(converted, 10)
-					if err != nil {
-						f.Set(rowIdx, nil)
-						continue
-					}
-					f.Set(rowIdx, &n)
-				case data.FieldTypeNullableBool:
-					n, err := strconv.ParseBool(value)
-					if err != nil {
-						f.Set(rowIdx, nil)
-						continue
-					}
-					f.Set(rowIdx, &n)
-				case data.FieldTypeNullableTime:
-					n, err := strconv.ParseInt(value, 10, 64)
-					if err == nil {
-						t := time.Unix(n, 0)
-						f.Set(rowIdx, &t)
-						continue
-					}
-
-					if timeLayout != "" {
-						t, err := time.Parse(timeLayout, value)
-						if err == nil {
-							f.Set(rowIdx, &t)
-							continue
-						}
-					}
-
-					f.Set(rowIdx, nil)
-				default:
-					f.Set(rowIdx, &value)
-				}
-			}
-		}(fieldIdx)
-	}
-
-	wg.Wait()
-
-	// Remove ignored fields from result.
-	var res []*data.Field
-	for _, f := range fields {
-		if f != nil {
-			res = append(res, f)
-		}
-	}
-
-	return res, nil
+	return header, rows, nil
 }
 
-func splitNumberParts(str string, sep string) (string, string) {
-	idx := strings.LastIndex(str, sep)
+func parseCell(value string, opts csvOptions, timeLayout string, rowIdx int, f *data.Field) error {
+	switch f.Type() {
+	case data.FieldTypeNullableFloat64:
+		intPart, fracPart := splitNumberParts(value, opts.DecimalSeparator)
 
-	if idx < 0 {
-		return str, "0"
+		// Only one separator is allowed.
+		if strings.Contains(intPart, opts.DecimalSeparator) {
+			return errors.New("multiple decimal separators")
+		}
+
+		converted := strings.Map(func(r rune) rune {
+			switch r {
+			case ',', '.', ' ':
+				if string(r) == opts.DecimalSeparator {
+					return r
+				}
+				// Returning a negative value removes the character.
+				return -1
+			default:
+				return r
+			}
+		}, intPart) + "." + fracPart
+
+		n, err := strconv.ParseFloat(converted, 10)
+		if err != nil {
+			return err
+		}
+
+		f.Set(rowIdx, &n)
+	case data.FieldTypeNullableBool:
+		n, err := strconv.ParseBool(value)
+		if err != nil {
+			return err
+		}
+		f.Set(rowIdx, &n)
+	case data.FieldTypeNullableTime:
+		n, err := strconv.ParseInt(value, 10, 64)
+		if err == nil {
+			t := time.Unix(n, 0)
+			f.Set(rowIdx, &t)
+			return nil
+		}
+
+		if timeLayout != "" {
+			t, err := time.Parse(timeLayout, value)
+			if err == nil {
+				f.Set(rowIdx, &t)
+				return nil
+			}
+		}
+
+		return errors.New("unsupported time format")
+	default:
+		f.Set(rowIdx, &value)
 	}
 
-	return str[:idx], str[idx+1:]
+	return nil
+}
+
+// makeFieldsFromSchema returns a field for every column defined in the header.
+func makeFieldsFromSchema(header []string, schema []fieldSchema, ignoreUnknown bool, size int) []*data.Field {
+	fields := make([]*data.Field, len(header))
+
+	for i, name := range header {
+		sch, ok := findSchema(schema, name)
+		if !ok {
+			if ignoreUnknown {
+				continue
+			}
+
+			// Fields without a schema defaults to a string type.
+			sch = fieldSchema{Name: name, Type: "string"}
+		}
+
+		f := data.NewFieldFromFieldType(fieldType(sch.Type), size)
+		f.Name = name
+
+		fields[i] = f
+	}
+
+	return fields
 }
 
 func fieldType(str string) data.FieldType {
@@ -210,13 +222,23 @@ func fieldType(str string) data.FieldType {
 	}
 }
 
-func schemaContains(fields []fieldSchema, name string) (fieldSchema, bool) {
+func findSchema(fields []fieldSchema, name string) (fieldSchema, bool) {
 	for _, sch := range fields {
 		if sch.Name == name {
 			return sch, true
 		}
 	}
 	return fieldSchema{}, false
+}
+
+func splitNumberParts(str string, sep string) (string, string) {
+	idx := strings.LastIndex(str, sep)
+
+	if idx < 0 {
+		return str, "0"
+	}
+
+	return str[:idx], str[idx+1:]
 }
 
 // detectTimeLayoutNaive attempts to parse the string from a set of layouts, and
