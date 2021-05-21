@@ -1,24 +1,31 @@
 import React from 'react';
-import { CSVQuery } from './types';
+import { CSVDataSourceOptions, CSVQuery } from './types';
 import { TabbedQueryEditor } from 'components/TabbedQueryEditor';
 import { FieldEditor } from 'components/FieldEditor';
 import { DataSource } from 'datasource';
 import { InfoBox, InlineField, InlineFieldRow, Switch } from '@grafana/ui';
+import { QueryEditorProps } from '@grafana/data';
 
-interface Props {
-  query: CSVQuery;
-  onChange: (query: CSVQuery) => void;
-  onRunQuery: () => void;
-  datasource: DataSource;
+interface Props extends QueryEditorProps<DataSource, CSVQuery, CSVDataSourceOptions> {
+  limitFields?: number;
+  editorContext?: string;
 }
 
 export const QueryEditor = (props: Props) => {
-  const { query, onChange, onRunQuery } = props;
+  const { query, onChange, onRunQuery, limitFields, editorContext } = props;
 
   return (
     <TabbedQueryEditor
       {...props}
-      fieldsTab={<FieldEditor query={query} onChange={onChange} onRunQuery={onRunQuery} />}
+      fieldsTab={
+        <FieldEditor
+          query={query}
+          onChange={onChange}
+          onRunQuery={onRunQuery}
+          limit={limitFields}
+          editorContext={editorContext || 'default'}
+        />
+      }
       experimentalTab={
         <>
           <InfoBox severity="warning" style={{ maxWidth: '700px', whiteSpace: 'normal' }}>

@@ -62,7 +62,7 @@ export class DataSource extends DataSourceWithBackend<CSVQuery, CSVDataSourceOpt
       return Promise.reject(err);
     }
 
-    if (!res || !res.data || res.data.length < 0) {
+    if (!res.data.length || !res.data[0].fields.length) {
       return [];
     }
 

@@ -8,9 +8,10 @@ import { Icon, InlineFieldRow } from '@grafana/ui';
 interface Props {
   value: FieldSchema[];
   onChange: (value: FieldSchema[]) => void;
+  limit?: number;
 }
 
-export const SchemaEditor = ({ value, onChange }: Props) => {
+export const SchemaEditor = ({ value, onChange, limit }: Props) => {
   const [internalValue, setInternalValue] = useState(value);
 
   useEffect(() => {
@@ -23,14 +24,18 @@ export const SchemaEditor = ({ value, onChange }: Props) => {
     onChange(res);
   };
   const onAppendField = () => {
-    const res = [...internalValue, { name: '', type: 'string' }];
-    setInternalValue(res);
-    onChange(res);
+    if (!limit || value.length < limit) {
+      const res = [...internalValue, { name: '', type: 'string' }];
+      setInternalValue(res);
+      onChange(res);
+    }
   };
   const onAddField = (idx: number) => {
-    const res = [...internalValue.slice(0, idx + 1), { name: '', type: 'string' }, ...internalValue.slice(idx + 1)];
-    setInternalValue(res);
-    onChange(res);
+    if (!limit || value.length < limit) {
+      const res = [...internalValue.slice(0, idx + 1), { name: '', type: 'string' }, ...internalValue.slice(idx + 1)];
+      setInternalValue(res);
+      onChange(res);
+    }
   };
   const onRemoveField = (idx: number) => {
     const res = internalValue.filter((_, i) => i !== idx);
@@ -48,9 +53,11 @@ export const SchemaEditor = ({ value, onChange }: Props) => {
         <InlineFieldRow key={i}>
           <CSVQueryField field={_} onFieldChange={onFieldChange(i)} />
 
-          <a className="gf-form-label">
-            <Icon name="plus" size="lg" onClick={() => onAddField(i)} />
-          </a>
+          {(!limit || value.length < limit) && (
+            <a className="gf-form-label">
+              <Icon name="plus" size="lg" onClick={() => onAddField(i)} />
+            </a>
+          )}
           {internalValue.length > 1 && (
             <a className="gf-form-label">
               <Icon name="minus" size="lg" onClick={() => onRemoveField(i)} />

@@ -10,9 +10,11 @@ interface Props {
   query: CSVQuery;
   onChange: (query: CSVQuery) => void;
   onRunQuery: () => void;
+  limit?: number;
+  editorContext: string;
 }
 
-export const FieldEditor = ({ query, onChange, onRunQuery }: Props) => {
+export const FieldEditor = ({ query, onChange, onRunQuery, limit, editorContext }: Props) => {
   const { header, skipRows, delimiter, decimalSeparator, ignoreUnknown, schema } = defaults(query, defaultQuery);
 
   const [numSkipRows, setNumSkipRows] = useState(skipRows?.toString());
@@ -93,11 +95,15 @@ export const FieldEditor = ({ query, onChange, onRunQuery }: Props) => {
         <InlineField label="Header" tooltip="Data contains a header row with field names">
           <Switch value={header} onChange={onHeaderChange} />
         </InlineField>
-        <InlineField label="Ignore unknown" tooltip="Ignore fields that aren't defined in the schema">
+        <InlineField
+          disabled={editorContext === 'variables'}
+          label="Ignore unknown"
+          tooltip="Ignore fields that aren't defined in the schema"
+        >
           <Switch value={ignoreUnknown} onChange={onIgnoreUnknownChange} />
         </InlineField>
       </InlineFieldRow>
-      <SchemaEditor value={schema} onChange={onSchemaChange} />
+      <SchemaEditor value={schema} onChange={onSchemaChange} limit={limit} />
     </>
   );
 };
