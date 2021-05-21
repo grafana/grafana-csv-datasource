@@ -9,10 +9,12 @@ The query editor for the CSV data source consists of a number of tabs. Each tab 
 
 ### Fields
 
+![Fields](../static/img/editor-fields.png)
+
 The **Fields** tab is where you configure how to parse the data returned by the URL configured in the data source configuration.
 
 - **Delimiter** defines how columns are separated in the file.
-- **Decimal separator** lets you define the character used to separate the integer and fractional part of a number.
+- **Decimal separator** defines the character used to separate the integer and fractional part of a number.
 - **Skip leading rows** allows you to ignore a number of rows at the start of the data. This can be useful if your data contains comments, documentations, or other information before the data.
 - **Header** tells Grafana whether the first row contains the names of each column.
 - **Ignore unknown** toggles whether to display columns that aren't defined in the schema. This can be useful if you're only interested in a few columns.
@@ -28,6 +30,8 @@ The contents of this tab depends on whether the data source is set to HTTP or Lo
 
 #### HTTP
 
+![Path](../static/img/editor-path.png)
+
 The drop-down box to the left lets you configure the **HTTP method** of the request sent to the URL and can be set to **GET** and **POST**.
 
 The text box lets you append a path to the URL in the data source configuration. This can be used to dynamically change the request URL using [variables](https://grafana.com/docs/grafana/latest/variables/).
@@ -36,11 +40,15 @@ For example, by setting the path to `/movies/${movie}/summary` you can query the
 
 #### Local
 
-The **Relative path** lets you append a relative path to the one in the data source configuration. For example, you can use the same data source to load multiple files by setting the **Path** in the data source configuration to a directory, and then use the **Relative path** to load a file within that directory.
+![Path](../static/img/editor-local-path.png)
+
+**Relative path** lets you append a relative path to the one in the data source configuration. For example, you can use the same data source to load multiple files by setting the **Path** in the data source configuration to a directory, and then use the **Relative path** to load a file within that directory.
 
 ### Params
 
 > Only available in HTTP mode.
+
+![Params](../static/img/editor-params.png)
 
 Add any parameters you'd like to send as part of the query string. For example, the parameters in the screenshot gets encoded as `?category=movies`.
 
@@ -54,6 +62,8 @@ Any query parameters that have been set by the administrator in the data source 
 
 > Only available in HTTP mode.
 
+![Headers](../static/img/editor-headers.png)
+
 Add any parameters you'd like to send as HTTP headers.
 
 Both the **Key** and **Value** fields support [variables](https://grafana.com/docs/grafana/latest/variables/).
@@ -61,6 +71,8 @@ Both the **Key** and **Value** fields support [variables](https://grafana.com/do
 ### Body
 
 > Only available in HTTP mode.
+
+![Body](../static/img/editor-body.png)
 
 Sets the text to send as a request body.
 
