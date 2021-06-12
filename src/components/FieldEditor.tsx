@@ -1,10 +1,9 @@
 import defaults from 'lodash/defaults';
 import React, { FormEvent, useState } from 'react';
 import { SelectableValue } from '@grafana/data';
-import { SchemaEditor } from './SchemaEditor';
-import { CSVQuery } from '../types';
-import { defaultQuery, FieldSchema } from '../types';
 import { InlineFieldRow, InlineField, Select, Switch, Input } from '@grafana/ui';
+import { SchemaEditor } from './SchemaEditor';
+import { CSVQuery, defaultQuery, FieldSchema } from '../types';
 
 interface Props {
   query: CSVQuery;

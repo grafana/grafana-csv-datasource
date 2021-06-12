@@ -2,11 +2,10 @@ import defaults from 'lodash/defaults';
 import React, { useState } from 'react';
 import { InlineFieldRow, InlineField, RadioButtonGroup, CodeEditor, useTheme, InfoBox, Input } from '@grafana/ui';
 import { TimeRange } from '@grafana/data';
-import { CSVQuery, defaultQuery } from '../types';
+import { CSVQuery, defaultQuery, Pair } from '../types';
 import { KeyValueEditor } from './KeyValueEditor';
 import AutoSizer from 'react-virtualized-auto-sizer';
 import { css } from 'emotion';
-import { Pair } from '../types';
 import { DataSource } from 'datasource';
 import { PathEditor } from './PathEditor';
 
