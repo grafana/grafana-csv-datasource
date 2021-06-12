@@ -1,8 +1,7 @@
-import React from 'react';
-
-import { CSVQuery } from './types';
-import { QueryEditor } from './QueryEditor';
 import { DataSource } from 'datasource';
+import React from 'react';
+import { QueryEditor } from './QueryEditor';
+import { CSVQuery } from './types';
 
 interface Props {
   query: CSVQuery;

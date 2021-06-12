@@ -1,9 +1,8 @@
-import React from 'react';
-
 import { QueryEditorProps } from '@grafana/data';
+import React from 'react';
 import { DataSource } from './datasource';
-import { CSVDataSourceOptions, CSVQuery } from './types';
 import { QueryEditor } from './QueryEditor';
+import { CSVDataSourceOptions, CSVQuery } from './types';
 
 type Props = QueryEditorProps<DataSource, CSVQuery, CSVDataSourceOptions>;
 

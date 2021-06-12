@@ -1,9 +1,8 @@
-import React, { useState, useEffect } from 'react';
-
-import { FieldSchema } from '../types';
 import {} from '@emotion/core';
-import { CSVQueryField } from './CSVQueryField';
 import { Icon, InlineFieldRow } from '@grafana/ui';
+import React, { useEffect, useState } from 'react';
+import { FieldSchema } from '../types';
+import { CSVQueryField } from './CSVQueryField';
 
 interface Props {
   value: FieldSchema[];

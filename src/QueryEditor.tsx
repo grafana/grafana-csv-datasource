@@ -1,10 +1,10 @@
+import { QueryEditorProps } from '@grafana/data';
+import { InfoBox, InlineField, InlineFieldRow, Switch } from '@grafana/ui';
+import { FieldEditor } from 'components/FieldEditor';
+import { TabbedQueryEditor } from 'components/TabbedQueryEditor';
+import { DataSource } from 'datasource';
 import React from 'react';
 import { CSVDataSourceOptions, CSVQuery } from './types';
-import { TabbedQueryEditor } from 'components/TabbedQueryEditor';
-import { FieldEditor } from 'components/FieldEditor';
-import { DataSource } from 'datasource';
-import { InfoBox, InlineField, InlineFieldRow, Switch } from '@grafana/ui';
-import { QueryEditorProps } from '@grafana/data';
 
 interface Props extends QueryEditorProps<DataSource, CSVQuery, CSVDataSourceOptions> {
   limitFields?: number;

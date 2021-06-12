@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from 'react';
-import { InlineField, Select, QueryField } from '@grafana/ui';
-import { FieldSchema } from 'types';
 import { SelectableValue } from '@grafana/data';
+import { InlineField, QueryField, Select } from '@grafana/ui';
+import React, { useEffect, useState } from 'react';
+import { FieldSchema } from 'types';
 
 interface Props {
   field: FieldSchema;

@@ -1,12 +1,9 @@
-import defaults from 'lodash/defaults';
-
-import React, { ChangeEvent } from 'react';
-
-import { LegacyForms, DataSourceHttpSettings, RadioButtonGroup, Field, Legend, InlineField } from '@grafana/ui';
-import { DataSourcePluginOptionsEditorProps } from '@grafana/data';
-import { CSVDataSourceOptions, defaultOptions } from './types';
-
 import {} from '@emotion/core';
+import { DataSourcePluginOptionsEditorProps } from '@grafana/data';
+import { DataSourceHttpSettings, Field, InlineField, LegacyForms, Legend, RadioButtonGroup } from '@grafana/ui';
+import defaults from 'lodash/defaults';
+import React, { ChangeEvent } from 'react';
+import { CSVDataSourceOptions, defaultOptions } from './types';
 
 const { Input, FormField } = LegacyForms;
 
