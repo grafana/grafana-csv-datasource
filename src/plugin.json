@@ -36,10 +36,8 @@
       }
     ],
     "screenshots": [
-      {
-        "name": "CSV",
-        "path": "img/screenshot.png"
-      }
+      { "name": "Explore (Dark)", "path": "img/dark.png" },
+      { "name": "Explore (Light)", "path": "img/light.png" }
     ],
     "version": "%VERSION%",
     "updated": "%TODAY%"

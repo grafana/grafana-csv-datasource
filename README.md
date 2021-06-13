@@ -9,7 +9,7 @@
 
 A data source for loading CSV data into [Grafana](https://grafana.com).
 
-![Screenshot](https://github.com/marcusolsson/grafana-csv-datasource/raw/main/src/img/screenshot.png)
+![Screenshot](https://github.com/marcusolsson/grafana-csv-datasource/raw/main/src/img/dark.png)
 
 ## Documentation
 
