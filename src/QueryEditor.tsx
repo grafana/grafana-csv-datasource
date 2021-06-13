@@ -1,5 +1,5 @@
 import { QueryEditorProps } from '@grafana/data';
-import { InfoBox, InlineField, InlineFieldRow, Switch } from '@grafana/ui';
+import { InfoBox, InlineField, InlineFieldRow, InlineSwitch, Switch } from '@grafana/ui';
 import { FieldEditor } from 'components/FieldEditor';
 import { TabbedQueryEditor } from 'components/TabbedQueryEditor';
 import { DataSource } from 'datasource';
@@ -13,6 +13,8 @@ interface Props extends QueryEditorProps<DataSource, CSVQuery, CSVDataSourceOpti
 
 export const QueryEditor = (props: Props) => {
   const { query, onChange, onRunQuery, limitFields, editorContext } = props;
+
+  const InlineSwitchFallback = InlineSwitch ?? Switch;
 
   return (
     <TabbedQueryEditor
@@ -54,7 +56,7 @@ export const QueryEditor = (props: Props) => {
                 </>
               }
             >
-              <Switch
+              <InlineSwitchFallback
                 value={!!query.experimental?.regex}
                 onChange={(e) => {
                   onChange({

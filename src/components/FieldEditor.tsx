@@ -1,5 +1,5 @@
 import { SelectableValue } from '@grafana/data';
-import { InlineField, InlineFieldRow, Input, Select, Switch } from '@grafana/ui';
+import { InlineField, InlineFieldRow, InlineSwitch, Input, Select, Switch } from '@grafana/ui';
 import defaults from 'lodash/defaults';
 import React, { FormEvent, useState } from 'react';
 import { CSVQuery, defaultQuery, FieldSchema } from '../types';
@@ -58,6 +58,8 @@ export const FieldEditor = ({ query, onChange, onRunQuery, limit, editorContext 
     onRunQuery();
   };
 
+  const InlineSwitchFallback = InlineSwitch ?? Switch;
+
   return (
     <>
       <InlineFieldRow>
@@ -92,14 +94,14 @@ export const FieldEditor = ({ query, onChange, onRunQuery, limit, editorContext 
           />
         </InlineField>
         <InlineField label="Header" tooltip="Data contains a header row with field names">
-          <Switch value={header} onChange={onHeaderChange} />
+          <InlineSwitchFallback value={header} onChange={onHeaderChange} />
         </InlineField>
         <InlineField
           disabled={editorContext === 'variables'}
           label="Ignore unknown"
           tooltip="Ignore fields that aren't defined in the schema"
         >
-          <Switch value={ignoreUnknown} onChange={onIgnoreUnknownChange} />
+          <InlineSwitchFallback value={ignoreUnknown} onChange={onIgnoreUnknownChange} />
         </InlineField>
       </InlineFieldRow>
       <SchemaEditor value={schema} onChange={onSchemaChange} limit={limit} />
