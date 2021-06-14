@@ -23,12 +23,14 @@
     "url": "https://marcus.se.net"
   },
   "devDependencies": {
-    "@grafana/data": "7.5.7",
-    "@grafana/runtime": "7.5.7",
-    "@grafana/toolkit": "7.5.7",
-    "@grafana/ui": "7.5.7",
+    "@emotion/core": "10.0.27",
+    "@grafana/data": "8.0.1",
+    "@grafana/runtime": "8.0.1",
+    "@grafana/toolkit": "8.0.1",
+    "@grafana/ui": "8.0.1",
     "@types/lodash": "^4.14.168",
     "@types/react-virtualized-auto-sizer": "^1.0.0",
+    "emotion": "10.0.27",
     "react-virtualized-auto-sizer": "^1.0.4"
   },
   "engines": {
@@ -36,5 +38,8 @@
   },
   "resolutions": {
     "rxjs": "6.6.3"
+  },
+  "dependencies": {
+    "tslib": "^2.3.0"
   }
 }
