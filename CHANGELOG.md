@@ -1,5 +1,18 @@
 # Changelog
 
+## 0.6.0 (2021-03-21)
+
+[Full changelog](https://github.com/marcusolsson/grafana-csv-datasource/compare/v0.5.0...v0.6.0)
+
+### Enhancements
+
+- Disable local mode by default. To use local mode, allow it in your grafana.ini:
+
+  ```ini
+  [plugin.marcusolsson-csv-datasource]
+  allow_local_mode = true
+  ```
+
 ## 0.5.0 (2021-03-21)
 
 [Full changelog](https://github.com/marcusolsson/grafana-csv-datasource/compare/v0.4.1...v0.5.0)

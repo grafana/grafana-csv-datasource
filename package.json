@@ -1,6 +1,6 @@
 {
   "name": "marcusolsson-csv-datasource",
-  "version": "0.5.0",
+  "version": "0.6.0",
   "description": "A Grafana data source for loading CSV data",
   "keywords": [
     "grafana",
