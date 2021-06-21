@@ -6,6 +6,7 @@ import (
 	"errors"
 	"io"
 	"net/http"
+	"os"
 	"path/filepath"
 	"sync"
 
@@ -34,6 +35,7 @@ type dataSourceQuery struct {
 type dataSource struct {
 	instanceManager instancemgmt.InstanceManager
 	logger          log.Logger
+	allowLocalMode  bool
 }
 
 func newDataSource(logger log.Logger) *dataSource {
@@ -42,6 +44,7 @@ func newDataSource(logger log.Logger) *dataSource {
 	return &dataSource{
 		instanceManager: instanceManager,
 		logger:          logger,
+		allowLocalMode:  os.Getenv("GF_PLUGIN_ALLOW_LOCAL_MODE") != "",
 	}
 }
 
@@ -76,6 +79,15 @@ func (ds *dataSource) query(ctx context.Context, query backend.DataQuery, instan
 	var dsQuery dataSourceQuery
 	if err := json.Unmarshal(query.JSON, &dsQuery); err != nil {
 		return backend.DataResponse{Error: err}
+	}
+
+	settings, err := instance.Settings()
+	if err != nil {
+		return backend.DataResponse{Error: err}
+	}
+
+	if settings.Storage == "local" && !ds.allowLocalMode {
+		return backend.DataResponse{Error: errors.New("local mode has been disabled by your administrator")}
 	}
 
 	store, err := newStorage(instance, dsQuery, ds.logger)
