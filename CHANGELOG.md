@@ -1,6 +1,6 @@
 # Changelog
 
-## 0.6.1 (2021-03-21)
+## 0.6.1 (2021-06-22)
 
 [Full changelog](https://github.com/marcusolsson/grafana-csv-datasource/compare/v0.6.0...v0.6.1)
 
@@ -8,7 +8,7 @@
 
 - allow_local_mode accepts any value
 
-## 0.6.0 (2021-03-21)
+## 0.6.0 (2021-06-21)
 
 [Full changelog](https://github.com/marcusolsson/grafana-csv-datasource/compare/v0.5.0...v0.6.0)
 
