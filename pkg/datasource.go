@@ -44,7 +44,7 @@ func newDataSource(logger log.Logger) *dataSource {
 	return &dataSource{
 		instanceManager: instanceManager,
 		logger:          logger,
-		allowLocalMode:  os.Getenv("GF_PLUGIN_ALLOW_LOCAL_MODE") != "",
+		allowLocalMode:  os.Getenv("GF_PLUGIN_ALLOW_LOCAL_MODE") == "true",
 	}
 }
 
