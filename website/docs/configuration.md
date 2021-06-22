@@ -9,5 +9,15 @@ title: Configuration
 1. Click **Add data source** in the top-right corner of the **Data Sources** tab
 1. Enter "CSV" in the search box to find the CSV data source
 1. Click the search result that says "CSV"
+1. In **URL**, enter a URL that points to CSV content
 
-The data source has been added, but it needs some more configuration before you can use it.
+## Allow local mode
+
+Reading files from the local file system is disabled by default.
+
+To allow local mode, add the following to your Grafana config file:
+
+```ini
+[plugin.marcusolsson-csv-datasource]
+allow_local_mode = true
+```
