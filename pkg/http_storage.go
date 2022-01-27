@@ -6,11 +6,10 @@ import (
 	"net/http"
 	"net/url"
 	"strings"
-	"time"
 
 	"github.com/grafana/grafana-plugin-sdk-go/backend"
+	"github.com/grafana/grafana-plugin-sdk-go/backend/httpclient"
 	"github.com/grafana/grafana-plugin-sdk-go/backend/log"
-	"github.com/marcusolsson/grafana-csv-datasource/pkg/httpclient"
 )
 
 type httpStorage struct {
@@ -26,7 +25,12 @@ func newHTTPStorage(instance *dataSourceInstance, query dataSourceQuery, logger 
 		return nil, err
 	}
 
-	httpClient, err := httpclient.New(&instance.settings, 10*time.Second, logger)
+	httpOptions, err := instance.settings.HTTPClientOptions()
+	if err != nil {
+		return nil, err
+	}
+
+	httpClient, err := httpclient.New(httpOptions)
 	if err != nil {
 		return nil, err
 	}
