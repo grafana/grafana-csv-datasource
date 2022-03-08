@@ -14,3 +14,9 @@ A data source for loading CSV data into [Grafana](https://grafana.com).
 ## Documentation
 
 Full documentation for the plugin is available on the [website](https://marcusolsson.github.io/grafana-csv-datasource).
+
+## Maintenance
+
+I maintain [several plugins](https://marcus.se.net/projects/) for Grafana. While my employer allows me to spend some time on developing plugins, most of the work happens on evenings and weekends. At the moment, I'm prioritizing fixing bugs and reviewing PRs over introducing new features.
+
+If you'd still like to propose a new feature, [create a new Discussion](https://github.com/marcusolsson/grafana-csv-datasource/discussions/new?category=ideas). While I likely won't be able to work on features myself, I'd be happy to accept pull requests. If you'd like to contribute a feature, please let me know before you start working on it.
