@@ -27,12 +27,18 @@ type csvOptions struct {
 	Schema           []fieldSchema `json:"schema"`
 	SkipRows         int           `json:"skipRows"`
 	DecimalSeparator string        `json:"decimalSeparator"`
+	Timezone         string        `json:"timezone"`
 }
 
 func parseCSV(opts csvOptions, regex bool, r io.Reader, logger log.Logger) ([]*data.Field, error) {
 	header, rows, err := readCSV(opts, r)
 	if err != nil {
 		return nil, err
+	}
+
+	location, err := time.LoadLocation(opts.Timezone)
+	if err != nil {
+		panic(err)
 	}
 
 	fields := makeFieldsFromSchema(header, opts.Schema, len(rows), opts.IgnoreUnknown, regex)
@@ -63,7 +69,7 @@ func parseCSV(opts csvOptions, regex bool, r io.Reader, logger log.Logger) ([]*d
 			}
 
 			for rowIdx := 0; rowIdx < f.Len(); rowIdx++ {
-				if err := parseCell(rows[rowIdx][fieldIdx], opts, timeLayout, rowIdx, f); err != nil {
+				if err := parseCell(rows[rowIdx][fieldIdx], opts, timeLayout, rowIdx, f, location); err != nil {
 					// Ignore any cells that couldn't be parsed.
 					f.Set(rowIdx, nil)
 				}
@@ -127,7 +133,7 @@ func readCSV(opts csvOptions, r io.Reader) ([]string, [][]string, error) {
 	return header, rows, nil
 }
 
-func parseCell(value string, opts csvOptions, timeLayout string, rowIdx int, f *data.Field) error {
+func parseCell(value string, opts csvOptions, timeLayout string, rowIdx int, f *data.Field, tz *time.Location) error {
 	switch f.Type() {
 	case data.FieldTypeNullableFloat64:
 		intPart, fracPart := splitNumberParts(value, opts.DecimalSeparator)
@@ -171,7 +177,7 @@ func parseCell(value string, opts csvOptions, timeLayout string, rowIdx int, f *
 		}
 
 		if timeLayout != "" {
-			t, err := time.Parse(timeLayout, value)
+			t, err := time.ParseInLocation(timeLayout, value, tz)
 			if err == nil {
 				f.Set(rowIdx, &t)
 				return nil
