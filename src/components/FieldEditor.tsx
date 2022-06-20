@@ -4,6 +4,7 @@ import defaults from 'lodash/defaults';
 import React, { FormEvent, useState } from 'react';
 import { CSVQuery, defaultQuery, FieldSchema } from '../types';
 import { SchemaEditor } from './SchemaEditor';
+import momentTz from 'moment-timezone';
 
 interface Props {
   query: CSVQuery;
@@ -14,7 +15,10 @@ interface Props {
 }
 
 export const FieldEditor = ({ query, onChange, onRunQuery, limit, editorContext }: Props) => {
-  const { header, skipRows, delimiter, decimalSeparator, ignoreUnknown, schema } = defaults(query, defaultQuery);
+  const { header, skipRows, delimiter, decimalSeparator, ignoreUnknown, schema, timezone } = defaults(
+    query,
+    defaultQuery
+  );
 
   const [numSkipRows, setNumSkipRows] = useState(skipRows?.toString());
 
@@ -23,6 +27,13 @@ export const FieldEditor = ({ query, onChange, onRunQuery, limit, editorContext 
     { label: 'Semicolon', value: ';' },
     { label: 'Tab', value: '\t' },
   ];
+
+  const tzData = momentTz.tz.names().map((s: string) => ({ label: s, value: s }));
+
+  const onTzChange = (value: SelectableValue<string>) => {
+    onChange({ ...query, timezone: value.value ?? 'UTC' });
+    onRunQuery();
+  };
 
   const onDelimiterChange = (value: SelectableValue<string>) => {
     onChange({ ...query, delimiter: value.value ?? ',' });
@@ -103,7 +114,11 @@ export const FieldEditor = ({ query, onChange, onRunQuery, limit, editorContext 
         >
           <InlineSwitchFallback value={ignoreUnknown} onChange={onIgnoreUnknownChange} />
         </InlineField>
+        <InlineField label="Timezone" tooltip="Timezone timestamps without explicit Zone are parsed in">
+          <Select width={20} value={tzData.find((_) => _.value === timezone)} onChange={onTzChange} options={tzData} />
+        </InlineField>
       </InlineFieldRow>
+
       <SchemaEditor value={schema} onChange={onSchemaChange} limit={limit} />
     </>
   );

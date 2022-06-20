@@ -11,6 +11,7 @@ export interface CSVQuery extends DataQuery {
   header: boolean;
   ignoreUnknown: boolean;
   skipRows: number;
+  timezone: string;
   decimalSeparator: string;
 
   method: string;
