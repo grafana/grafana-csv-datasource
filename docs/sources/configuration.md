@@ -19,7 +19,6 @@ To add a CSV data source to Grafana:
 ## Allow local mode
 
 The plugin disables reading files from the local file system by default.
-
 To allow local mode, add `allow_local_mode` to the plugin's configuration in your [Grafana configuration file](https://grafana.com/docs/grafana/latest/setup-grafana/configure-grafana/):
 
 ```ini
