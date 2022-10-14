@@ -1,6 +1,6 @@
 {
-  "name": "marcusolsson-csv-datasource",
-  "version": "0.6.1",
+  "name": "grafana-csv-datasource",
+  "version": "0.6.2",
   "description": "A Grafana data source for loading CSV data",
   "keywords": [
     "grafana",
@@ -15,12 +15,11 @@
     "sign": "grafana-toolkit plugin:sign"
   },
   "homepage": "https://grafana.com/plugins/marcusolsson-csv-datasource",
-  "bugs": "https://github.com/marcusolsson/grafana-csv-datasource/issues",
-  "repository": "github:marcusolsson/grafana-csv-datasource",
+  "bugs": "https://github.com/grafana/grafana-csv-datasource/issues",
+  "repository": "github:grafana/grafana-csv-datasource",
   "author": {
-    "name": "Marcus Olsson",
-    "email": "marcus.olsson@hey.com",
-    "url": "https://marcus.se.net"
+    "name": "Grafana Labs",
+    "url": "https://grafana.com"
   },
   "devDependencies": {
     "@emotion/core": "10.0.27",
