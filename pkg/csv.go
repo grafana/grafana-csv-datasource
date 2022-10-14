@@ -156,7 +156,7 @@ func parseCell(value string, opts csvOptions, timeLayout string, rowIdx int, f *
 			}
 		}, intPart) + "." + fracPart
 
-		n, err := strconv.ParseFloat(converted, 10)
+		n, err := strconv.ParseFloat(converted, 64)
 		if err != nil {
 			return err
 		}
