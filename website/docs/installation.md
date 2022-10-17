@@ -45,7 +45,7 @@ grafana-cli.exe plugins install marcusolsson-csv-datasource
 
 ## Install manually
 
-1. Go to [Releases](https://github.com/marcusolsson/grafana-csv-datasource/releases) on the GitHub project page
+1. Go to [Releases](https://github.com/grafana/grafana-csv-datasource/releases) on the GitHub project page
 1. Find the release you want to install
 1. Download the release by clicking the release asset called `marcusolsson-csv-datasource-<version>.zip`. You may need to uncollapse the **Assets** section to see it.
 1. Install the plugin into the Grafana plugins directory

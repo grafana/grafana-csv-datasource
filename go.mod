@@ -1,4 +1,4 @@
-module github.com/marcusolsson/grafana-csv-datasource
+module github.com/grafana/grafana-csv-datasource
 
 go 1.17
 

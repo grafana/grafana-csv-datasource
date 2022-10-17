@@ -47,7 +47,7 @@ export const QueryEditor = (props: Props) => {
                     }
                   </p>
                   <a
-                    href="https://github.com/marcusolsson/grafana-csv-datasource/issues/68"
+                    href="https://github.com/grafana/grafana-csv-datasource/issues/68"
                     target="_blank"
                     rel="noreferrer"
                   >
