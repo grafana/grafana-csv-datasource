@@ -54,7 +54,7 @@ export class DataSource extends DataSourceWithBackend<CSVQuery, CSVDataSourceOpt
       rangeRaw: options.rangeRaw,
     } as DataQueryRequest<CSVQuery>;
 
-    let res: DataQueryResponse;
+    let res: DataQueryResponse | undefined;
 
     try {
       res = await this.query(request).toPromise();
@@ -62,10 +62,10 @@ export class DataSource extends DataSourceWithBackend<CSVQuery, CSVDataSourceOpt
       return Promise.reject(err);
     }
 
-    if (!res.data.length || !res.data[0].fields.length) {
+    if (res && (!res.data.length || !res.data[0].fields.length)) {
       return [];
     }
 
-    return (res.data[0] as DataFrame).fields[0].values.toArray().map((_) => ({ text: _.toString() }));
+    return res ? (res.data[0] as DataFrame).fields[0].values.toArray().map((_) => ({ text: _.toString() })) : [];
   }
 }

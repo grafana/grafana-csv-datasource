@@ -1,0 +1,29 @@
+{
+  "ignorePaths": [
+    ".github/**",
+    "node_modules/**",
+    "website/node_modules/**",
+    "website/src/css/*.css",
+    "dist/**",
+    "cypress/**",
+    "provisioning/**",
+    "src/dashboards/**",
+    "yarn.lock",
+    "go.sum",
+    "mage_output_file.go"
+  ],
+  "words": [
+    "clsx",
+    "DataSource",
+    "DataSources",
+    "Grafana",
+    "httpclient",
+    "instancemgmt",
+    "Marcus",
+    "MarcusOlsson",
+    "Olsson",
+    "prismjs",
+    "testdata",
+    "uncollapse"
+  ]
+}

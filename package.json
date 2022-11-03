@@ -1,6 +1,6 @@
 {
   "name": "grafana-csv-datasource",
-  "version": "0.6.2",
+  "version": "0.6.3",
   "description": "A Grafana data source for loading CSV data",
   "keywords": [
     "grafana",
@@ -8,6 +8,7 @@
   ],
   "license": "Apache-2.0",
   "scripts": {
+    "spellcheck": "cspell -c cspell.config.json \"**/*.{ts,tsx,js,go,md,mdx,yml,yaml,json,scss,css}\"",
     "build": "grafana-toolkit plugin:build",
     "test": "grafana-toolkit plugin:test",
     "dev": "grafana-toolkit plugin:dev",
@@ -21,25 +22,27 @@
     "name": "Grafana Labs",
     "url": "https://grafana.com"
   },
-  "devDependencies": {
+  "dependencies": {
     "@emotion/core": "10.0.27",
-    "@grafana/data": "8.3.4",
-    "@grafana/runtime": "8.3.4",
-    "@grafana/toolkit": "8.3.4",
-    "@grafana/ui": "8.3.4",
-    "@types/lodash": "^4.14.168",
-    "@types/react-virtualized-auto-sizer": "^1.0.0",
+    "@grafana/data": "8.4.7",
+    "@grafana/runtime": "8.4.7",
+    "@grafana/ui": "8.4.7",
     "emotion": "10.0.27",
+    "moment-timezone": "0.5.38",
+    "tslib": "^2.3.0",
     "react-virtualized-auto-sizer": "^1.0.4"
   },
-  "engines": {
-    "node": ">=14"
+  "devDependencies": {
+    "@grafana/toolkit": "9.2.2",
+    "@types/lodash": "^4.14.168",
+    "@types/react-virtualized-auto-sizer": "^1.0.0",
+    "cspell": "6.13.3"
   },
   "resolutions": {
-    "rxjs": "6.6.3"
-  },
-  "dependencies": {
-    "moment-timezone": "^0.5.34",
-    "tslib": "^2.3.0"
+    "d3-color": "3.1.0",
+    "minimatch": "5.1.0",
+    "minimist": "1.2.7",
+    "moment": "2.29.4",
+    "prismjs": "1.29.0"
   }
 }
