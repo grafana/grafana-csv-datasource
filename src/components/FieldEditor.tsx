@@ -22,7 +22,7 @@ export const FieldEditor = ({ query, onChange, onRunQuery, limit, editorContext 
 
   const [numSkipRows, setNumSkipRows] = useState(skipRows?.toString());
 
-  const delimOptions = [
+  const delimiterOptions = [
     { label: 'Comma', value: ',' },
     { label: 'Semicolon', value: ';' },
     { label: 'Tab', value: '\t' },
@@ -77,9 +77,9 @@ export const FieldEditor = ({ query, onChange, onRunQuery, limit, editorContext 
         <InlineField label="Delimiter" tooltip="Character used to separate columns">
           <Select
             width={13}
-            value={delimOptions.find((_) => _.value === delimiter)}
+            value={delimiterOptions.find((_) => _.value === delimiter)}
             onChange={onDelimiterChange}
-            options={delimOptions}
+            options={delimiterOptions}
           />
         </InlineField>
         <InlineField
