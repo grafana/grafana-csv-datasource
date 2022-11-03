@@ -3,6 +3,7 @@
 ## 0.6.3 (2021-11-03)
 
 - **Chore** backend binaries are now compiled with go 1.19.3
+- **Chore** frontend npm dependencies updated
 - **Chore** added spellcheck
 
 ## 0.6.2 (2021-10-14)

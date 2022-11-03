@@ -28,14 +28,21 @@
     "@grafana/runtime": "8.4.7",
     "@grafana/ui": "8.4.7",
     "emotion": "10.0.27",
-    "moment-timezone": "^0.5.34",
+    "moment-timezone": "0.5.38",
     "tslib": "^2.3.0",
     "react-virtualized-auto-sizer": "^1.0.4"
   },
   "devDependencies": {
-    "@grafana/toolkit": "8.4.7",
+    "@grafana/toolkit": "9.2.2",
     "@types/lodash": "^4.14.168",
     "@types/react-virtualized-auto-sizer": "^1.0.0",
     "cspell": "6.13.3"
+  },
+  "resolutions": {
+    "d3-color": "3.1.0",
+    "minimatch": "5.1.0",
+    "minimist": "1.2.7",
+    "moment": "2.29.4",
+    "prismjs": "1.29.0"
   }
 }
