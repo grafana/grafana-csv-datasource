@@ -1,6 +1,10 @@
 # Changelog
 
-## 0.6.3 (2021-11-03)
+## 0.6.4 (2022-12-13)
+
+- **Chore** backend binaries are now compiled with go 1.19.4
+
+## 0.6.3 (2021-12-03)
 
 - **Chore** backend binaries are now compiled with go 1.19.3
 - **Chore** frontend npm dependencies updated
