@@ -1,8 +1,8 @@
 # Changelog
 
-## 0.6.4 (2022-12-13)
+## 0.6.4 (2023-04-19)
 
-- **Chore** backend binaries are now compiled with go 1.19.4
+- **Chore** backend binaries are now compiled with go 1.20.3
 
 ## 0.6.3 (2021-12-03)
 

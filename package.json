@@ -1,6 +1,6 @@
 {
   "name": "grafana-csv-datasource",
-  "version": "0.6.3",
+  "version": "0.6.4",
   "description": "A Grafana data source for loading CSV data",
   "keywords": [
     "grafana",

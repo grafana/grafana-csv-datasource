@@ -5,6 +5,7 @@
     "website/node_modules/**",
     "website/src/css/*.css",
     "dist/**",
+    "coverage/**",
     "cypress/**",
     "provisioning/**",
     "src/dashboards/**",
