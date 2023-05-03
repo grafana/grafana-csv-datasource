@@ -13,11 +13,13 @@ title: Configuration
 
 ## Allow local mode
 
-Reading files from the local file system is disabled by default.
+This allows you to read files from local computer.
 
-To allow local mode, add the following to your Grafana config file:
+Reading files from the local file system is disabled by default. To allow local mode, add the following to your Grafana config file:
 
 ```ini
 [plugin.marcusolsson-csv-datasource]
 allow_local_mode = true
 ```
+
+> Note: Local mode option is not available in Grafana Cloud and other hosted grafana environments. In such cases, use a web server such as nginx to serve the CSV files over http and then use http url such as `http://localhost/my-csv-app/my-csv-file.csv`.
