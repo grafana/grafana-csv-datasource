@@ -2,17 +2,17 @@
 
 ## 0.6.5 (2023-05-03)
 
-- **Chore** backend binaries are now compiled with go 1.20.4
+- ⚙️ **Chore**: backend binaries are now compiled with go 1.20.4
 
 ## 0.6.4 (2023-04-19)
 
-- **Chore** backend binaries are now compiled with go 1.20.3
+- ⚙️ **Chore**: backend binaries are now compiled with go 1.20.3
 
 ## 0.6.3 (2021-12-03)
 
-- **Chore** backend binaries are now compiled with go 1.19.3
-- **Chore** frontend npm dependencies updated
-- **Chore** added spellcheck
+- ⚙️ **Chore**: backend binaries are now compiled with go 1.19.3
+- ⚙️ **Chore**: frontend npm dependencies updated
+- ⚙️ **Chore**: added spellcheck
 
 ## 0.6.2 (2021-10-14)
 
@@ -102,7 +102,7 @@
 ### Bug fixes
 
 - Ignore empty custom HTTP headers
-- Fix duplicate JSON tag for TLS skip verify
+- 🐛 **Fix**: duplicate JSON tag for TLS skip verify
 
 ## 0.3.0
 
