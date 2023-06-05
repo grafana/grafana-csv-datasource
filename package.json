@@ -13,7 +13,8 @@
     "test": "grafana-toolkit plugin:test",
     "dev": "grafana-toolkit plugin:dev",
     "watch": "grafana-toolkit plugin:dev --watch",
-    "sign": "grafana-toolkit plugin:sign"
+    "sign": "grafana-toolkit plugin:sign",
+    "changeset": "changeset-improved"
   },
   "homepage": "https://grafana.com/plugins/marcusolsson-csv-datasource",
   "bugs": "https://github.com/grafana/grafana-csv-datasource/issues",
@@ -25,6 +26,7 @@
   "dependencies": {
     "@emotion/core": "10.0.27",
     "@grafana/data": "8.4.7",
+    "@grafana/plugin-ui": "^0.3.1",
     "@grafana/runtime": "8.4.7",
     "@grafana/ui": "8.4.7",
     "emotion": "10.0.27",
