@@ -1,6 +1,6 @@
 import { SelectableValue } from '@grafana/data';
 import { InlineField, QueryField, Select } from '@grafana/ui';
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { FieldSchema } from 'types';
 
 interface Props {
@@ -9,13 +9,9 @@ interface Props {
 }
 
 export const CSVQueryField = ({ field, onFieldChange }: Props) => {
-  const [name, setName] = useState(field.name);
-
-  useEffect(() => {
-    setName(field.name);
-  }, [field]);
-
-  const onNameChange = (value: string) => setName(value);
+  const onNameChange = (value: string) => {
+    onFieldChange({ ...field, name: value });
+  };
   const onTypeChange = (selectableValue: SelectableValue<string>) => {
     onFieldChange({ ...field, type: selectableValue.value! });
   };
@@ -23,12 +19,7 @@ export const CSVQueryField = ({ field, onFieldChange }: Props) => {
   return (
     <>
       <InlineField label="Field" tooltip={`Name of the CSV column to include.`} grow>
-        <QueryField
-          query={name}
-          onRunQuery={() => onFieldChange({ ...field, name })}
-          onChange={onNameChange}
-          portalOrigin="csv"
-        />
+        <QueryField query={field.name} onChange={onNameChange} portalOrigin="csv" />
       </InlineField>
       <InlineField label="Type" tooltip="Set the type of a field. By default, all fields have type String.">
         <Select
