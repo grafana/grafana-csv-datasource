@@ -1,5 +1,9 @@
 # Changelog
 
+## v0.6.6 - 2023-08-23
+
+- 🐛 **Fix**: Consistently apply field names
+
 ## v0.6.5 - 2023-05-03
 
 - ⚙️ **Chore**: backend binaries are now compiled with go 1.20.4
