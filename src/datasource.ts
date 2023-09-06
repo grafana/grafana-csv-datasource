@@ -8,6 +8,8 @@ import {
 } from '@grafana/data';
 import { DataSourceWithBackend, getTemplateSrv } from '@grafana/runtime';
 import { CSVDataSourceOptions, CSVQuery } from './types';
+import { Observable } from 'rxjs';
+import { trackRequest } from 'tracking';
 
 export class DataSource extends DataSourceWithBackend<CSVQuery, CSVDataSourceOptions> {
   jsonData: CSVDataSourceOptions;
@@ -16,6 +18,11 @@ export class DataSource extends DataSourceWithBackend<CSVQuery, CSVDataSourceOpt
     super(instanceSettings);
 
     this.jsonData = instanceSettings.jsonData;
+  }
+
+  query(request: DataQueryRequest<CSVQuery>): Observable<DataQueryResponse> {
+    trackRequest(request);
+    return super.query(request);
   }
 
   applyTemplateVariables(query: CSVQuery, scopedVars: ScopedVars): Record<string, any> {
