@@ -3,6 +3,7 @@
     ".github/**",
     "node_modules/**",
     "website/node_modules/**",
+    "website/build/**",
     "website/src/css/*.css",
     "dist/**",
     "coverage/**",
@@ -26,6 +27,7 @@
     "prismjs",
     "testdata",
     "uncollapse",
+    "typecheck",
     "changesets"
   ]
 }
