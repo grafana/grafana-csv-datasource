@@ -11,6 +11,8 @@ services:
         grafana_version: ${GRAFANA_VERSION:-10.0.3}
     ports:
       - 3000:3000/tcp
+    environment:
+      - GF_PLUGIN_ALLOW_LOCAL_MODE=true
     volumes:
       - ./dist:/var/lib/grafana/plugins/marcusolsson-csv-datasource
       - ./provisioning:/etc/grafana/provisioning
