@@ -1,11 +1,11 @@
+import { css } from '@emotion/css';
 import { TimeRange } from '@grafana/data';
 import { CodeEditor, InfoBox, InlineField, InlineFieldRow, Input, RadioButtonGroup, useTheme } from '@grafana/ui';
 import { DataSource } from 'datasource';
-import { css } from 'emotion';
 import defaults from 'lodash/defaults';
 import React, { useState } from 'react';
 import AutoSizer from 'react-virtualized-auto-sizer';
-import { CSVQuery, defaultQuery, Pair } from '../types';
+import { CSVQuery, Pair, defaultQuery } from '../types';
 import { KeyValueEditor } from './KeyValueEditor';
 import { PathEditor } from './PathEditor';
 
@@ -136,11 +136,11 @@ export const TabbedQueryEditor = ({ query, onChange, onRunQuery, fieldsTab, expe
                 margin-bottom: ${theme.spacing.sm};
               `}
             >
-              {({ width }) => (
+              {(size) => (
                 <CodeEditor
                   value={q.body || ''}
                   language={bodyType}
-                  width={width}
+                  width={size.width}
                   height="200px"
                   showMiniMap={false}
                   showLineNumbers={true}
