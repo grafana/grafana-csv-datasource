@@ -1,4 +1,3 @@
-import {} from '@emotion/core';
 import { Icon, InlineFieldRow } from '@grafana/ui';
 import React, { useEffect, useState } from 'react';
 import { FieldSchema } from '../types';

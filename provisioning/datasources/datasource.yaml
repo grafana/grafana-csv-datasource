@@ -11,6 +11,6 @@ datasources:
   - name: Employees
     type: marcusolsson-csv-datasource
     editable: true
-    url: /opt/testdata/employees.csv
+    url: /etc/grafana/provisioning/testdata/employees.csv
     jsonData:
       storage: local

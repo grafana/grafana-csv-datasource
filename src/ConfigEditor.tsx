@@ -1,4 +1,3 @@
-import {} from '@emotion/core';
 import { DataSourcePluginOptionsEditorProps } from '@grafana/data';
 import { DataSourceHttpSettings, Field, InlineField, LegacyForms, Legend, RadioButtonGroup } from '@grafana/ui';
 import defaults from 'lodash/defaults';

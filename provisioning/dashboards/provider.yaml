@@ -7,4 +7,4 @@ providers:
     updateIntervalSeconds: 1
     allowUiUpdates: true
     options:
-      path: /etc/grafana/dashboards
+      path: /etc/grafana/provisioning/dashboards/csv
