@@ -11,6 +11,9 @@ import { CSVDataSourceOptions, CSVQuery } from './types';
 import { Observable } from 'rxjs';
 import { trackRequest } from 'tracking';
 
+
+const numbers = [1,2,3,4]
+
 export class DataSource extends DataSourceWithBackend<CSVQuery, CSVDataSourceOptions> {
   jsonData: CSVDataSourceOptions;
 
