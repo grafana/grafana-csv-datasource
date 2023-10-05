@@ -49,7 +49,7 @@ func newDataSource(logger log.Logger) *dataSource {
 }
 
 func (ds *dataSource) QueryData(ctx context.Context, req *backend.QueryDataRequest) (*backend.QueryDataResponse, error) {
-	instance, err := ds.getInstance(req.PluginContext)
+	instance, err := ds.getInstance(ctx, req.PluginContext)
 	if err != nil {
 		return nil, err
 	}
@@ -116,7 +116,7 @@ func (ds *dataSource) query(ctx context.Context, query backend.DataQuery, instan
 
 // CheckHealth returns the current health of the backend.
 func (ds *dataSource) CheckHealth(ctx context.Context, req *backend.CheckHealthRequest) (*backend.CheckHealthResult, error) {
-	instance, err := ds.getInstance(req.PluginContext)
+	instance, err := ds.getInstance(ctx, req.PluginContext)
 	if err != nil {
 		return &backend.CheckHealthResult{
 			Status:  backend.HealthStatusError,
@@ -147,8 +147,8 @@ func (ds *dataSource) CheckHealth(ctx context.Context, req *backend.CheckHealthR
 	}, nil
 }
 
-func (ds *dataSource) getInstance(ctx backend.PluginContext) (*dataSourceInstance, error) {
-	instance, err := ds.instanceManager.Get(ctx)
+func (ds *dataSource) getInstance(ctx context.Context, pluginCtx backend.PluginContext) (*dataSourceInstance, error) {
+	instance, err := ds.instanceManager.Get(ctx, pluginCtx)
 	if err != nil {
 		return nil, err
 	}
@@ -161,7 +161,7 @@ type dataSourceInstance struct {
 	settings   backend.DataSourceInstanceSettings
 }
 
-func newDataSourceInstance(settings backend.DataSourceInstanceSettings) (instancemgmt.Instance, error) {
+func newDataSourceInstance(_ context.Context, settings backend.DataSourceInstanceSettings) (instancemgmt.Instance, error) {
 	return &dataSourceInstance{
 		httpClient: &http.Client{},
 		settings:   settings,
