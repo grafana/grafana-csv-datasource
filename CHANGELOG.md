@@ -1,5 +1,10 @@
 # Changelog
 
+## v0.6.7 - 2023-10-09
+
+- ⚙️ **Chore**: Upgrade dependencies
+- Added feature tracking
+
 ## v0.6.6 - 2023-08-23
 
 - 🐛 **Fix**: Consistently apply field names
