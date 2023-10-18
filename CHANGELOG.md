@@ -1,5 +1,9 @@
 # Changelog
 
+## v0.6.8 - 2023-10-18
+
+- ⚙️ **Chore**: Upgrade dependencies
+
 ## v0.6.7 - 2023-10-09
 
 - ⚙️ **Chore**: Upgrade dependencies
