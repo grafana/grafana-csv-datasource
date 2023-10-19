@@ -1,5 +1,10 @@
 # Changelog
 
+## v0.6.9 - 2023-10-19
+
+- 🐛 **Fix**: Correct query field behavior on older Grafana versions
+- ⚙️ **Chore**: Upgrade dependencies
+
 ## v0.6.8 - 2023-10-18
 
 - ⚙️ **Chore**: Upgrade dependencies
