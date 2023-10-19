@@ -19,7 +19,16 @@ export const CSVQueryField = ({ field, onFieldChange }: Props) => {
   return (
     <>
       <InlineField label="Field" tooltip={`Name of the CSV column to include.`} grow>
-        <QueryField query={field.name} onChange={onNameChange} portalOrigin="csv" />
+        <QueryField
+          query={field.name}
+          onChange={onNameChange}
+          portalOrigin="csv"
+          // https://github.com/grafana/grafana/commit/f6d3a5cc9411acf20c9a8a497c993667aa825062
+          // auto-adds the `onblur: empty-function` prop,
+          // but for older grafana versions we need to add this.
+          // we can remove this when we stop supporting grafana versions before that commit.
+          onBlur={() => {}}
+        />
       </InlineField>
       <InlineField label="Type" tooltip="Set the type of a field. By default, all fields have type String.">
         <Select
