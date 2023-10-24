@@ -81,16 +81,7 @@ func (ds *dataSource) query(ctx context.Context, query backend.DataQuery, instan
 		return backend.DataResponse{Error: err}
 	}
 
-	settings, err := instance.Settings()
-	if err != nil {
-		return backend.DataResponse{Error: err}
-	}
-
-	if settings.Storage == "local" && !ds.allowLocalMode {
-		return backend.DataResponse{Error: errors.New("local mode has been disabled by your administrator")}
-	}
-
-	store, err := newStorage(instance, dsQuery, ds.logger)
+	store, err := newStorage(instance, dsQuery, ds.logger, ds.allowLocalMode)
 	if err != nil {
 		return backend.DataResponse{Error: err}
 	}
@@ -126,7 +117,7 @@ func (ds *dataSource) CheckHealth(ctx context.Context, req *backend.CheckHealthR
 
 	var query dataSourceQuery
 
-	store, err := newStorage(instance, query, ds.logger)
+	store, err := newStorage(instance, query, ds.logger, ds.allowLocalMode)
 	if err != nil {
 		return &backend.CheckHealthResult{
 			Status:  backend.HealthStatusError,
@@ -192,10 +183,14 @@ type storage interface {
 	Stat() error
 }
 
-func newStorage(instance *dataSourceInstance, query dataSourceQuery, logger log.Logger) (storage, error) {
+func newStorage(instance *dataSourceInstance, query dataSourceQuery, logger log.Logger, allowLocalMode bool) (storage, error) {
 	settings, err := instance.Settings()
 	if err != nil {
 		return nil, err
+	}
+
+	if settings.Storage == "local" && !allowLocalMode {
+		return nil, errors.New("local mode has been disabled by your administrator")
 	}
 
 	// Default to HTTP storage for backwards compatibility.
