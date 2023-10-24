@@ -1,5 +1,9 @@
 # Changelog
 
+## v0.6.10 - 2023-10-24
+
+- 🐛 **Fix**: More robust local file mode handling
+
 ## v0.6.9 - 2023-10-19
 
 - 🐛 **Fix**: Correct query field behavior on older Grafana versions
