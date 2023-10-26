@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunkgrafana_csv_datasource_docs=self.webpackChunkgrafana_csv_datasource_docs||[]).push([[661],{1892:(a,s,e)=>{e.r(s),e.d(s,{default:()=>o});e(7294);var r=e(4334),c=e(1944),u=e(5281),d=e(8790),n=e(7961),t=e(5893);function o(a){return(0,t.jsx)(c.FG,{className:(0,r.Z)(u.k.wrapper.docsPages),children:(0,t.jsx)(n.Z,{children:(0,d.H)(a.route.routes)})})}}}]);
