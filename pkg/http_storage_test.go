@@ -7,6 +7,7 @@ import (
 	"io"
 	"net/http"
 	"net/http/httptest"
+	"net/url"
 	"reflect"
 	"testing"
 
@@ -188,5 +189,41 @@ func TestHTTPStorage_Options(t *testing.T) {
 
 	if !invoked {
 		t.Fatal("server didn't receive any requests")
+	}
+}
+
+func TestHTTPStorage_UrlHandling(t *testing.T) {
+	instanceSettings := backend.DataSourceInstanceSettings{
+		URL: "http://localhost:8000",
+	}
+	badPath := "@example.com/test/1"
+	goodPath := "/test/1"
+
+	parsedSettingsURL, err := url.Parse(instanceSettings.URL)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	req1, err := newRequestFromQuery(&instanceSettings, dataSourceSettings{}, dataSourceQuery{
+		Path:   goodPath,
+		Method: "GET",
+	})
+
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	if req1.URL.Host != parsedSettingsURL.Host {
+		t.Fatal("hostname changed because of the path")
+	}
+
+	_, err = newRequestFromQuery(&instanceSettings, dataSourceSettings{}, dataSourceQuery{
+		Path:   badPath,
+		Method: "GET",
+	})
+
+	// this must have failed
+	if err == nil {
+		t.Fatal("host-modifying path was accepted")
 	}
 }
