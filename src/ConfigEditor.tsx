@@ -1,10 +1,17 @@
-import { DataSourcePluginOptionsEditorProps } from '@grafana/data';
-import { DataSourceHttpSettings, Field, InlineField, LegacyForms, Legend, RadioButtonGroup } from '@grafana/ui';
+import { DataSourcePluginOptionsEditorProps, GrafanaTheme2 } from '@grafana/data';
+import { Divider, Field, Input, RadioButtonGroup, useStyles2 } from '@grafana/ui';
 import defaults from 'lodash/defaults';
 import React, { ChangeEvent } from 'react';
 import { CSVDataSourceOptions, defaultOptions } from './types';
-
-const { Input, FormField } = LegacyForms;
+import {
+  AdvancedHttpSettings,
+  Auth,
+  ConfigSection,
+  ConnectionSettings,
+  DataSourceDescription,
+  convertLegacyAuthProps,
+} from '@grafana/experimental';
+import { css } from '@emotion/css';
 
 interface Props extends DataSourcePluginOptionsEditorProps<CSVDataSourceOptions> {}
 
@@ -14,6 +21,7 @@ interface Props extends DataSourcePluginOptionsEditorProps<CSVDataSourceOptions>
  */
 export const ConfigEditor: React.FC<Props> = ({ options, onOptionsChange }) => {
   const jsonData = defaults(options.jsonData, defaultOptions);
+  const styles = useStyles2(getStyles);
 
   const onParamsChange = (e: ChangeEvent<HTMLInputElement>) => {
     onOptionsChange({
@@ -44,7 +52,15 @@ export const ConfigEditor: React.FC<Props> = ({ options, onOptionsChange }) => {
 
   return (
     <>
-      <Field>
+      <DataSourceDescription
+        dataSourceName="CSV"
+        docsLink="https://grafana.github.io/grafana-csv-datasource/"
+        hasRequiredFields={false}
+      />
+
+      <Divider />
+
+      <Field label="Storage Location">
         <RadioButtonGroup
           options={[
             { label: 'HTTP', value: 'http' },
@@ -55,51 +71,61 @@ export const ConfigEditor: React.FC<Props> = ({ options, onOptionsChange }) => {
         />
       </Field>
 
+      <Divider />
+
       {jsonData.storage === 'http' ? (
         <>
-          {/* DataSourceHttpSettings handles most the settings for connecting over
-      HTTP. */}
-          <DataSourceHttpSettings
-            defaultUrl="http://localhost:8080"
-            dataSourceConfig={options}
-            onChange={onOptionsChange}
+          <ConnectionSettings config={options} onChange={onOptionsChange} urlPlaceholder="http://localhost:8080" />
+
+          <Divider />
+
+          <Auth
+            {...convertLegacyAuthProps({
+              config: options,
+              onChange: onOptionsChange,
+            })}
           />
 
-          {/* The Grafana proxy strips query parameters from the URL set in
-      DataSourceHttpSettings. To support custom query parameters, the user need
-      to set them explicitly.  */}
-          <h3 className="page-heading">Misc</h3>
-          <div className="gf-form-group">
-            <div className="gf-form-inline">
-              <div className="gf-form max-width-30">
-                <FormField
-                  label="Custom query parameters"
-                  labelWidth={14}
-                  tooltip="Add custom parameters to your queries."
-                  inputEl={
-                    <Input
-                      className="width-25"
-                      value={jsonData.queryParams}
-                      onChange={onParamsChange}
-                      spellCheck={false}
-                      placeholder="page=1&limit=100"
-                    />
-                  }
-                />
-              </div>
-            </div>
-          </div>
+          <Divider />
+
+          <ConfigSection title="Additional settings" isCollapsible>
+            <AdvancedHttpSettings config={options} onChange={onOptionsChange} />
+
+            <div className={styles.space} />
+
+            <Field label="Custom query parameters" description="Add custom parameters to your queries.">
+              <Input
+                width={40}
+                value={jsonData.queryParams}
+                onChange={onParamsChange}
+                spellCheck={false}
+                placeholder="limit=100"
+              />
+            </Field>
+          </ConfigSection>
         </>
       ) : null}
 
       {jsonData.storage === 'local' ? (
-        <>
-          <Legend>Local</Legend>
-          <InlineField label="Path" tooltip="Path to the CSV file.">
-            <Input value={options.url} onChange={onLocalPathChange} spellCheck={false} />
-          </InlineField>
-        </>
+        <Field label="Path">
+          <Input
+            value={options.url}
+            onChange={onLocalPathChange}
+            spellCheck={false}
+            width={40}
+            placeholder="Path to the CSV file"
+          />
+        </Field>
       ) : null}
     </>
   );
+};
+
+const getStyles = (theme: GrafanaTheme2) => {
+  return {
+    space: css({
+      width: '100%',
+      height: theme.spacing(2),
+    }),
+  };
 };
