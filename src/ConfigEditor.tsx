@@ -1,5 +1,5 @@
 import { DataSourcePluginOptionsEditorProps, GrafanaTheme2 } from '@grafana/data';
-import { Divider, Field, Input, RadioButtonGroup, useStyles2 } from '@grafana/ui';
+import { Field, Input, RadioButtonGroup, useStyles2 } from '@grafana/ui';
 import defaults from 'lodash/defaults';
 import React, { ChangeEvent } from 'react';
 import { CSVDataSourceOptions, defaultOptions } from './types';
@@ -12,6 +12,7 @@ import {
   convertLegacyAuthProps,
 } from '@grafana/experimental';
 import { css } from '@emotion/css';
+import { Divider } from 'components/Divider';
 
 interface Props extends DataSourcePluginOptionsEditorProps<CSVDataSourceOptions> {}
 
