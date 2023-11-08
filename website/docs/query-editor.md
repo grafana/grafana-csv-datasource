@@ -3,13 +3,20 @@ id: query-editor
 title: Query editor
 ---
 
-This page explains the what each part of the query editor does, and how you can configure it.
+import QueryEditor from '../static/img/editor-fields.png';
+import Path from '../static/img/editor-path.png';
+import LocalPath from '../static/img/editor-local-path.png';
+import Params from '../static/img/editor-params.png';
+import Headers from '../static/img/editor-headers.png';
+import Body from '../static/img/editor-body.png';
+
+This page explains what each part of the query editor does, and how you can configure it.
 
 The query editor for the CSV data source consists of a number of tabs. Each tab configures a part of the query.
 
 ### Fields
 
-![Fields](../static/img/editor-fields.png)
+<img src={QueryEditor} alt="Fields" />
 
 The **Fields** tab is where you configure how to parse the data returned by the URL configured in the data source configuration.
 
@@ -30,7 +37,7 @@ The contents of this tab depends on whether the data source is set to HTTP or Lo
 
 #### HTTP
 
-![Path](../static/img/editor-path.png)
+<img src={Path} alt="Path" />
 
 The drop-down box to the left lets you configure the **HTTP method** of the request sent to the URL and can be set to **GET** and **POST**.
 
@@ -40,7 +47,7 @@ For example, by setting the path to `/movies/${movie}/summary` you can query the
 
 #### Local
 
-![Path](../static/img/editor-local-path.png)
+<img src={LocalPath} alt="Local Path" />
 
 **Relative path** lets you append a relative path to the one in the data source configuration. For example, you can use the same data source to load multiple files by setting the **Path** in the data source configuration to a directory, and then use the **Relative path** to load a file within that directory.
 
@@ -48,7 +55,7 @@ For example, by setting the path to `/movies/${movie}/summary` you can query the
 
 > Only available in HTTP mode.
 
-![Params](../static/img/editor-params.png)
+<img src={Params} alt="Params" />
 
 Add any parameters you'd like to send as part of the query string. For example, the parameters in the screenshot gets encoded as `?category=movies`.
 
@@ -62,7 +69,7 @@ Any query parameters that have been set by the administrator in the data source 
 
 > Only available in HTTP mode.
 
-![Headers](../static/img/editor-headers.png)
+<img src={Headers} alt="Headers" />
 
 Add any parameters you'd like to send as HTTP headers.
 
@@ -72,7 +79,7 @@ Both the **Key** and **Value** fields support [variables](https://grafana.com/do
 
 > Only available in HTTP mode.
 
-![Body](../static/img/editor-body.png)
+<img src={Body} alt="Body" />
 
 Sets the text to send as a request body.
 
