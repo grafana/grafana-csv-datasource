@@ -50,8 +50,12 @@ export const SchemaEditor = ({ value, onChange, limit }: Props) => {
       {internalValue.map((_, i) => (
         <InlineFieldRow key={i}>
           <CSVQueryField field={_} onFieldChange={onFieldChange(i)} />
-          {(!limit || value.length < limit) && <Button variant="secondary" title="plus" onClick={() => onAddField(i)} icon="plus" />}
-          {internalValue.length > 1 && <Button variant="secondary" title="minus" onClick={() => onRemoveField(i)} icon="minus" />}
+          {(!limit || value.length < limit) && (
+            <Button variant="secondary" title="plus" onClick={() => onAddField(i)} icon="plus" />
+          )}
+          {internalValue.length > 1 && (
+            <Button variant="secondary" title="minus" onClick={() => onRemoveField(i)} icon="minus" />
+          )}
         </InlineFieldRow>
       ))}
     </>
