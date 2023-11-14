@@ -1,4 +1,4 @@
-import { Icon, InlineFieldRow } from '@grafana/ui';
+import { Button, InlineFieldRow } from '@grafana/ui';
 import React, { useEffect, useState } from 'react';
 import { FieldSchema } from '../types';
 import { CSVQueryField } from './CSVQueryField';
@@ -50,16 +50,11 @@ export const SchemaEditor = ({ value, onChange, limit }: Props) => {
       {internalValue.map((_, i) => (
         <InlineFieldRow key={i}>
           <CSVQueryField field={_} onFieldChange={onFieldChange(i)} />
-
           {(!limit || value.length < limit) && (
-            <a className="gf-form-label">
-              <Icon name="plus" size="lg" onClick={() => onAddField(i)} />
-            </a>
+            <Button variant="secondary" title="plus" onClick={() => onAddField(i)} icon="plus" />
           )}
           {internalValue.length > 1 && (
-            <a className="gf-form-label">
-              <Icon name="minus" size="lg" onClick={() => onRemoveField(i)} />
-            </a>
+            <Button variant="secondary" title="minus" onClick={() => onRemoveField(i)} icon="minus" />
           )}
         </InlineFieldRow>
       ))}
