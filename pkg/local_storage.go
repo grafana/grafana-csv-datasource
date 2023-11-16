@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"fmt"
 	"io"
 	"os"
@@ -17,7 +18,7 @@ type localStorage struct {
 	query          dataSourceQuery
 }
 
-func newLocalStorage(instance *dataSourceInstance, query dataSourceQuery, logger log.Logger) (*localStorage, error) {
+func newLocalStorage(_ context.Context, instance *dataSourceInstance, query dataSourceQuery, logger log.Logger) (*localStorage, error) {
 	customSettings, err := instance.Settings()
 	if err != nil {
 		return nil, err

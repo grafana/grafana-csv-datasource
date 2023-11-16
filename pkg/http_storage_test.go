@@ -2,6 +2,7 @@ package main
 
 import (
 	"bytes"
+	"context"
 	"encoding/json"
 	"fmt"
 	"io"
@@ -30,7 +31,7 @@ func TestHTTPStorage_Stat(t *testing.T) {
 	logger := log.New()
 
 	var opts dataSourceQuery
-	storage, err := newHTTPStorage(instance, opts, logger)
+	storage, err := newHTTPStorage(context.TODO(), instance, opts, logger)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -57,7 +58,7 @@ func TestHTTPStorage_Open(t *testing.T) {
 	logger := log.New()
 
 	var opts dataSourceQuery
-	storage, err := newHTTPStorage(instance, opts, logger)
+	storage, err := newHTTPStorage(context.TODO(), instance, opts, logger)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -107,7 +108,7 @@ func TestHTTPStorage_Settings(t *testing.T) {
 	logger := log.New()
 
 	var opts dataSourceQuery
-	storage, err := newHTTPStorage(instance, opts, logger)
+	storage, err := newHTTPStorage(context.TODO(), instance, opts, logger)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -126,8 +127,8 @@ func TestHTTPStorage_Options(t *testing.T) {
 	opts := dataSourceQuery{
 		Method:  "POST",
 		Path:    "/orders",
-		Params:  [][2]string{[2]string{"foo", "bar"}},
-		Headers: [][2]string{[2]string{"baz", "test"}},
+		Params:  [][2]string{{"foo", "bar"}},
+		Headers: [][2]string{{"baz", "test"}},
 		Body:    `{"something": "anything"}`,
 	}
 
@@ -177,7 +178,7 @@ func TestHTTPStorage_Options(t *testing.T) {
 
 	logger := log.New()
 
-	storage, err := newHTTPStorage(instance, opts, logger)
+	storage, err := newHTTPStorage(context.TODO(), instance, opts, logger)
 	if err != nil {
 		t.Fatal(err)
 	}

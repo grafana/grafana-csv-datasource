@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"fmt"
 	"io"
 	"net/http"
@@ -19,13 +20,13 @@ type httpStorage struct {
 	query          dataSourceQuery
 }
 
-func newHTTPStorage(instance *dataSourceInstance, query dataSourceQuery, logger log.Logger) (*httpStorage, error) {
+func newHTTPStorage(ctx context.Context, instance *dataSourceInstance, query dataSourceQuery, logger log.Logger) (*httpStorage, error) {
 	customSettings, err := instance.Settings()
 	if err != nil {
 		return nil, err
 	}
 
-	httpOptions, err := instance.settings.HTTPClientOptions()
+	httpOptions, err := instance.settings.HTTPClientOptions(ctx)
 	if err != nil {
 		return nil, err
 	}
