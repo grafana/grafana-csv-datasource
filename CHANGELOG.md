@@ -1,9 +1,5 @@
 # Changelog
 
-## v0.6.11 - 2023-11-16
-
-- ⚙️ **Chore**: Upgrade grafana plugin SDK
-
 ## v0.6.10 - 2023-10-24
 
 - 🐛 **Fix**: More robust local file mode handling
