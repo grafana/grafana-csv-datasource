@@ -81,7 +81,7 @@ func (ds *dataSource) query(ctx context.Context, query backend.DataQuery, instan
 		return backend.DataResponse{Error: err}
 	}
 
-	store, err := newStorage(instance, dsQuery, ds.logger, ds.allowLocalMode)
+	store, err := newStorage(ctx, instance, dsQuery, ds.logger, ds.allowLocalMode)
 	if err != nil {
 		return backend.DataResponse{Error: err}
 	}
@@ -117,7 +117,7 @@ func (ds *dataSource) CheckHealth(ctx context.Context, req *backend.CheckHealthR
 
 	var query dataSourceQuery
 
-	store, err := newStorage(instance, query, ds.logger, ds.allowLocalMode)
+	store, err := newStorage(ctx, instance, query, ds.logger, ds.allowLocalMode)
 	if err != nil {
 		return &backend.CheckHealthResult{
 			Status:  backend.HealthStatusError,
@@ -183,7 +183,7 @@ type storage interface {
 	Stat() error
 }
 
-func newStorage(instance *dataSourceInstance, query dataSourceQuery, logger log.Logger, allowLocalMode bool) (storage, error) {
+func newStorage(ctx context.Context, instance *dataSourceInstance, query dataSourceQuery, logger log.Logger, allowLocalMode bool) (storage, error) {
 	settings, err := instance.Settings()
 	if err != nil {
 		return nil, err
@@ -195,14 +195,14 @@ func newStorage(instance *dataSourceInstance, query dataSourceQuery, logger log.
 
 	// Default to HTTP storage for backwards compatibility.
 	if settings.Storage == "" {
-		return newHTTPStorage(instance, query, logger)
+		return newHTTPStorage(ctx, instance, query, logger)
 	}
 
 	switch settings.Storage {
 	case "http":
-		return newHTTPStorage(instance, query, logger)
+		return newHTTPStorage(ctx, instance, query, logger)
 	case "local":
-		return newLocalStorage(instance, query, logger)
+		return newLocalStorage(ctx, instance, query, logger)
 	default:
 		return nil, errors.New("unsupported storage type")
 	}
