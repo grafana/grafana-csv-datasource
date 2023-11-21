@@ -1,5 +1,13 @@
 # Changelog
 
+## v0.6.11 - 2023-11-21
+
+- **Feature**: Update configuration page to follow best practices
+- ⚙️ **Chore**: Upgrade grafana-plugin-sdk-go to latest
+- ⚙️ **Chore**: Added lint github workflow
+- ⚙️ **Chore**: Update legacy form styling
+- ⚙️ **Chore**: Update readme and documentation
+
 ## v0.6.10 - 2023-10-24
 
 - 🐛 **Fix**: More robust local file mode handling
