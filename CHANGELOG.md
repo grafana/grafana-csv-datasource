@@ -1,6 +1,11 @@
 # Changelog
 
-## v0.6.11 - 2023-11-21
+## v0.6.12 - 2023-12-19
+
+- ⚙️ **Docs**: Documentation website moved from [github pages](https://grafana.github.io/grafana-csv-datasource) to [grafana.com/docs/plugins](https://grafana.com/docs/plugins/marcusolsson-csv-datasource/latest/) page
+- ⚙️ **Chore**: Updated grafana-plugin-sdk-go from `v0.193.0` to `v0.197.0`
+
+## v0.6.11 - 2023-11-21
 
 - **Feature**: Update configuration page to follow best practices
 - ⚙️ **Chore**: Upgrade grafana-plugin-sdk-go to latest
