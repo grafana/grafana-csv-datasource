@@ -25,7 +25,7 @@ In linux/macos, you will be installing using the following command
 grafana-cli plugins install marcusolsson-csv-datasource
 ```
 
-whereas in windows machine, use the following comand
+whereas in windows machine, use the following command
 
 ```bash
 grafana-cli.exe plugins install marcusolsson-csv-datasource
