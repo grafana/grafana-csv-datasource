@@ -23,10 +23,10 @@
     "links": [
       {
         "name": "Documentation",
-        "url": "https://grafana.github.io/grafana-csv-datasource"
+        "url": "https://grafana.com/docs/plugins/marcusolsson-csv-datasource/latest/"
       },
       {
-        "name": "Website",
+        "name": "Github",
         "url": "https://github.com/grafana/grafana-csv-datasource"
       },
       {

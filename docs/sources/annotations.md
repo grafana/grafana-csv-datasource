@@ -1,6 +1,16 @@
 ---
-id: annotations
 title: Annotations
+menuTitle: Annotations
+description: This document explains how to setup annotations with CSV datasource
+aliases:
+keywords:
+  - data source
+  - csv
+labels:
+  products:
+    - oss
+    - grafana cloud
+weight: 600
 ---
 
 [Annotations](https://grafana.com/docs/grafana/latest/dashboards/annotations) let you extract data from a data source and use it to annotate a dashboard.

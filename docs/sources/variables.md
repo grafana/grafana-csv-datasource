@@ -1,6 +1,16 @@
 ---
-id: variables
 title: Variables
+menuTitle: Variables
+description: This document explains how to setup variables with CSV datasource
+aliases:
+keywords:
+  - data source
+  - csv
+labels:
+  products:
+    - oss
+    - grafana cloud
+weight: 500
 ---
 
 [Query variables](https://grafana.com/docs/grafana/latest/variables/variable-types/add-query-variable) let you extract data from a data source and use it to populate a dashboard variable.

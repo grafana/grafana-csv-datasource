@@ -1,14 +1,17 @@
 ---
-id: query-editor
-title: Query editor
+title: Query Editor
+menuTitle: Query Editor
+description: This document explains query editor of CSV datasource
+aliases:
+keywords:
+  - data source
+  - csv
+labels:
+  products:
+    - oss
+    - grafana cloud
+weight: 400
 ---
-
-import QueryEditor from '../static/img/editor-fields.png';
-import Path from '../static/img/editor-path.png';
-import LocalPath from '../static/img/editor-local-path.png';
-import Params from '../static/img/editor-params.png';
-import Headers from '../static/img/editor-headers.png';
-import Body from '../static/img/editor-body.png';
 
 This page explains what each part of the query editor does, and how you can configure it.
 
@@ -16,7 +19,7 @@ The query editor for the CSV data source consists of a number of tabs. Each tab 
 
 ### Fields
 
-<img src={QueryEditor} alt="Fields" />
+![Fields](https://raw.githubusercontent.com/grafana/grafana-csv-datasource/main/docs/images/editor-fields.png)
 
 The **Fields** tab is where you configure how to parse the data returned by the URL configured in the data source configuration.
 
@@ -37,7 +40,7 @@ The contents of this tab depends on whether the data source is set to HTTP or Lo
 
 #### HTTP
 
-<img src={Path} alt="Path" />
+![Path](https://raw.githubusercontent.com/grafana/grafana-csv-datasource/main/docs/images/editor-path.png)
 
 The drop-down box to the left lets you configure the **HTTP method** of the request sent to the URL and can be set to **GET** and **POST**.
 
@@ -47,7 +50,7 @@ For example, by setting the path to `/movies/${movie}/summary` you can query the
 
 #### Local
 
-<img src={LocalPath} alt="Local Path" />
+![Local Path](https://raw.githubusercontent.com/grafana/grafana-csv-datasource/main/docs/images/editor-local-path.png)
 
 **Relative path** lets you append a relative path to the one in the data source configuration. For example, you can use the same data source to load multiple files by setting the **Path** in the data source configuration to a directory, and then use the **Relative path** to load a file within that directory.
 
@@ -55,7 +58,7 @@ For example, by setting the path to `/movies/${movie}/summary` you can query the
 
 > Only available in HTTP mode.
 
-<img src={Params} alt="Params" />
+![Params](https://raw.githubusercontent.com/grafana/grafana-csv-datasource/main/docs/images/editor-params.png)
 
 Add any parameters you'd like to send as part of the query string. For example, the parameters in the screenshot gets encoded as `?category=movies`.
 
@@ -69,7 +72,7 @@ Any query parameters that have been set by the administrator in the data source 
 
 > Only available in HTTP mode.
 
-<img src={Headers} alt="Headers" />
+![Headers](https://raw.githubusercontent.com/grafana/grafana-csv-datasource/main/docs/images/editor-headers.png)
 
 Add any parameters you'd like to send as HTTP headers.
 
@@ -79,7 +82,7 @@ Both the **Key** and **Value** fields support [variables](https://grafana.com/do
 
 > Only available in HTTP mode.
 
-<img src={Body} alt="Body" />
+![Body](https://raw.githubusercontent.com/grafana/grafana-csv-datasource/main/docs/images/editor-body.png)
 
 Sets the text to send as a request body.
 
