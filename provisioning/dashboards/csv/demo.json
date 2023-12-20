@@ -162,15 +162,19 @@
           "refId": "A",
           "schema": [
             {
-              "name": "",
-              "type": "string"
+              "name": "Date",
+              "type": "time"
+            },
+            {
+              "name": "Price",
+              "type": "number"
             }
           ],
           "skipRows": 0
         }
       ],
       "title": "Natural Gas Prices",
-      "type": "table"
+      "type": "timeseries"
     }
   ],
   "refresh": "",
@@ -181,8 +185,8 @@
     "list": []
   },
   "time": {
-    "from": "now-6h",
-    "to": "now"
+    "from": "1997-01-07T00:00:00.000Z",
+    "to": "2020-09-01T00:00:00.000Z"
   },
   "timepicker": {},
   "timezone": "",

@@ -55,7 +55,7 @@ export const ConfigEditor: React.FC<Props> = ({ options, onOptionsChange }) => {
     <>
       <DataSourceDescription
         dataSourceName="CSV"
-        docsLink="https://grafana.github.io/grafana-csv-datasource/"
+        docsLink="https://grafana.com/docs/plugins/marcusolsson-csv-datasource/latest/"
         hasRequiredFields={false}
       />
 
