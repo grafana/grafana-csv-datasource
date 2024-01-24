@@ -86,6 +86,17 @@ func newRequestFromQuery(settings *backend.DataSourceInstanceSettings, customSet
 		return nil, err
 	}
 
+	// we need to verify that `query.Path` did not modify the hostname by doing tricks
+	settingsURL, err := url.Parse(settings.URL)
+	if err != nil {
+		return nil, fmt.Errorf("invalid URL")
+	}
+
+	if settingsURL.Host != u.Host {
+		// the host got changed by adding the path to it. this must not happen.
+		return nil, fmt.Errorf("invalid URL + path combination")
+	}
+
 	params := make(url.Values)
 	for _, p := range query.Params {
 		params.Set(p[0], p[1])
