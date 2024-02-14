@@ -1,9 +1,5 @@
 # Changelog
 
-## v0.6.13 - 2024-01-24
-
-- 🐛 **Fix**: More robust URL handling
-
 ## v0.6.12 - 2023-12-19
 
 - ⚙️ **Docs**: Documentation website moved from [github pages](https://grafana.github.io/grafana-csv-datasource) to [grafana.com/docs/plugins](https://grafana.com/docs/plugins/marcusolsson-csv-datasource/latest/) page
