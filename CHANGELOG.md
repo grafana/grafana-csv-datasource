@@ -1,5 +1,13 @@
 # Changelog
 
+## v0.6.14 - 2024-02-14
+
+- ⚙️ **Chore**: Maintenance
+
+## v0.6.13 - 2024-02-14
+
+- 🛡️ **Security**: More robust URL handling: disallow changing the configured hostname in the query editor ( CVE-2023-5122 )
+
 ## v0.6.12 - 2023-12-19
 
 - ⚙️ **Docs**: Documentation website moved from [github pages](https://grafana.github.io/grafana-csv-datasource) to [grafana.com/docs/plugins](https://grafana.com/docs/plugins/marcusolsson-csv-datasource/latest/) page
