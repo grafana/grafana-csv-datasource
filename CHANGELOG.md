@@ -1,5 +1,9 @@
 # Changelog
 
+## v0.6.15 - 2024-03-07
+
+- ⚙️ **Chore**: Build with go 1.22
+
 ## v0.6.14 - 2024-02-14
 
 - ⚙️ **Chore**: Maintenance
