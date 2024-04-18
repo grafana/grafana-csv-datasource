@@ -1,5 +1,9 @@
 # Changelog
 
+## v0.6.17 - 2024-04-18
+
+- ⚙️ **Chore**: Bump grafana-plugin-sdk-go from `v0.220.0` to `v0.225.0`
+
 ## v0.6.16 - 2024-04-08
 
 - ⚙️ **Chore**: Bump grafana-plugin-sdk-go from `v0.197.0` to `v0.220.0`
