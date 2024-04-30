@@ -51,6 +51,36 @@ export const ConfigEditor: React.FC<Props> = ({ options, onOptionsChange }) => {
     });
   };
 
+  const onAccessKeyIdChange = (e: ChangeEvent<HTMLInputElement>) => {
+    onOptionsChange({
+      ...options,
+      jsonData: {
+        ...jsonData,
+        awsAccessKeyId: e.currentTarget.value,
+      },
+    });
+  };
+
+  const onSecretAccessKeyChange = (e: ChangeEvent<HTMLInputElement>) => {
+    onOptionsChange({
+      ...options,
+      jsonData: {
+        ...jsonData,
+        awsSecretAccessKey: e.currentTarget.value,
+      },
+    });
+  };
+
+  const onBucketNameChange = (e: ChangeEvent<HTMLInputElement>) => {
+    onOptionsChange({
+      ...options,
+      jsonData: {
+        ...jsonData,
+        bucketName: e.currentTarget.value,
+      },
+    });
+  };
+
   return (
     <>
       <DataSourceDescription
@@ -66,6 +96,7 @@ export const ConfigEditor: React.FC<Props> = ({ options, onOptionsChange }) => {
           options={[
             { label: 'HTTP', value: 'http' },
             { label: 'Local', value: 'local' },
+            { label: 'AWS', value: 'aws' },
           ]}
           value={jsonData.storage}
           onChange={onStorageChange}
@@ -117,6 +148,38 @@ export const ConfigEditor: React.FC<Props> = ({ options, onOptionsChange }) => {
             placeholder="Path to the CSV file"
           />
         </Field>
+      ) : null}
+
+      {jsonData.storage === 'aws' ? (
+        <>
+          <Field label="AWS access key id">
+            <Input
+              value={options.jsonData.awsAccessKeyId}
+              onChange={onAccessKeyIdChange}
+              spellCheck={false}
+              width={140}
+              placeholder="Path to the CSV file"
+            />
+          </Field>
+          <Field label="AWS secret access key">
+            <Input
+              value={options.jsonData.awsSecretAccessKey}
+              onChange={onSecretAccessKeyChange}
+              spellCheck={false}
+              width={140}
+              placeholder="Path to the CSV file"
+            />
+          </Field>
+          <Field label="Bucket name">
+            <Input
+              value={options.jsonData.bucketName}
+              onChange={onBucketNameChange}
+              spellCheck={false}
+              width={140}
+              placeholder="Path to the CSV file"
+            />
+          </Field>
+        </>
       ) : null}
     </>
   );

@@ -62,7 +62,43 @@ export const QueryEditor = (props: Props) => {
                   onChange({
                     ...query,
                     experimental: {
+                      ...query.experimental,
                       regex: e.currentTarget.checked,
+                    },
+                  });
+                  onRunQuery();
+                }}
+              />
+            </InlineField>
+          </InlineFieldRow>
+          <InlineFieldRow>
+            <InlineField
+              label="List AWS bucket"
+              tooltip={
+                <>
+                  <p>
+                    {
+                      'When enabled, field names become regular expressions and can be used to set a type for multiple fields at once.'
+                    }
+                  </p>
+                  <a
+                    href="https://github.com/grafana/grafana-csv-datasource/issues/68"
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    Share feedback
+                  </a>
+                </>
+              }
+            >
+              <InlineSwitchFallback
+                value={!!query.experimental?.listDir}
+                onChange={(e) => {
+                  onChange({
+                    ...query,
+                    experimental: {
+                      ...query.experimental,
+                      listDir: e.currentTarget.checked,
                     },
                   });
                   onRunQuery();

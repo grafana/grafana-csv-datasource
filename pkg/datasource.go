@@ -27,7 +27,8 @@ type dataSourceQuery struct {
 	Body    string      `json:"body"`
 
 	Experimental struct {
-		Regex bool `json:"regex"`
+		Regex   bool `json:"regex"`
+		ListDir bool `json:"listDir"`
 	} `json:"experimental"`
 }
 
@@ -166,8 +167,11 @@ func (s *dataSourceInstance) Settings() (dataSourceSettings, error) {
 }
 
 type dataSourceSettings struct {
-	QueryParams string `json:"queryParams"`
-	Storage     string `json:"storage"`
+	QueryParams        string `json:"queryParams"`
+	Storage            string `json:"storage"`
+	AWSAccesKeyId      string `json:"awsAccessKeyId"`
+	AWSSecretAccessKey string `json:"awsSecretAccessKey"`
+	BucketName         string `json:"bucketName"`
 }
 
 func newDataSourceSettings(instanceSettings backend.DataSourceInstanceSettings) (dataSourceSettings, error) {
@@ -203,6 +207,8 @@ func newStorage(ctx context.Context, instance *dataSourceInstance, query dataSou
 		return newHTTPStorage(ctx, instance, query, logger)
 	case "local":
 		return newLocalStorage(ctx, instance, query, logger)
+	case "aws":
+		return newAWSStorage(ctx, instance, query, logger)
 	default:
 		return nil, errors.New("unsupported storage type")
 	}

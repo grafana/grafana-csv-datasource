@@ -23,6 +23,7 @@ export interface CSVQuery extends DataQuery {
 
   experimental: {
     regex: boolean;
+    listDir: boolean;
   };
 }
 
@@ -38,6 +39,10 @@ export const defaultQuery: Partial<CSVQuery> = {
 export interface CSVDataSourceOptions extends DataSourceJsonData {
   storage?: string;
   queryParams?: string;
+  //should be stored in secureJsonData
+  awsAccessKeyId?: string;
+  awsSecretAccessKey?: string;
+  bucketName?: string;
 }
 
 export const defaultOptions: Partial<CSVDataSourceOptions> = {
