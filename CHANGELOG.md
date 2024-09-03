@@ -1,5 +1,13 @@
 # Changelog
 
+## v0.6.19 - 2024-09-03
+
+- 🛡️ **Security**: Bump `micromatch` from 4.0.5 to 4.0.8
+- 🛡️ **Security**: Bump `webpack` from 5.86.0 to 5.94.0
+- 🛡️ **Security**: Bump `fast-loops` from 1.1.3 to 1.1.4
+- 🛡️ **Security**: Bump `ws` from 8.14.2 to 8.17.1
+- 🛡️ **Security**: Bump `braces` from 3.0.2 to 3.0.3
+
 ## v0.6.18 - 2024-05-14
 
 - ⚙️ **Chore**: Updated the eslint-plugin-prettier dependency
