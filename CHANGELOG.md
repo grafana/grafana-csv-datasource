@@ -1,5 +1,11 @@
 # Changelog
 
+## v0.6.20 - 2024-10-18
+
+- 🛡️ **Security**: Update `grafana-plugin-sdk-go` to 0.255
+- 🛡️ **Security**: Bump `dompurify` from 3.1.0 to 3.1.6
+- 🛡️ **Security**: Bump `path-to-regexp` from 1.8.0 to 1.9.0
+
 ## v0.6.19 - 2024-09-03
 
 - 🛡️ **Security**: Bump `micromatch` from 4.0.5 to 4.0.8

@@ -19,6 +19,7 @@
     "clsx",
     "DataSource",
     "DataSources",
+    "dompurify",
     "Grafana",
     "httpclient",
     "instancemgmt",
