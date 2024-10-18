@@ -15,6 +15,7 @@
     "mage_output_file.go"
   ],
   "words": [
+    "changesets",
     "clsx",
     "DataSource",
     "DataSources",
@@ -23,11 +24,12 @@
     "instancemgmt",
     "Marcus",
     "MarcusOlsson",
+    "nolint",
     "Olsson",
     "prismjs",
+    "staticcheck",
     "testdata",
-    "uncollapse",
     "typecheck",
-    "changesets"
+    "uncollapse"
   ]
 }
