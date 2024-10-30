@@ -1,5 +1,9 @@
 # Changelog
 
+## v0.6.21 - 2024-10-30
+
+- 🛡️ **Security**: Update `uplot` to 1.6.31
+
 ## v0.6.20 - 2024-10-18
 
 - 🛡️ **Security**: Update `grafana-plugin-sdk-go` to 0.255
