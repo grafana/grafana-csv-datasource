@@ -78,7 +78,9 @@
     "webpack-livereload-plugin": "^3.0.2"
   },
   "resolutions": {
-    "uplot": "1.6.31"
+    "uplot": "1.6.31",
+    "dompurify": "2.5.4",
+    "cross-spawn": "7.0.6"
   },
   "packageManager": "yarn@1.22.19"
 }
