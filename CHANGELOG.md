@@ -4,6 +4,7 @@
 
 - 🛡️ **Security**: `golang.org/x/net` from 0.30.0 to 0.33.0
 - 🛡️ **Security**: Update `grafana-plugin-sdk-go` to 0.263.0
+- 🛡️ **Security**: Build and publish pipelines uses latest go lang version `1.23.5` which includes security fixes to the `crypto/x509` and `net/http` packages ( CVE-2024-45341 and CVE-2024-45336 ). More details can be found [here](https://groups.google.com/g/golang-announce/c/sSaUhLA-2SI)
 
 ## v0.6.21 - 2024-10-30
 
