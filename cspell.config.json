@@ -7,7 +7,6 @@
     "website/src/css/*.css",
     "dist/**",
     "coverage/**",
-    "cypress/**",
     "provisioning/**",
     "src/dashboards/**",
     "yarn.lock",
