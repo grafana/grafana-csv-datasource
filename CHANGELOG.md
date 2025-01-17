@@ -3,6 +3,7 @@
 ## v0.6.22 - 2025-01-17
 
 - 🛡️ **Security**: `golang.org/x/net` from 0.30.0 to 0.33.0
+- 🛡️ **Security**: Update `grafana-plugin-sdk-go` to 0.263.0
 
 ## v0.6.21 - 2024-10-30
 
