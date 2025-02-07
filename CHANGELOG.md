@@ -1,5 +1,9 @@
 # Changelog
 
+## v0.6.23 - 2025-02-07
+
+- Update documentation about the deprecation
+
 ## v0.6.22 - 2025-01-17
 
 - 🛡️ **Security**: `golang.org/x/net` from 0.30.0 to 0.33.0
