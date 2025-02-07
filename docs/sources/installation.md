@@ -13,6 +13,11 @@ labels:
 weight: 200
 ---
 
+{{< admonition type="warning" >}}
+This plugin is now in maintenance mode, no new features will be added. We recommend using the [Infinity data source plugin](https://grafana.com/grafana/plugins/yesoreyeram-infinity-datasource/) instead. If you want to get started
+quickly with CSV and Grafana, please read [How to Visualize CSV Data with Grafana](https://grafana.com/blog/2025/02/05/how-to-visualize-csv-data-with-grafana/), which uses the recommended approach.
+{{< /admonition >}}
+
 You can install the CSV plugin using [grafana-cli](https://grafana.com/docs/grafana/latest/administration/cli/), or by downloading the plugin manually.
 
 ## Install using grafana-cli
