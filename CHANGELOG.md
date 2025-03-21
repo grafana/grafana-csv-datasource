@@ -1,5 +1,12 @@
 # Changelog
 
+## v0.6.24 - 2025-03-21
+
+- 🛡️ **Security**: Update `grafana-plugin-sdk-go` to 0.274.0
+- 🛡️ **Security**: Update `go` to 1.24.1
+- 🛡️ **Security**: `golang.org/x/net` from 0.34.0 to 0.36.0
+- 🛡️ **Security**: Update frontend dependencies
+
 ## v0.6.23 - 2025-02-07
 
 - Update documentation about the deprecation
