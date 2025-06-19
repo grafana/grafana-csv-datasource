@@ -2,12 +2,12 @@ import { css } from '@emotion/css';
 import { TimeRange } from '@grafana/data';
 import { CodeEditor, InfoBox, InlineField, InlineFieldRow, Input, RadioButtonGroup, useTheme } from '@grafana/ui';
 import { DataSource } from 'datasource';
-import defaults from 'lodash/defaults';
 import React, { useState } from 'react';
 import AutoSizer from 'react-virtualized-auto-sizer';
-import { CSVQuery, Pair, defaultQuery } from '../types';
+import { CSVQuery, Pair } from '../types';
 import { KeyValueEditor } from './KeyValueEditor';
 import { PathEditor } from './PathEditor';
+import { getQueryWithDefaults } from 'utils';
 
 // Display a warning message when user adds any of the following headers.
 const sensitiveHeaders = ['authorization', 'proxy-authorization', 'x-api-key'];
@@ -29,7 +29,7 @@ export const TabbedQueryEditor = ({ query, onChange, onRunQuery, fieldsTab, expe
   const [tabIndex, setTabIndex] = useState(0);
   const theme = useTheme();
 
-  const q = defaults(query, defaultQuery);
+  const q = getQueryWithDefaults(query);
 
   const onBodyChange = (body: string) => {
     onChange({ ...q, body });
