@@ -4,7 +4,7 @@ import React, { FormEvent, useState } from 'react';
 import { CSVQuery, FieldSchema } from '../types';
 import { SchemaEditor } from './SchemaEditor';
 import momentTz from 'moment-timezone';
-import { getQueryWithDefaults } from 'utils';
+import { getQueryWithDefaults } from '../utils';
 
 interface Props {
   query: CSVQuery;

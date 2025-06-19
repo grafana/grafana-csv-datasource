@@ -7,7 +7,7 @@ import AutoSizer from 'react-virtualized-auto-sizer';
 import { CSVQuery, Pair } from '../types';
 import { KeyValueEditor } from './KeyValueEditor';
 import { PathEditor } from './PathEditor';
-import { getQueryWithDefaults } from 'utils';
+import { getQueryWithDefaults } from '../utils';
 
 // Display a warning message when user adds any of the following headers.
 const sensitiveHeaders = ['authorization', 'proxy-authorization', 'x-api-key'];

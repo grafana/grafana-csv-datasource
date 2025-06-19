@@ -12,7 +12,7 @@ import {
 } from '@grafana/experimental';
 import { css } from '@emotion/css';
 import { Divider } from 'components/Divider';
-import { getOptionsWithDefaults } from 'utils';
+import { getOptionsWithDefaults } from './utils';
 
 interface Props extends DataSourcePluginOptionsEditorProps<CSVDataSourceOptions> {}
 
