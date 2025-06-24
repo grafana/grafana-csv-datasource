@@ -26,7 +26,10 @@ export interface CSVQuery extends DataQuery {
   };
 }
 
-export const defaultQuery: Partial<CSVQuery> = {
+export const defaultQuery: Pick<
+  CSVQuery,
+  'delimiter' | 'decimalSeparator' | 'header' | 'ignoreUnknown' | 'skipRows' | 'schema'
+> = {
   delimiter: ',',
   decimalSeparator: '.',
   header: true,

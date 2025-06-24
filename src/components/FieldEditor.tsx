@@ -1,10 +1,10 @@
 import { SelectableValue } from '@grafana/data';
 import { InlineField, InlineFieldRow, InlineSwitch, Input, Select, Switch } from '@grafana/ui';
-import defaults from 'lodash/defaults';
 import React, { FormEvent, useState } from 'react';
-import { CSVQuery, defaultQuery, FieldSchema } from '../types';
+import { CSVQuery, FieldSchema } from '../types';
 import { SchemaEditor } from './SchemaEditor';
 import momentTz from 'moment-timezone';
+import { getQueryWithDefaults } from '../utils';
 
 interface Props {
   query: CSVQuery;
@@ -15,10 +15,8 @@ interface Props {
 }
 
 export const FieldEditor = ({ query, onChange, onRunQuery, limit, editorContext }: Props) => {
-  const { header, skipRows, delimiter, decimalSeparator, ignoreUnknown, schema, timezone } = defaults(
-    query,
-    defaultQuery
-  );
+  const { header, skipRows, delimiter, decimalSeparator, ignoreUnknown, schema, timezone } =
+    getQueryWithDefaults(query);
 
   const [numSkipRows, setNumSkipRows] = useState(skipRows?.toString());
 

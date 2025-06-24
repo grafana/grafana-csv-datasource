@@ -1,8 +1,7 @@
 import { DataSourcePluginOptionsEditorProps, GrafanaTheme2 } from '@grafana/data';
 import { Field, Input, RadioButtonGroup, useStyles2 } from '@grafana/ui';
-import defaults from 'lodash/defaults';
 import React, { ChangeEvent } from 'react';
-import { CSVDataSourceOptions, defaultOptions } from './types';
+import { CSVDataSourceOptions } from './types';
 import {
   AdvancedHttpSettings,
   Auth,
@@ -13,6 +12,7 @@ import {
 } from '@grafana/experimental';
 import { css } from '@emotion/css';
 import { Divider } from 'components/Divider';
+import { getOptionsWithDefaults } from './utils';
 
 interface Props extends DataSourcePluginOptionsEditorProps<CSVDataSourceOptions> {}
 
@@ -20,15 +20,16 @@ interface Props extends DataSourcePluginOptionsEditorProps<CSVDataSourceOptions>
  * ConfigEditor lets the user configure connection details like the URL or
  * authentication.
  */
-export const ConfigEditor: React.FC<Props> = ({ options, onOptionsChange }) => {
-  const jsonData = defaults(options.jsonData, defaultOptions);
+export const ConfigEditor: React.FC<Props> = (props) => {
+  const { onOptionsChange } = props;
+  const optionsWithDefaults = getOptionsWithDefaults(props.options);
   const styles = useStyles2(getStyles);
 
   const onParamsChange = (e: ChangeEvent<HTMLInputElement>) => {
     onOptionsChange({
-      ...options,
+      ...optionsWithDefaults,
       jsonData: {
-        ...jsonData,
+        ...optionsWithDefaults.jsonData,
         queryParams: e.currentTarget.value,
       },
     });
@@ -36,9 +37,9 @@ export const ConfigEditor: React.FC<Props> = ({ options, onOptionsChange }) => {
 
   const onStorageChange = (value?: string) => {
     onOptionsChange({
-      ...options,
+      ...optionsWithDefaults,
       jsonData: {
-        ...jsonData,
+        ...optionsWithDefaults.jsonData,
         storage: value!,
       },
     });
@@ -46,7 +47,7 @@ export const ConfigEditor: React.FC<Props> = ({ options, onOptionsChange }) => {
 
   const onLocalPathChange = (e: ChangeEvent<HTMLInputElement>) => {
     onOptionsChange({
-      ...options,
+      ...optionsWithDefaults,
       url: e.currentTarget.value,
     });
   };
@@ -67,22 +68,26 @@ export const ConfigEditor: React.FC<Props> = ({ options, onOptionsChange }) => {
             { label: 'HTTP', value: 'http' },
             { label: 'Local', value: 'local' },
           ]}
-          value={jsonData.storage}
+          value={optionsWithDefaults.jsonData.storage}
           onChange={onStorageChange}
         />
       </Field>
 
       <Divider />
 
-      {jsonData.storage === 'http' ? (
+      {optionsWithDefaults.jsonData.storage === 'http' ? (
         <>
-          <ConnectionSettings config={options} onChange={onOptionsChange} urlPlaceholder="http://localhost:8080" />
+          <ConnectionSettings
+            config={optionsWithDefaults}
+            onChange={onOptionsChange}
+            urlPlaceholder="http://localhost:8080"
+          />
 
           <Divider />
 
           <Auth
             {...convertLegacyAuthProps({
-              config: options,
+              config: optionsWithDefaults,
               onChange: onOptionsChange,
             })}
           />
@@ -90,14 +95,14 @@ export const ConfigEditor: React.FC<Props> = ({ options, onOptionsChange }) => {
           <Divider />
 
           <ConfigSection title="Additional settings" isCollapsible>
-            <AdvancedHttpSettings config={options} onChange={onOptionsChange} />
+            <AdvancedHttpSettings config={optionsWithDefaults} onChange={onOptionsChange} />
 
             <div className={styles.space} />
 
             <Field label="Custom query parameters" description="Add custom parameters to your queries.">
               <Input
                 width={40}
-                value={jsonData.queryParams}
+                value={optionsWithDefaults.jsonData.queryParams}
                 onChange={onParamsChange}
                 spellCheck={false}
                 placeholder="limit=100"
@@ -107,10 +112,10 @@ export const ConfigEditor: React.FC<Props> = ({ options, onOptionsChange }) => {
         </>
       ) : null}
 
-      {jsonData.storage === 'local' ? (
+      {optionsWithDefaults.jsonData.storage === 'local' ? (
         <Field label="Path">
           <Input
-            value={options.url}
+            value={optionsWithDefaults.url}
             onChange={onLocalPathChange}
             spellCheck={false}
             width={40}
