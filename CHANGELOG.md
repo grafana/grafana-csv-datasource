@@ -2,9 +2,8 @@
 
 ## 0.6.25
 
-### Patch Changes
-
 ⚙️ Chore: Remove props mutations
+⚙️ Chore: Update dependencies
 
 ## v0.6.24 - 2025-03-21
 
