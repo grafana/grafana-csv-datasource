@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.6.25
+
+⚙️ Chore: Remove props mutations
+⚙️ Chore: Update dependencies
+
 ## v0.6.24 - 2025-03-21
 
 - 🛡️ **Security**: Update `grafana-plugin-sdk-go` to 0.274.0
