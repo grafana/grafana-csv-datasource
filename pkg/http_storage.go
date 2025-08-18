@@ -1,7 +1,6 @@
 package main
 
 import (
-	"context"
 	"fmt"
 	"io"
 	"net/http"
@@ -9,43 +8,25 @@ import (
 	"strings"
 
 	"github.com/grafana/grafana-plugin-sdk-go/backend"
-	"github.com/grafana/grafana-plugin-sdk-go/backend/httpclient"
 	"github.com/grafana/grafana-plugin-sdk-go/backend/log"
 )
 
 type httpStorage struct {
 	httpClient     *http.Client
-	settings       *backend.DataSourceInstanceSettings
-	customSettings dataSourceSettings
-	query          dataSourceQuery
+	settings       backend.DataSourceInstanceSettings
+	query          queryModel
 }
 
-func newHTTPStorage(ctx context.Context, instance *dataSourceInstance, query dataSourceQuery, logger log.Logger) (*httpStorage, error) {
-	customSettings, err := instance.Settings()
-	if err != nil {
-		return nil, err
-	}
-
-	httpOptions, err := instance.settings.HTTPClientOptions(ctx)
-	if err != nil {
-		return nil, err
-	}
-
-	httpClient, err := httpclient.New(httpOptions)
-	if err != nil {
-		return nil, err
-	}
-
+func newHTTPStorage(query queryModel, instanceSettings backend.DataSourceInstanceSettings, httpClient *http.Client) (*httpStorage, error) {
 	return &httpStorage{
 		httpClient:     httpClient,
-		settings:       &instance.settings,
-		customSettings: customSettings,
+		settings:       instanceSettings,
 		query:          query,
 	}, nil
 }
 
 func (c *httpStorage) do() (*http.Response, error) {
-	req, err := newRequestFromQuery(c.settings, c.customSettings, c.query)
+	req, err := newRequestFromQuery(c.settings, c.query)
 	if err != nil {
 		return nil, err
 	}
@@ -66,12 +47,16 @@ func (c *httpStorage) Open() (io.ReadCloser, error) {
 	return resp.Body, nil
 }
 
-func (c *httpStorage) Stat() error {
+func (c *httpStorage) Stat(logger log.Logger) error {
 	resp, err := c.do()
 	if err != nil {
 		return err
 	}
-	defer resp.Body.Close()
+	defer func() {
+		if err := resp.Body.Close(); err != nil {
+			logger.Warn("failed to close response body", "error", err)
+		}
+	}()
 
 	if resp.StatusCode < 200 && resp.StatusCode >= 300 {
 		return fmt.Errorf("unexpected response status: %s", resp.Status)
@@ -80,7 +65,12 @@ func (c *httpStorage) Stat() error {
 	return nil
 }
 
-func newRequestFromQuery(settings *backend.DataSourceInstanceSettings, customSettings dataSourceSettings, query dataSourceQuery) (*http.Request, error) {
+func newRequestFromQuery(settings backend.DataSourceInstanceSettings, query queryModel) (*http.Request, error) {
+	customSettings, err := LoadPluginSettings(settings)
+	if err != nil {
+		return nil, err
+	}
+
 	u, err := url.Parse(settings.URL + query.Path)
 	if err != nil {
 		return nil, err

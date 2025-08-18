@@ -2,7 +2,6 @@ package main
 
 import (
 	"bytes"
-	"context"
 	"encoding/json"
 	"fmt"
 	"io"
@@ -13,31 +12,30 @@ import (
 	"testing"
 
 	"github.com/grafana/grafana-plugin-sdk-go/backend"
+	"github.com/grafana/grafana-plugin-sdk-go/backend/httpclient"
 	"github.com/grafana/grafana-plugin-sdk-go/backend/log"
 )
 
 func TestHTTPStorage_Stat(t *testing.T) {
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		fmt.Fprintf(w, "time,value\n1609754451933,12")
+		_, err := fmt.Fprintf(w, "time,value\n1609754451933,12")
+		if err != nil {
+			t.Fatal(err)
+		}
 	}))
 
-	instance := &dataSourceInstance{
-		httpClient: &http.Client{},
-		settings: backend.DataSourceInstanceSettings{
-			URL:      srv.URL,
-			JSONData: json.RawMessage(`{}`),
-		},
+	settings := backend.DataSourceInstanceSettings{
+		URL:      srv.URL,
+		JSONData: json.RawMessage(`{}`),
 	}
 
-	logger := log.New()
-
-	var opts dataSourceQuery
-	storage, err := newHTTPStorage(context.TODO(), instance, opts, logger)
+	var qm queryModel
+	storage, err := newHTTPStorage(qm, settings, &http.Client{})
 	if err != nil {
 		t.Fatal(err)
 	}
 
-	if err := storage.Stat(); err != nil {
+	if err := storage.Stat(log.New()); err != nil {
 		t.Fatal(err)
 	}
 }
@@ -45,21 +43,20 @@ func TestHTTPStorage_Stat(t *testing.T) {
 func TestHTTPStorage_Open(t *testing.T) {
 	csv := "time,value\n1609754451933,12"
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		fmt.Fprint(w, csv)
+		_, err := fmt.Fprint(w, csv)
+		if err != nil {
+			t.Fatal(err)
+		}
 	}))
 
-	instance := &dataSourceInstance{
-		httpClient: &http.Client{},
-		settings: backend.DataSourceInstanceSettings{
-			URL:      srv.URL,
-			JSONData: json.RawMessage(`{}`),
-		},
+	settings := backend.DataSourceInstanceSettings{
+		URL:      srv.URL,
+		JSONData: json.RawMessage(`{}`),
 	}
 
-	logger := log.New()
+	var qm queryModel
 
-	var opts dataSourceQuery
-	storage, err := newHTTPStorage(context.TODO(), instance, opts, logger)
+	storage, err := newHTTPStorage(qm, settings, &http.Client{})
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -89,27 +86,32 @@ func TestHTTPStorage_Settings(t *testing.T) {
 			t.Errorf("unexpected query string: %q", r.URL.RawQuery)
 		}
 
-		fmt.Fprintf(w, "time,value\n1609754451933,12")
+		_, err := fmt.Fprintf(w, "time,value\n1609754451933,12")
+		if err != nil {
+			t.Fatal(err)
+		}
 	}))
 
-	instance := &dataSourceInstance{
-		httpClient: &http.Client{},
-		settings: backend.DataSourceInstanceSettings{
-			URL: srv.URL,
-			JSONData: json.RawMessage(`{
+	settings := backend.DataSourceInstanceSettings{
+		URL: srv.URL,
+		JSONData: json.RawMessage(`{
 				"queryParams": "limit=100&page=1",
 				"httpHeaderName1": "X-Api-Key"
 			}`),
-			DecryptedSecureJSONData: map[string]string{
-				"httpHeaderValue1": "XYZ",
-			},
+		DecryptedSecureJSONData: map[string]string{
+			"httpHeaderValue1": "XYZ",
 		},
 	}
-
-	logger := log.New()
-
-	var opts dataSourceQuery
-	storage, err := newHTTPStorage(context.TODO(), instance, opts, logger)
+	var qm queryModel
+	opts, err := settings.HTTPClientOptions(t.Context())
+	if err != nil {
+		t.Fatal(err)
+	}
+	httpClient, err := httpclient.New(opts)
+	if err != nil {
+		t.Fatal(err)
+	}
+	storage, err := newHTTPStorage(qm, settings, httpClient)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -119,13 +121,13 @@ func TestHTTPStorage_Settings(t *testing.T) {
 		t.Error(err)
 	}
 
-	if err := storage.Stat(); err != nil {
+	if err := storage.Stat(log.New()); err != nil {
 		t.Error(err)
 	}
 }
 
 func TestHTTPStorage_Options(t *testing.T) {
-	opts := dataSourceQuery{
+	opts := queryModel{
 		Method:  "POST",
 		Path:    "/orders",
 		Params:  [][2]string{{"foo", "bar"}},
@@ -169,22 +171,17 @@ func TestHTTPStorage_Options(t *testing.T) {
 		invoked = true
 	}))
 
-	instance := &dataSourceInstance{
-		httpClient: &http.Client{},
-		settings: backend.DataSourceInstanceSettings{
-			URL:      srv.URL,
-			JSONData: json.RawMessage(`{}`),
-		},
+	settings := backend.DataSourceInstanceSettings{
+		URL:      srv.URL,
+		JSONData: json.RawMessage(`{"storage": "http"}`),
 	}
 
-	logger := log.New()
-
-	storage, err := newHTTPStorage(context.TODO(), instance, opts, logger)
+	storage, err := newHTTPStorage(opts, settings, &http.Client{})
 	if err != nil {
 		t.Fatal(err)
 	}
 
-	if err := storage.Stat(); err != nil {
+	if err := storage.Stat(log.New()); err != nil {
 		t.Fatal(err)
 	}
 
@@ -195,7 +192,8 @@ func TestHTTPStorage_Options(t *testing.T) {
 
 func TestHTTPStorage_UrlHandling(t *testing.T) {
 	instanceSettings := backend.DataSourceInstanceSettings{
-		URL: "http://localhost:8000",
+		URL:      "http://localhost:8000",
+		JSONData: json.RawMessage(`{"storage": "http"}`),
 	}
 	badPath := "@example.com/test/1"
 	goodPath := "/test/1"
@@ -205,7 +203,7 @@ func TestHTTPStorage_UrlHandling(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	req1, err := newRequestFromQuery(&instanceSettings, dataSourceSettings{}, dataSourceQuery{
+	req1, err := newRequestFromQuery(instanceSettings, queryModel{
 		Path:   goodPath,
 		Method: "GET",
 	})
@@ -218,7 +216,7 @@ func TestHTTPStorage_UrlHandling(t *testing.T) {
 		t.Fatal("hostname changed because of the path")
 	}
 
-	_, err = newRequestFromQuery(&instanceSettings, dataSourceSettings{}, dataSourceQuery{
+	_, err = newRequestFromQuery(instanceSettings, queryModel{
 		Path:   badPath,
 		Method: "GET",
 	})

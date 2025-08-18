@@ -11,7 +11,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/grafana/grafana-plugin-sdk-go/backend/log"
+	"github.com/grafana/grafana-plugin-sdk-go/backend"
 	"github.com/grafana/grafana-plugin-sdk-go/data"
 )
 
@@ -30,15 +30,15 @@ type csvOptions struct {
 	Timezone         string        `json:"timezone"`
 }
 
-func parseCSV(opts csvOptions, regex bool, r io.Reader, logger log.Logger) ([]*data.Field, error) {
+func parseCSV(opts csvOptions, regex bool, r io.Reader) ([]*data.Field, error) {
 	header, rows, err := readCSV(opts, r)
 	if err != nil {
-		return nil, err
+		return nil, backend.DownstreamError(err)
 	}
 
 	location, err := time.LoadLocation(opts.Timezone)
 	if err != nil {
-		panic(err)
+		return nil, backend.DownstreamError(err)
 	}
 
 	fields := makeFieldsFromSchema(header, opts.Schema, len(rows), opts.IgnoreUnknown, regex)
@@ -60,9 +60,7 @@ func parseCSV(opts csvOptions, regex bool, r io.Reader, logger log.Logger) ([]*d
 			if f.Type() == data.FieldTypeNullableTime {
 				layout, err := detectTimeLayoutNaive(rows[0][fieldIdx])
 				if err != nil {
-					// TODO: Handle error instead of sending it to the log.
-					logger.Error(err.Error())
-					return
+					return 
 				}
 
 				timeLayout = layout
@@ -315,5 +313,5 @@ func detectTimeLayoutNaive(str string) (string, error) {
 		}
 	}
 
-	return "", errors.New("unsupported time format")
+	return "", backend.DownstreamError(errors.New("unsupported time format"))
 }

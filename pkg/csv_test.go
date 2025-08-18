@@ -6,13 +6,10 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/grafana/grafana-plugin-sdk-go/backend/log"
 	"github.com/grafana/grafana-plugin-sdk-go/data"
 )
 
 func TestParseCSV(t *testing.T) {
-	logger := log.New()
-
 	for _, tt := range []struct {
 		query  csvOptions
 		input  string
@@ -23,7 +20,7 @@ func TestParseCSV(t *testing.T) {
 		}},
 	} {
 		t.Run("", func(t *testing.T) {
-			fields, err := parseCSV(tt.query, false, strings.NewReader(tt.input), logger)
+			fields, err := parseCSV(tt.query, false, strings.NewReader(tt.input))
 			if err != nil {
 				t.Fatal(err)
 			}
@@ -91,8 +88,6 @@ func TestParseTimeNaive(t *testing.T) {
 }
 
 func TestParseLazyQuotes(t *testing.T) {
-	logger := log.New()
-
 	opts := csvOptions{
 		Delimiter: ",",
 	}
@@ -106,7 +101,7 @@ func TestParseLazyQuotes(t *testing.T) {
 		{In: `I,can"t,even`},
 	} {
 		t.Run("", func(t *testing.T) {
-			_, err := parseCSV(opts, false, strings.NewReader(tt.In), logger)
+			_, err := parseCSV(opts, false, strings.NewReader(tt.In))
 			if err != nil {
 				t.Fatal(err)
 			}
@@ -115,8 +110,6 @@ func TestParseLazyQuotes(t *testing.T) {
 }
 
 func TestDecimalSeparator(t *testing.T) {
-	logger := log.New()
-
 	for _, tt := range []struct {
 		In  string
 		Out float64
@@ -146,7 +139,7 @@ func TestDecimalSeparator(t *testing.T) {
 				},
 			}
 
-			fields, err := parseCSV(opts, false, strings.NewReader(tt.In), logger)
+			fields, err := parseCSV(opts, false, strings.NewReader(tt.In))
 			if err != nil {
 				t.Fatal(err)
 			}

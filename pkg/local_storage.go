@@ -1,7 +1,6 @@
 package main
 
 import (
-	"context"
 	"fmt"
 	"io"
 	"os"
@@ -13,19 +12,19 @@ import (
 )
 
 type localStorage struct {
-	settings       *backend.DataSourceInstanceSettings
-	customSettings dataSourceSettings
-	query          dataSourceQuery
+	settings       backend.DataSourceInstanceSettings
+	customSettings *PluginSettings
+	query          queryModel
 }
 
-func newLocalStorage(_ context.Context, instance *dataSourceInstance, query dataSourceQuery, logger log.Logger) (*localStorage, error) {
-	customSettings, err := instance.Settings()
+func newLocalStorage(query queryModel, instanceSettings backend.DataSourceInstanceSettings) (*localStorage, error) {
+	customSettings, err := LoadPluginSettings(instanceSettings)
 	if err != nil {
 		return nil, err
 	}
 
 	return &localStorage{
-		settings:       &instance.settings,
+		settings:       instanceSettings,
 		customSettings: customSettings,
 		query:          query,
 	}, nil
@@ -46,7 +45,7 @@ func (c *localStorage) Open() (io.ReadCloser, error) {
 	return os.Open(filepath.ToSlash(fullPath))
 }
 
-func (c *localStorage) Stat() error {
+func (c *localStorage) Stat(_ log.Logger) error {
 	_, err := os.Stat(filepath.ToSlash(c.settings.URL))
 	return err
 }
