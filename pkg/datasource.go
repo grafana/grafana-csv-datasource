@@ -13,6 +13,7 @@ import (
 	"github.com/grafana/grafana-plugin-sdk-go/backend/instancemgmt"
 	"github.com/grafana/grafana-plugin-sdk-go/backend/log"
 	"github.com/grafana/grafana-plugin-sdk-go/data"
+	"github.com/grafana/grafana-plugin-sdk-go/experimental/concurrent"
 )
 
 var (
@@ -41,17 +42,7 @@ func NewDatasource(ctx context.Context, instanceSettings backend.DataSourceInsta
 }
 
 func (d *Datasource) QueryData(ctx context.Context, req *backend.QueryDataRequest) (*backend.QueryDataResponse, error) {
-	response := backend.NewQueryDataResponse()
-
-	for _, q := range req.Queries {
-		res := d.query(ctx, req.PluginContext, q)
-
-		// save the response in a hashmap
-		// based on with RefID as identifier
-		response.Responses[q.RefID] = res
-	}
-
-	return response, nil
+	return concurrent.QueryData(ctx, req, d.query, 10)
 }
 
 type queryModel struct {
@@ -68,19 +59,19 @@ type queryModel struct {
 	} `json:"experimental"`
 }
 
-func (d *Datasource) query(ctx context.Context, pCtx backend.PluginContext, query backend.DataQuery) backend.DataResponse {
+func (d *Datasource) query(ctx context.Context, q concurrent.Query) backend.DataResponse {
 	var response backend.DataResponse
 	logger := backend.Logger.FromContext(ctx)
 
 	// Unmarshal the JSON into our queryModel.
 	var qm queryModel
-	err := json.Unmarshal(query.JSON, &qm)
+	err := json.Unmarshal(q.DataQuery.JSON, &qm)
 	if err != nil {
 		logger.Warn("failed to unmarshal query model", "error", err)
 		return backend.ErrorResponseWithErrorSource(err)
 	}
 
-	store, err := d.newStorage(*pCtx.DataSourceInstanceSettings, qm)
+	store, err := d.newStorage(*q.PluginContext.DataSourceInstanceSettings, qm)
 	if err != nil {
 		logger.Warn("failed to create storage", "error", err)
 		return backend.ErrorResponseWithErrorSource(err)
@@ -97,9 +88,9 @@ func (d *Datasource) query(ctx context.Context, pCtx backend.PluginContext, quer
 		}
 	}()
 
-	frame := data.NewFrame(pCtx.DataSourceInstanceSettings.URL)
+	frame := data.NewFrame(q.PluginContext.DataSourceInstanceSettings.URL)
 
-	fields, err := parseCSV(qm.csvOptions, qm.Experimental.Regex, f)
+	fields, err := parseCSV(qm.csvOptions, qm.Experimental.Regex, f, logger)
 	if err != nil {
 		return backend.ErrorResponseWithErrorSource(err)
 	}

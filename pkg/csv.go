@@ -12,6 +12,7 @@ import (
 	"time"
 
 	"github.com/grafana/grafana-plugin-sdk-go/backend"
+	"github.com/grafana/grafana-plugin-sdk-go/backend/log"
 	"github.com/grafana/grafana-plugin-sdk-go/data"
 )
 
@@ -30,7 +31,7 @@ type csvOptions struct {
 	Timezone         string        `json:"timezone"`
 }
 
-func parseCSV(opts csvOptions, regex bool, r io.Reader) ([]*data.Field, error) {
+func parseCSV(opts csvOptions, regex bool, r io.Reader, logger log.Logger) ([]*data.Field, error) {
 	header, rows, err := readCSV(opts, r)
 	if err != nil {
 		return nil, backend.DownstreamError(err)
@@ -60,6 +61,7 @@ func parseCSV(opts csvOptions, regex bool, r io.Reader) ([]*data.Field, error) {
 			if f.Type() == data.FieldTypeNullableTime {
 				layout, err := detectTimeLayoutNaive(rows[0][fieldIdx])
 				if err != nil {
+					logger.Warn(fmt.Sprintf("Parse csv error: %s", err.Error()), "timeField", rows[0][fieldIdx])
 					return 
 				}
 

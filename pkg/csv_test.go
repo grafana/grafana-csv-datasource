@@ -6,6 +6,7 @@ import (
 	"strings"
 	"testing"
 
+	"github.com/grafana/grafana-plugin-sdk-go/backend/log"
 	"github.com/grafana/grafana-plugin-sdk-go/data"
 )
 
@@ -20,7 +21,7 @@ func TestParseCSV(t *testing.T) {
 		}},
 	} {
 		t.Run("", func(t *testing.T) {
-			fields, err := parseCSV(tt.query, false, strings.NewReader(tt.input))
+			fields, err := parseCSV(tt.query, false, strings.NewReader(tt.input), log.DefaultLogger)
 			if err != nil {
 				t.Fatal(err)
 			}
@@ -101,7 +102,7 @@ func TestParseLazyQuotes(t *testing.T) {
 		{In: `I,can"t,even`},
 	} {
 		t.Run("", func(t *testing.T) {
-			_, err := parseCSV(opts, false, strings.NewReader(tt.In))
+			_, err := parseCSV(opts, false, strings.NewReader(tt.In), log.DefaultLogger)
 			if err != nil {
 				t.Fatal(err)
 			}
@@ -139,7 +140,7 @@ func TestDecimalSeparator(t *testing.T) {
 				},
 			}
 
-			fields, err := parseCSV(opts, false, strings.NewReader(tt.In))
+			fields, err := parseCSV(opts, false, strings.NewReader(tt.In), log.DefaultLogger)
 			if err != nil {
 				t.Fatal(err)
 			}
