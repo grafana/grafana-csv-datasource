@@ -17,13 +17,19 @@ import (
 )
 
 var (
-	_ backend.QueryDataHandler   = (*Datasource)(nil)
-	_ backend.CheckHealthHandler = (*Datasource)(nil)
+	_ backend.QueryDataHandler      = (*Datasource)(nil)
+	_ backend.CheckHealthHandler    = (*Datasource)(nil)
+	_ instancemgmt.InstanceDisposer = (*Datasource)(nil)
 )
 
 type Datasource struct {
 	allowLocalMode bool
 	HTTPClient     *http.Client
+}
+
+// Dispose implements instancemgmt.InstanceDisposer.
+func (d *Datasource) Dispose() {
+	backend.Logger.Info("Disposing datasource")
 }
 
 func NewDatasource(ctx context.Context, instanceSettings backend.DataSourceInstanceSettings) (instancemgmt.Instance, error) {
