@@ -38,3 +38,11 @@ playwright/.auth/
 
 # Misc
 mage_output_file.go
+
+.pnp.*
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/sdks
+!.yarn/versions

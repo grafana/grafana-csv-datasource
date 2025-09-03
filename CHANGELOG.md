@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.7.0
+
+🚀 Refactor backend to handle error source
+🚀 Bump frontend dependencies and bump grafana dependency
+
 ## 0.6.25
 
 ⚙️ Chore: Remove props mutations
