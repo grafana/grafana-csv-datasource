@@ -1,8 +1,6 @@
 module github.com/grafana/grafana-csv-datasource
 
-go 1.24.1
-
-toolchain go1.24.6
+go 1.25
 
 require github.com/grafana/grafana-plugin-sdk-go v0.278.0
 

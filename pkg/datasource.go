@@ -7,17 +7,51 @@ import (
 	"io"
 	"net/http"
 	"os"
-	"path/filepath"
-	"sync"
 
 	"github.com/grafana/grafana-plugin-sdk-go/backend"
-	"github.com/grafana/grafana-plugin-sdk-go/backend/datasource"
+	"github.com/grafana/grafana-plugin-sdk-go/backend/httpclient"
 	"github.com/grafana/grafana-plugin-sdk-go/backend/instancemgmt"
 	"github.com/grafana/grafana-plugin-sdk-go/backend/log"
 	"github.com/grafana/grafana-plugin-sdk-go/data"
+	"github.com/grafana/grafana-plugin-sdk-go/experimental/concurrent"
 )
 
-type dataSourceQuery struct {
+var (
+	_ backend.QueryDataHandler      = (*Datasource)(nil)
+	_ backend.CheckHealthHandler    = (*Datasource)(nil)
+	_ instancemgmt.InstanceDisposer = (*Datasource)(nil)
+)
+
+type Datasource struct {
+	allowLocalMode bool
+	HTTPClient     *http.Client
+}
+
+// Dispose implements instancemgmt.InstanceDisposer.
+func (d *Datasource) Dispose() {
+	backend.Logger.Info("Disposing datasource")
+}
+
+func NewDatasource(ctx context.Context, instanceSettings backend.DataSourceInstanceSettings) (instancemgmt.Instance, error) {
+	opts, err := instanceSettings.HTTPClientOptions(ctx)
+	if err != nil {
+		return nil, err
+	}
+	httpClient, err := httpclient.New(opts)
+	if err != nil {
+		return nil, err
+	}
+	return &Datasource{
+		allowLocalMode: os.Getenv("GF_PLUGIN_ALLOW_LOCAL_MODE") == "true",
+		HTTPClient:     httpClient,
+	}, nil
+}
+
+func (d *Datasource) QueryData(ctx context.Context, req *backend.QueryDataRequest) (*backend.QueryDataResponse, error) {
+	return concurrent.QueryData(ctx, req, d.query, 10)
+}
+
+type queryModel struct {
 	csvOptions
 
 	Method  string      `json:"method"`
@@ -31,179 +65,111 @@ type dataSourceQuery struct {
 	} `json:"experimental"`
 }
 
-// dataSource defines common operations for all instances of this data source.
-type dataSource struct {
-	instanceManager instancemgmt.InstanceManager
-	logger          log.Logger
-	allowLocalMode  bool
-}
+func (d *Datasource) query(ctx context.Context, q concurrent.Query) backend.DataResponse {
+	var response backend.DataResponse
+	logger := backend.Logger.FromContext(ctx)
 
-func newDataSource(logger log.Logger) *dataSource {
-	instanceManager := datasource.NewInstanceManager(newDataSourceInstance)
-
-	return &dataSource{
-		instanceManager: instanceManager,
-		logger:          logger,
-		allowLocalMode:  os.Getenv("GF_PLUGIN_ALLOW_LOCAL_MODE") == "true",
-	}
-}
-
-func (ds *dataSource) QueryData(ctx context.Context, req *backend.QueryDataRequest) (*backend.QueryDataResponse, error) {
-	instance, err := ds.getInstance(ctx, req.PluginContext)
+	// Unmarshal the JSON into our queryModel.
+	var qm queryModel
+	err := json.Unmarshal(q.DataQuery.JSON, &qm)
 	if err != nil {
-		return nil, err
+		logger.Warn("failed to unmarshal query model", "error", err)
+		return backend.ErrorResponseWithErrorSource(err)
 	}
 
-	responses := make(backend.Responses)
-
-	var wg sync.WaitGroup
-	wg.Add(len(req.Queries))
-
-	for _, q := range req.Queries {
-		go func(q backend.DataQuery) {
-			responses[q.RefID] = ds.query(ctx, q, instance)
-			wg.Done()
-		}(q)
-	}
-
-	// Wait for all queries to finish before returning the result.
-	wg.Wait()
-
-	return &backend.QueryDataResponse{
-		Responses: responses,
-	}, nil
-}
-
-// query is a helper that performs a single data source query.
-func (ds *dataSource) query(ctx context.Context, query backend.DataQuery, instance *dataSourceInstance) backend.DataResponse {
-	var dsQuery dataSourceQuery
-	if err := json.Unmarshal(query.JSON, &dsQuery); err != nil {
-		return backend.DataResponse{Error: err}
-	}
-
-	store, err := newStorage(ctx, instance, dsQuery, ds.logger, ds.allowLocalMode)
+	store, err := d.newStorage(*q.PluginContext.DataSourceInstanceSettings, qm)
 	if err != nil {
-		return backend.DataResponse{Error: err}
+		logger.Warn("failed to create storage", "error", err)
+		return backend.ErrorResponseWithErrorSource(err)
 	}
 
 	f, err := store.Open()
 	if err != nil {
-		return backend.DataResponse{Error: err}
+		logger.Warn("failed to open storage", "error", err)
+		return backend.ErrorResponseWithErrorSource(err)
 	}
-	defer f.Close()
+	defer func() {
+		if err := f.Close(); err != nil {
+			logger.Warn("failed to close file", "error", err)
+		}
+	}()
 
-	fields, err := parseCSV(dsQuery.csvOptions, dsQuery.Experimental.Regex, f, ds.logger)
+	frame := data.NewFrame(q.PluginContext.DataSourceInstanceSettings.URL)
+
+	fields, err := parseCSV(qm.csvOptions, qm.Experimental.Regex, f, logger)
 	if err != nil {
-		return backend.DataResponse{Error: err}
+		return backend.ErrorResponseWithErrorSource(err)
 	}
 
-	return backend.DataResponse{
-		Frames: []*data.Frame{{
-			Name:   filepath.Base(instance.settings.URL),
-			Fields: fields,
-		}},
-	}
+	frame.Fields = fields
+
+	// add the frames to the response.
+	response.Frames = append(response.Frames, frame)
+
+	return response
 }
 
 // CheckHealth returns the current health of the backend.
-func (ds *dataSource) CheckHealth(ctx context.Context, req *backend.CheckHealthRequest) (*backend.CheckHealthResult, error) {
-	instance, err := ds.getInstance(ctx, req.PluginContext)
+func (d *Datasource) CheckHealth(ctx context.Context, req *backend.CheckHealthRequest) (*backend.CheckHealthResult, error) {
+	res := &backend.CheckHealthResult{}
+	logger := backend.Logger.FromContext(ctx)
+
+	settings, err := LoadPluginSettings(*req.PluginContext.DataSourceInstanceSettings)
 	if err != nil {
-		return &backend.CheckHealthResult{
-			Status:  backend.HealthStatusError,
-			Message: err.Error(),
-		}, nil
+		logger.Warn("failed to load plugin settings", "error", err)
+		res.Status = backend.HealthStatusError
+		res.Message = "Failed to load plugin settings"
+		return res, nil
 	}
 
-	var query dataSourceQuery
+	if settings.Storage == "http" && req.PluginContext.DataSourceInstanceSettings.URL == "" {
+		res.Status = backend.HealthStatusError
+		res.Message = "URL is required for HTTP storage"
+		return res, nil
+	}
 
-	store, err := newStorage(ctx, instance, query, ds.logger, ds.allowLocalMode)
+	store, err := d.newStorage(*req.PluginContext.DataSourceInstanceSettings, queryModel{})
 	if err != nil {
-		return &backend.CheckHealthResult{
-			Status:  backend.HealthStatusError,
-			Message: err.Error(),
-		}, nil
+		logger.Warn("failed to create storage", "error", err)
+		res.Status = backend.HealthStatusError
+		res.Message = err.Error()
+		return res, nil
 	}
 
-	if err := store.Stat(); err != nil {
-		return &backend.CheckHealthResult{
-			Status:  backend.HealthStatusError,
-			Message: err.Error(),
-		}, nil
+	if err := store.Stat(logger); err != nil {
+		logger.Warn("failed to connect to storage", "error", err)
+		res.Status = backend.HealthStatusError
+		res.Message = err.Error()
+		return res, nil
 	}
 
-	return &backend.CheckHealthResult{
-		Status:  backend.HealthStatusOk,
-		Message: "Success",
-	}, nil
-}
-
-func (ds *dataSource) getInstance(ctx context.Context, pluginCtx backend.PluginContext) (*dataSourceInstance, error) {
-	instance, err := ds.instanceManager.Get(ctx, pluginCtx)
-	if err != nil {
-		return nil, err
-	}
-	return instance.(*dataSourceInstance), nil
-}
-
-// dataSourceInstance represents a single instance of this data source.
-type dataSourceInstance struct {
-	httpClient *http.Client
-	settings   backend.DataSourceInstanceSettings
-}
-
-func newDataSourceInstance(_ context.Context, settings backend.DataSourceInstanceSettings) (instancemgmt.Instance, error) {
-	return &dataSourceInstance{
-		httpClient: &http.Client{},
-		settings:   settings,
-	}, nil
-}
-
-func (s *dataSourceInstance) Dispose() {}
-
-func (s *dataSourceInstance) Settings() (dataSourceSettings, error) {
-	return newDataSourceSettings(s.settings)
-}
-
-type dataSourceSettings struct {
-	QueryParams string `json:"queryParams"`
-	Storage     string `json:"storage"`
-}
-
-func newDataSourceSettings(instanceSettings backend.DataSourceInstanceSettings) (dataSourceSettings, error) {
-	var settings dataSourceSettings
-	if err := json.Unmarshal(instanceSettings.JSONData, &settings); err != nil {
-		return dataSourceSettings{}, err
-	}
-	return settings, nil
+	res.Status = backend.HealthStatusOk
+	res.Message = "Success"
+	return res, nil
 }
 
 type storage interface {
 	Open() (io.ReadCloser, error)
-	Stat() error
+	Stat(logger log.Logger) error
 }
 
-func newStorage(ctx context.Context, instance *dataSourceInstance, query dataSourceQuery, logger log.Logger, allowLocalMode bool) (storage, error) {
-	settings, err := instance.Settings()
+func (d *Datasource) newStorage(instanceSettings backend.DataSourceInstanceSettings, query queryModel) (storage, error) {
+	settings, err := LoadPluginSettings(instanceSettings)
 	if err != nil {
 		return nil, err
 	}
 
-	if settings.Storage == "local" && !allowLocalMode {
+	if settings.Storage == "local" && !d.allowLocalMode {
 		return nil, errors.New("local mode has been disabled by your administrator")
 	}
 
-	// Default to HTTP storage for backwards compatibility.
-	if settings.Storage == "" {
-		return newHTTPStorage(ctx, instance, query, logger)
-	}
-
 	switch settings.Storage {
-	case "http":
-		return newHTTPStorage(ctx, instance, query, logger)
 	case "local":
-		return newLocalStorage(ctx, instance, query, logger)
+		return newLocalStorage(query, instanceSettings)
+	case "http":
+		fallthrough
 	default:
-		return nil, errors.New("unsupported storage type")
+		// Default to HTTP storage for backwards compatibility.
+		return newHTTPStorage(query, instanceSettings, d.HTTPClient)
 	}
 }
