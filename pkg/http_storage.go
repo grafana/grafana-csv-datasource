@@ -31,7 +31,12 @@ func (c *httpStorage) do() (*http.Response, error) {
 		return nil, err
 	}
 
-	return c.httpClient.Do(req)
+	resp, err := c.httpClient.Do(req)
+	if err != nil {
+		return nil, backend.DownstreamError(err)
+	}
+
+	return resp, nil
 }
 
 func (c *httpStorage) Open() (io.ReadCloser, error) {
@@ -41,7 +46,7 @@ func (c *httpStorage) Open() (io.ReadCloser, error) {
 	}
 
 	if resp.StatusCode < 200 && resp.StatusCode >= 300 {
-		return nil, fmt.Errorf("unexpected response status: %s", resp.Status)
+		return nil, backend.DownstreamErrorf("unexpected response status: %s", resp.Status)
 	}
 
 	return resp.Body, nil
@@ -73,18 +78,18 @@ func newRequestFromQuery(settings backend.DataSourceInstanceSettings, query quer
 
 	u, err := url.Parse(settings.URL + query.Path)
 	if err != nil {
-		return nil, err
+		return nil, backend.DownstreamError(err)
 	}
 
 	// we need to verify that `query.Path` did not modify the hostname by doing tricks
 	settingsURL, err := url.Parse(settings.URL)
 	if err != nil {
-		return nil, fmt.Errorf("invalid URL")
+		return nil, backend.DownstreamErrorf("invalid URL")
 	}
 
 	if settingsURL.Host != u.Host {
 		// the host got changed by adding the path to it. this must not happen.
-		return nil, fmt.Errorf("invalid URL + path combination")
+		return nil, backend.DownstreamErrorf("invalid URL + path combination")
 	}
 
 	params := make(url.Values)
@@ -95,7 +100,7 @@ func newRequestFromQuery(settings backend.DataSourceInstanceSettings, query quer
 	// Query params set by admin overrides params set by query editor.
 	values, err := url.ParseQuery(customSettings.QueryParams)
 	if err != nil {
-		return nil, err
+		return nil, backend.DownstreamError(err)
 	}
 	for k, v := range values {
 		params[k] = v
@@ -112,7 +117,7 @@ func newRequestFromQuery(settings backend.DataSourceInstanceSettings, query quer
 
 	req, err := http.NewRequest(method, u.String(), strings.NewReader(query.Body))
 	if err != nil {
-		return nil, err
+		return nil, backend.DownstreamError(err)
 	}
 
 	for _, p := range query.Headers {

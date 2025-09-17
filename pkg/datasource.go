@@ -3,7 +3,6 @@ package main
 import (
 	"context"
 	"encoding/json"
-	"errors"
 	"io"
 	"net/http"
 	"os"
@@ -73,19 +72,16 @@ func (d *Datasource) query(ctx context.Context, q concurrent.Query) backend.Data
 	var qm queryModel
 	err := json.Unmarshal(q.DataQuery.JSON, &qm)
 	if err != nil {
-		logger.Warn("failed to unmarshal query model", "error", err)
 		return backend.ErrorResponseWithErrorSource(err)
 	}
 
 	store, err := d.newStorage(*q.PluginContext.DataSourceInstanceSettings, qm)
 	if err != nil {
-		logger.Warn("failed to create storage", "error", err)
 		return backend.ErrorResponseWithErrorSource(err)
 	}
 
 	f, err := store.Open()
 	if err != nil {
-		logger.Warn("failed to open storage", "error", err)
 		return backend.ErrorResponseWithErrorSource(err)
 	}
 	defer func() {
@@ -160,7 +156,7 @@ func (d *Datasource) newStorage(instanceSettings backend.DataSourceInstanceSetti
 	}
 
 	if settings.Storage == "local" && !d.allowLocalMode {
-		return nil, errors.New("local mode has been disabled by your administrator")
+		return nil, backend.DownstreamErrorf("local mode has been disabled by your administrator")
 	}
 
 	switch settings.Storage {
