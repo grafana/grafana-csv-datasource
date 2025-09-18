@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.7.1
+
+🐛 Fix: Add error source for http errors
+
 ## 0.7.0
 
 🚀 Refactor backend to handle error source
