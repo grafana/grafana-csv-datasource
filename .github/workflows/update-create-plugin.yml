@@ -1,9 +1,7 @@
 name: Create Plugin Update
 
 on:
-  workflow_dispatch:
-  schedule:
-    - cron: '0 0 1 * *' # run once a month on the 1st day
+  pull_request:
 
 permissions:
   contents: write
@@ -13,4 +11,4 @@ jobs:
   release:
     runs-on: ubuntu-latest
     steps:
-      - uses: grafana/plugin-actions/create-plugin-update@main
+      - uses: grafana/plugin-actions/create-plugin-update@enable-mutable-yarn-updates
