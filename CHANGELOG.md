@@ -3,6 +3,8 @@
 ## 0.7.1
 
 🐛 Fix: Add error source for http errors
+🐛 Fix: Panics `index out of range [0] with length 0`
+⚙️ Chore: Bump create plugin to 5.26.4
 
 ## 0.7.0
 
