@@ -190,6 +190,155 @@ func TestHTTPStorage_Options(t *testing.T) {
 	}
 }
 
+func TestHTTPStorage_MalformedParamsHeaders(t *testing.T) {
+	tests := []struct {
+		name    string
+		params  [][2]string
+		headers [][2]string
+	}{
+		{
+			name:    "empty params array",
+			params:  [][2]string{},
+			headers: [][2]string{{"valid-header", "value"}},
+		},
+		{
+			name:    "params with single element arrays",
+			params:  [][2]string{{"incomplete"}},
+			headers: [][2]string{{"valid-header", "value"}},
+		},
+		{
+			name:    "headers with single element arrays",
+			params:  [][2]string{{"valid-param", "value"}},
+			headers: [][2]string{{"incomplete"}},
+		},
+		{
+			name:    "mix of valid and invalid params/headers",
+			params:  [][2]string{{"valid-param", "value"}, {"incomplete"}},
+			headers: [][2]string{{"valid-header", "value"}, {"incomplete"}},
+		},
+		{
+			name:    "completely empty arrays",
+			params:  [][2]string{},
+			headers: [][2]string{},
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+				// Verify that only valid params/headers are set
+				for _, p := range tt.params {
+					if len(p) >= 2 {
+						if r.URL.Query().Get(p[0]) != p[1] {
+							t.Errorf("expected param %s=%s", p[0], p[1])
+						}
+					}
+				}
+				
+				for _, h := range tt.headers {
+					if len(h) >= 2 {
+						if r.Header.Get(h[0]) != h[1] {
+							t.Errorf("expected header %s=%s", h[0], h[1])
+						}
+					}
+				}
+				
+				_, err := fmt.Fprintf(w, "time,value\n1609754451933,12")
+				if err != nil {
+					t.Fatal(err)
+				}
+			}))
+			defer srv.Close()
+
+			settings := backend.DataSourceInstanceSettings{
+				URL:      srv.URL,
+				JSONData: json.RawMessage(`{}`),
+			}
+
+			qm := queryModel{
+				Params:  tt.params,
+				Headers: tt.headers,
+			}
+
+			storage, err := newHTTPStorage(qm, settings, &http.Client{})
+			if err != nil {
+				t.Fatal(err)
+			}
+
+			// This should not panic even with malformed params/headers
+			_, err = storage.Open()
+			if err != nil {
+				t.Fatal(err)
+			}
+
+			err = storage.Stat(log.New())
+			if err != nil {
+				t.Fatal(err)
+			}
+		})
+	}
+}
+
+func TestNewRequestFromQuery_EdgeCases(t *testing.T) {
+	settings := backend.DataSourceInstanceSettings{
+		URL:      "http://localhost:8000",
+		JSONData: json.RawMessage(`{}`),
+	}
+
+	tests := []struct {
+		name        string
+		query       queryModel
+		expectError bool
+	}{
+		{
+			name: "empty params and headers",
+			query: queryModel{
+				Method:  "GET",
+				Params:  [][2]string{},
+				Headers: [][2]string{},
+			},
+			expectError: false,
+		},
+		{
+			name: "malformed params",
+			query: queryModel{
+				Method:  "GET",
+				Params:  [][2]string{{"incomplete"}},
+				Headers: [][2]string{{"valid", "header"}},
+			},
+			expectError: false, // Should not error, just skip incomplete params
+		},
+		{
+			name: "malformed headers",
+			query: queryModel{
+				Method:  "GET",
+				Params:  [][2]string{{"valid", "param"}},
+				Headers: [][2]string{{"incomplete"}},
+			},
+			expectError: false, // Should not error, just skip incomplete headers
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			req, err := newRequestFromQuery(settings, tt.query)
+			
+			if tt.expectError {
+				if err == nil {
+					t.Fatalf("expected error but got none")
+				}
+			} else {
+				if err != nil {
+					t.Fatalf("unexpected error: %v", err)
+				}
+				if req == nil {
+					t.Fatalf("expected request but got nil")
+				}
+			}
+		})
+	}
+}
+
 func TestHTTPStorage_UrlHandling(t *testing.T) {
 	instanceSettings := backend.DataSourceInstanceSettings{
 		URL:      "http://localhost:8000",

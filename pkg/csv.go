@@ -37,6 +37,11 @@ func parseCSV(opts csvOptions, regex bool, r io.Reader, logger log.Logger) ([]*d
 		return nil, backend.DownstreamError(err)
 	}
 
+	// Check if we have any data to process
+	if len(rows) == 0 {
+		return nil, backend.DownstreamErrorf("no data rows found in CSV")
+	}
+
 	location, err := time.LoadLocation(opts.Timezone)
 	if err != nil {
 		return nil, backend.DownstreamError(err)
@@ -59,18 +64,29 @@ func parseCSV(opts csvOptions, regex bool, r io.Reader, logger log.Logger) ([]*d
 
 			var timeLayout string
 			if f.Type() == data.FieldTypeNullableTime {
-				layout, err := detectTimeLayoutNaive(rows[0][fieldIdx])
-				if err != nil {
-					logger.Warn(fmt.Sprintf("Parse csv error: %s", err.Error()), "timeField", rows[0][fieldIdx])
-					return 
+				// Ensure we have data and the field index is valid
+				if len(rows) > 0 && len(rows[0]) > fieldIdx {
+					layout, err := detectTimeLayoutNaive(rows[0][fieldIdx])
+					if err != nil {
+						logger.Warn(fmt.Sprintf("Parse csv error: %s", err.Error()), "timeField", rows[0][fieldIdx])
+						return 
+					}
+					timeLayout = layout
+				} else {
+					logger.Warn("No data available for time layout detection")
+					return
 				}
-
-				timeLayout = layout
 			}
 
 			for rowIdx := 0; rowIdx < f.Len(); rowIdx++ {
-				if err := parseCell(rows[rowIdx][fieldIdx], opts, timeLayout, rowIdx, f, location); err != nil {
-					// Ignore any cells that couldn't be parsed.
+				// Ensure the row and field indices are valid
+				if rowIdx < len(rows) && fieldIdx < len(rows[rowIdx]) {
+					if err := parseCell(rows[rowIdx][fieldIdx], opts, timeLayout, rowIdx, f, location); err != nil {
+						// Ignore any cells that couldn't be parsed.
+						f.Set(rowIdx, nil)
+					}
+				} else {
+					// Set nil for missing data
 					f.Set(rowIdx, nil)
 				}
 			}
@@ -106,7 +122,7 @@ func readCSV(opts csvOptions, r io.Reader) ([]string, [][]string, error) {
 	rd := csv.NewReader(r)
 	rd.LazyQuotes = true
 
-	if len(opts.Delimiter) == 1 {
+	if len(opts.Delimiter) >= 1 {
 		rd.Comma = rune(opts.Delimiter[0])
 	}
 
@@ -118,11 +134,15 @@ func readCSV(opts csvOptions, r io.Reader) ([]string, [][]string, error) {
 	var rows [][]string
 	var header []string
 
+	if len(records) == 0 {
+		return nil, nil, errors.New("no records found in CSV")
+	}
+
 	if opts.Header {
 		header = records[0]
 		rows = records[1:]
 	} else {
-		if len(records) > 0 {
+		if len(records) > 0 && len(records[0]) > 0 {
 			for i := 0; i < len(records[0]); i++ {
 				header = append(header, fmt.Sprintf("Field %d", i+1))
 			}
@@ -264,6 +284,11 @@ func splitNumberParts(str string, sep string) (string, string) {
 
 	if idx < 0 {
 		return str, "0"
+	}
+
+	// Check bounds to prevent slice out of range panic
+	if idx+1 >= len(str) {
+		return str[:idx], "0"
 	}
 
 	return str[:idx], str[idx+1:]
