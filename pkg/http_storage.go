@@ -94,7 +94,9 @@ func newRequestFromQuery(settings backend.DataSourceInstanceSettings, query quer
 
 	params := make(url.Values)
 	for _, p := range query.Params {
-		params.Set(p[0], p[1])
+		if len(p) >= 2 {
+			params.Set(p[0], p[1])
+		}
 	}
 
 	// Query params set by admin overrides params set by query editor.
@@ -121,7 +123,9 @@ func newRequestFromQuery(settings backend.DataSourceInstanceSettings, query quer
 	}
 
 	for _, p := range query.Headers {
-		req.Header.Set(p[0], p[1])
+		if len(p) >= 2 {
+			req.Header.Set(p[0], p[1])
+		}
 	}
 
 	return req, nil
