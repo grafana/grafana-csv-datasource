@@ -1427,7 +1427,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@grafana/e2e-selectors@npm:12.1.0, @grafana/e2e-selectors@npm:^12.1.0-254610":
+"@grafana/e2e-selectors@npm:12.1.0":
   version: 12.1.0
   resolution: "@grafana/e2e-selectors@npm:12.1.0"
   dependencies:
@@ -1436,6 +1436,17 @@ __metadata:
     tslib: "npm:2.8.1"
     typescript: "npm:5.8.3"
   checksum: 10c0/596dd5944027926def168516b502c330c0973dd6377cbea4ede7dadc14ebb9eab783c2c7d9777041c89f0944477d0b1287d662be495003a249a2879e9f2d478b
+  languageName: node
+  linkType: hard
+
+"@grafana/e2e-selectors@npm:^12.2.0-255920":
+  version: 12.2.0-17681690154
+  resolution: "@grafana/e2e-selectors@npm:12.2.0-17681690154"
+  dependencies:
+    semver: "npm:^7.7.0"
+    tslib: "npm:2.8.1"
+    typescript: "npm:5.9.2"
+  checksum: 10c0/63fd9c317ba55a9713b961d677104ad0d0c20d48c0437da4f1bf61550ff40cfc520933e06f16c014b36005ff82c00b00ec7976e2ddb63149052b772cb2ec7cb7
   languageName: node
   linkType: hard
 
@@ -1495,17 +1506,35 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@grafana/plugin-e2e@npm:^2.1.7":
-  version: 2.1.8
-  resolution: "@grafana/plugin-e2e@npm:2.1.8"
+"@grafana/i18n@npm:^12.1.0":
+  version: 12.1.1
+  resolution: "@grafana/i18n@npm:12.1.1"
   dependencies:
-    "@grafana/e2e-selectors": "npm:^12.1.0-254610"
+    "@formatjs/intl-durationformat": "npm:^0.7.0"
+    "@typescript-eslint/utils": "npm:^8.33.1"
+    fast-deep-equal: "npm:^3.1.3"
+    i18next: "npm:^25.0.0"
+    i18next-browser-languagedetector: "npm:^8.0.0"
+    i18next-pseudo: "npm:^2.2.1"
+    micro-memoize: "npm:^4.1.2"
+    react-i18next: "npm:^15.0.0"
+  peerDependencies:
+    react: ">=18"
+  checksum: 10c0/7704efe03d8a81c00d71c69672a586eae42ab18364bbd3a9b657e4c5600f38bf771eeb2681b76362e9a61dd755bcab82a79958d3e31dbb7add20e0f7619f2f7d
+  languageName: node
+  linkType: hard
+
+"@grafana/plugin-e2e@npm:^2.1.12":
+  version: 2.1.12
+  resolution: "@grafana/plugin-e2e@npm:2.1.12"
+  dependencies:
+    "@grafana/e2e-selectors": "npm:^12.2.0-255920"
     semver: "npm:^7.5.4"
     uuid: "npm:^11.0.2"
     yaml: "npm:^2.3.4"
   peerDependencies:
     "@playwright/test": ^1.52.0
-  checksum: 10c0/3b473227400e764314fe548cc45c35e748d03d6570d1f36d297dccfb3fedbf323a3c2de2f8b8f57b55f9016f75d617e117b743cccbcd5d2c5ee80b005c880e92
+  checksum: 10c0/cf6d10bb696b46e0bd74d67d9311ad912efb00eb13cdcca9904fa88bfdc2558ce8e3b5b535d4d522779b3e90d9e818dc7e8c0469fee7ca5d13ceb83f7a960531
   languageName: node
   linkType: hard
 
@@ -7134,7 +7163,8 @@ __metadata:
     "@grafana/data": "npm:^12.1.0"
     "@grafana/e2e-selectors": "npm:12.1.0"
     "@grafana/eslint-config": "npm:^8.0.0"
-    "@grafana/plugin-e2e": "npm:^2.1.7"
+    "@grafana/i18n": "npm:^12.1.0"
+    "@grafana/plugin-e2e": "npm:^2.1.12"
     "@grafana/plugin-ui": "npm:^0.10.9"
     "@grafana/runtime": "npm:^12.1.0"
     "@grafana/schema": "npm:^12.1.0"
@@ -12774,6 +12804,16 @@ __metadata:
   languageName: node
   linkType: hard
 
+"typescript@npm:5.9.2":
+  version: 5.9.2
+  resolution: "typescript@npm:5.9.2"
+  bin:
+    tsc: bin/tsc
+    tsserver: bin/tsserver
+  checksum: 10c0/cd635d50f02d6cf98ed42de2f76289701c1ec587a363369255f01ed15aaf22be0813226bff3c53e99d971f9b540e0b3cc7583dbe05faded49b1b0bed2f638a18
+  languageName: node
+  linkType: hard
+
 "typescript@patch:typescript@npm%3A5.5.4#optional!builtin<compat/typescript>":
   version: 5.5.4
   resolution: "typescript@patch:typescript@npm%3A5.5.4#optional!builtin<compat/typescript>::version=5.5.4&hash=379a07"
@@ -12791,6 +12831,16 @@ __metadata:
     tsc: bin/tsc
     tsserver: bin/tsserver
   checksum: 10c0/39117e346ff8ebd87ae1510b3a77d5d92dae5a89bde588c747d25da5c146603a99c8ee588c7ef80faaf123d89ed46f6dbd918d534d641083177d5fac38b8a1cb
+  languageName: node
+  linkType: hard
+
+"typescript@patch:typescript@npm%3A5.9.2#optional!builtin<compat/typescript>":
+  version: 5.9.2
+  resolution: "typescript@patch:typescript@npm%3A5.9.2#optional!builtin<compat/typescript>::version=5.9.2&hash=5786d5"
+  bin:
+    tsc: bin/tsc
+    tsserver: bin/tsserver
+  checksum: 10c0/34d2a8e23eb8e0d1875072064d5e1d9c102e0bdce56a10a25c0b917b8aa9001a9cf5c225df12497e99da107dc379360bc138163c66b55b95f5b105b50578067e
   languageName: node
   linkType: hard
 

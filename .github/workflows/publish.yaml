@@ -31,6 +31,7 @@ jobs:
     with:
       go-version: '1.25'
       golangci-lint-version: '2.4.0'
+      github-draft-release: false
       branch: ${{ github.event.inputs.branch }}
       environment: ${{ github.event.inputs.environment }}
       docs-only: ${{ fromJSON(github.event.inputs.docs-only) }}
