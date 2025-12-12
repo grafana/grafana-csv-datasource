@@ -25,7 +25,7 @@ export const FieldEditor = ({ query, onChange, onRunQuery, limit, editorContext 
     { label: 'Tab', value: '\t' },
   ];
 
-  const onTzChange = (timezone: string = 'UTC') => {
+  const onTzChange = (timezone = 'UTC') => {
     onChange({ ...query, timezone });
     onRunQuery();
   };
