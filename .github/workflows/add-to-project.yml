@@ -17,19 +17,22 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - id: get-secrets
-        uses: grafana/shared-workflows/actions/get-vault-secrets@main # zizmor: ignore[unpinned-uses]
+        uses: grafana/shared-workflows/actions/get-vault-secrets@get-vault-secrets/v1.3.0
+        # https://github.com/grafana/shared-workflows/releases?q=get-vault-secrets
         with:
           repo_secrets: |
             GITHUB_APP_ID=grafana-oss-big-tent:app-id
             GITHUB_APP_PRIVATE_KEY=grafana-oss-big-tent:private-key
       - name: Generate a token
         id: generate-token
-        uses: actions/create-github-app-token@v1
+        uses: actions/create-github-app-token@v2.2.1
+        # https://github.com/actions/create-github-app-token/releases
         with:
           app-id: ${{ env.GITHUB_APP_ID }}
           private-key: ${{ env.GITHUB_APP_PRIVATE_KEY }}
           owner: ${{ github.repository_owner }}
-      - uses: actions/add-to-project@main
+      - uses: actions/add-to-project@v1.0.2
+        # https://github.com/actions/add-to-project/releases
         with:
           project-url: https://github.com/orgs/grafana/projects/457
           github-token: ${{ steps.generate-token.outputs.token }}

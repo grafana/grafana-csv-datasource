@@ -13,4 +13,5 @@ jobs:
   release:
     runs-on: ubuntu-latest
     steps:
-      - uses: grafana/plugin-actions/create-plugin-update@main
+      - uses: grafana/plugin-actions/create-plugin-update@v2.0.1
+      # https://github.com/grafana/plugin-actions/releases?q=create-plugin-update
