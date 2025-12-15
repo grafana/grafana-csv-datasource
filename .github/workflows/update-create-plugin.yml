@@ -7,10 +7,19 @@ on:
 
 permissions:
   contents: write
+  id-token: write # Needed for grafana/shared-workflows/actions/create-github-app-token@create-github-app-token
   pull-requests: write
 
 jobs:
   release:
     runs-on: ubuntu-latest
     steps:
-      - uses: grafana/plugin-actions/create-plugin-update@main
+      - id: get-github-token
+        uses: grafana/shared-workflows/actions/create-github-app-token@create-github-app-token/v0.2.2
+        # https://github.com/grafana/shared-workflows/releases?q=create-github-app-token
+        with:
+          github_app: grafana-oss-big-tent
+      - uses: grafana/plugin-actions/create-plugin-update@create-plugin-update/v2.0.1
+        # https://github.com/grafana/plugin-actions/releases?q=create-plugin-update
+        with:
+          token: ${{ steps.get-github-token.outputs.token }}

@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.7.2
+
+⚙️ Chore: Replaced custom timezone picker with Grafana UI component
+⚙️ Chore: Updated frontend deps
+⚙️ Chore: Updated backend plugin sdk `grafana-plugin-sdk-go`
+⚙️ Chore: Update create plugin config
+⚙️ Chore: Pinned github workflow actions
+
 ## 0.7.1
 
 🐛 Fix: Add error source for http errors
