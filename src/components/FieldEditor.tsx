@@ -1,9 +1,8 @@
 import { SelectableValue } from '@grafana/data';
-import { InlineField, InlineFieldRow, InlineSwitch, Input, Select, Switch } from '@grafana/ui';
+import { InlineField, InlineFieldRow, InlineSwitch, Input, Select, Switch, TimeZonePicker } from '@grafana/ui';
 import React, { FormEvent, useState } from 'react';
 import { CSVQuery, FieldSchema } from '../types';
 import { SchemaEditor } from './SchemaEditor';
-import momentTz from 'moment-timezone';
 import { getQueryWithDefaults } from '../utils';
 
 interface Props {
@@ -26,10 +25,8 @@ export const FieldEditor = ({ query, onChange, onRunQuery, limit, editorContext 
     { label: 'Tab', value: '\t' },
   ];
 
-  const tzData = momentTz.tz.names().map((s: string) => ({ label: s, value: s }));
-
-  const onTzChange = (value: SelectableValue<string>) => {
-    onChange({ ...query, timezone: value.value ?? 'UTC' });
+  const onTzChange = (timezone = 'UTC') => {
+    onChange({ ...query, timezone });
     onRunQuery();
   };
 
@@ -113,7 +110,7 @@ export const FieldEditor = ({ query, onChange, onRunQuery, limit, editorContext 
           <InlineSwitchFallback value={ignoreUnknown} onChange={onIgnoreUnknownChange} />
         </InlineField>
         <InlineField label="Timezone" tooltip="Timezone timestamps without explicit Zone are parsed in">
-          <Select width={20} value={tzData.find((_) => _.value === timezone)} onChange={onTzChange} options={tzData} />
+          <TimeZonePicker value={timezone} onChange={onTzChange} />
         </InlineField>
       </InlineFieldRow>
 
