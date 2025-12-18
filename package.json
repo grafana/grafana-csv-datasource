@@ -1,6 +1,6 @@
 {
   "name": "grafana-csv-datasource",
-  "version": "0.7.2",
+  "version": "0.7.3",
   "description": "A Grafana data source for loading CSV data",
   "keywords": [
     "grafana",
@@ -47,7 +47,7 @@
     "@grafana/tsconfig": "^2.0.0",
     "@playwright/test": "^1.52.0",
     "@stylistic/eslint-plugin-ts": "^2.9.0",
-    "@swc/core": "^1.13.4",
+    "@swc/core": "1.15.7",
     "@swc/helpers": "^0.5.17",
     "@swc/jest": "^0.2.39",
     "@testing-library/jest-dom": "^6.1.5",
