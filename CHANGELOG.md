@@ -3,7 +3,7 @@
 ## 0.7.3
 
 🚀 Add smoke tests
-🐛 Fix: Query editor broken because of dependency
+🐛 Fix: Query editor broken because of dependency (in v0.7.2)
 
 ## 0.7.2
 
