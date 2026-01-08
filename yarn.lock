@@ -7096,7 +7096,7 @@ __metadata:
     terser-webpack-plugin: "npm:^5.3.10"
     ts-node: "npm:^10.9.2"
     tsconfig-paths: "npm:^4.2.0"
-    tslib: "npm:2.5.3"
+    tslib: "npm:2.8.1"
     typescript: "npm:5.9.3"
     webpack: "npm:^5.94.0"
     webpack-cli: "npm:^5.1.4"
@@ -10066,11 +10066,11 @@ __metadata:
   linkType: hard
 
 "qs@npm:^6.4.0":
-  version: 6.14.1
-  resolution: "qs@npm:6.14.1"
+  version: 6.14.0
+  resolution: "qs@npm:6.14.0"
   dependencies:
     side-channel: "npm:^1.1.0"
-  checksum: 10c0/0e3b22dc451f48ce5940cbbc7c7d9068d895074f8c969c0801ac15c1313d1859c4d738e46dc4da2f498f41a9ffd8c201bd9fb12df67799b827db94cc373d2613
+  checksum: 10c0/8ea5d91bf34f440598ee389d4a7d95820e3b837d3fd9f433871f7924801becaa0cd3b3b4628d49a7784d06a8aea9bc4554d2b6d8d584e2d221dc06238a42909c
   languageName: node
   linkType: hard
 
@@ -12296,13 +12296,6 @@ __metadata:
     minimist: "npm:^1.2.6"
     strip-bom: "npm:^3.0.0"
   checksum: 10c0/09a5877402d082bb1134930c10249edeebc0211f36150c35e1c542e5b91f1047b1ccf7da1e59babca1ef1f014c525510f4f870de7c9bda470c73bb4e2721b3ea
-  languageName: node
-  linkType: hard
-
-"tslib@npm:2.5.3":
-  version: 2.5.3
-  resolution: "tslib@npm:2.5.3"
-  checksum: 10c0/4cb1817d34fae5b27d146e6c4a468d4155097d95c1335d0bc9690f11f33e63844806bf4ed6d97c30c72b8d85261b66cbbe16d871d9c594ac05701ec83e62a607
   languageName: node
   linkType: hard
 
