@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.7.3
+
+🚀 Add smoke tests
+🐛 Fix: Query editor broken because of dependency (in v0.7.2)
+
 ## 0.7.2
 
 ⚙️ Chore: Replaced custom timezone picker with Grafana UI component
