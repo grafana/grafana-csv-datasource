@@ -30,7 +30,7 @@
   "dependencies": {
     "@grafana/data": "12.2.0",
     "@grafana/i18n": "12.2.0",
-    "@grafana/plugin-ui": "0.12.0",
+    "@grafana/plugin-ui": "0.12.1",
     "@grafana/runtime": "12.2.0",
     "@grafana/schema": "12.2.0",
     "@grafana/ui": "12.2.0",
