@@ -46,7 +46,7 @@
     "@grafana/plugin-e2e": "3.1.0",
     "@grafana/tsconfig": "2.0.1",
     "@playwright/test": "1.57.0",
-    "@stylistic/eslint-plugin-ts": "2.13.0",
+    "@stylistic/eslint-plugin-ts": "4.4.1",
     "@swc/core": "1.15.8",
     "@swc/helpers": "0.5.18",
     "@swc/jest": "0.2.39",
