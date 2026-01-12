@@ -41,7 +41,7 @@
     "@babel/core": "7.28.5",
     "@changesets/cli": "2.29.8",
     "@emotion/css": "11.13.5",
-    "@grafana/e2e-selectors": "12.1.0",
+    "@grafana/e2e-selectors": "12.3.1",
     "@grafana/eslint-config": "9.0.0",
     "@grafana/plugin-e2e": "3.1.1",
     "@grafana/tsconfig": "2.0.1",
