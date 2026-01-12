@@ -7269,7 +7269,7 @@ __metadata:
     react-virtualized-auto-sizer: "npm:1.0.26"
     replace-in-file-webpack-plugin: "npm:1.0.6"
     sass: "npm:1.97.2"
-    sass-loader: "npm:13.3.3"
+    sass-loader: "npm:16.0.6"
     semver: "npm:7.7.3"
     style-loader: "npm:4.0.0"
     swc-loader: "npm:0.2.6"
@@ -11334,19 +11334,19 @@ __metadata:
   languageName: node
   linkType: hard
 
-"sass-loader@npm:13.3.3":
-  version: 13.3.3
-  resolution: "sass-loader@npm:13.3.3"
+"sass-loader@npm:16.0.6":
+  version: 16.0.6
+  resolution: "sass-loader@npm:16.0.6"
   dependencies:
     neo-async: "npm:^2.6.2"
   peerDependencies:
-    fibers: ">= 3.1.0"
+    "@rspack/core": 0.x || 1.x
     node-sass: ^4.0.0 || ^5.0.0 || ^6.0.0 || ^7.0.0 || ^8.0.0 || ^9.0.0
     sass: ^1.3.0
     sass-embedded: "*"
     webpack: ^5.0.0
   peerDependenciesMeta:
-    fibers:
+    "@rspack/core":
       optional: true
     node-sass:
       optional: true
@@ -11354,7 +11354,9 @@ __metadata:
       optional: true
     sass-embedded:
       optional: true
-  checksum: 10c0/5e955a4ffce35ee0a46fce677ce51eaa69587fb5371978588c83af00f49e7edc36dcf3bb559cbae27681c5e24a71284463ebe03a1fb65e6ecafa1db0620e3fc8
+    webpack:
+      optional: true
+  checksum: 10c0/a66df6ecc01c80011a2bc9356d2b262753ad425382171d120ec5d4b5015d5131e919384a22cd148d48ecc1cb4fa598acaaa6308b260f8951f3558b5785816bb4
   languageName: node
   linkType: hard
 
