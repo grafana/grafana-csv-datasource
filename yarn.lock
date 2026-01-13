@@ -3811,10 +3811,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/lodash@npm:4.17.21":
-  version: 4.17.21
-  resolution: "@types/lodash@npm:4.17.21"
-  checksum: 10c0/73cb006e047d8871e9d63f3a165543bf16c44a5b6fe3f9f6299e37cb8d67a7b1d55ac730959a81f9def510fd07232ff7e30e05413e5d5a12793baad84ebe36c3
+"@types/lodash@npm:4.17.22":
+  version: 4.17.22
+  resolution: "@types/lodash@npm:4.17.22"
+  checksum: 10c0/8cef39191f00eaf5714727b1e0528f2ad89bc017e3850807de1c3c3d82716c48c2fc84d15323a904e25f8070b7e792c2cf731e4403cbb8497d1b16d5ae99b016
   languageName: node
   linkType: hard
 
@@ -7568,7 +7568,7 @@ __metadata:
     "@testing-library/jest-dom": "npm:6.9.1"
     "@testing-library/react": "npm:16.3.1"
     "@types/jest": "npm:30.0.0"
-    "@types/lodash": "npm:4.17.21"
+    "@types/lodash": "npm:4.17.22"
     "@types/node": "npm:24.10.6"
     "@types/react": "npm:18.3.27"
     "@types/react-dom": "npm:18.3.7"
@@ -7593,7 +7593,7 @@ __metadata:
     prettier: "npm:3.7.4"
     react: "npm:18.3.1"
     react-dom: "npm:18.3.1"
-    react-virtualized-auto-sizer: "npm:1.0.26"
+    react-virtualized-auto-sizer: "npm:2.0.2"
     replace-in-file-webpack-plugin: "npm:1.0.6"
     sass: "npm:1.97.2"
     sass-loader: "npm:16.0.6"
@@ -11219,7 +11219,17 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-virtualized-auto-sizer@npm:1.0.26, react-virtualized-auto-sizer@npm:^1.0.6":
+"react-virtualized-auto-sizer@npm:2.0.2":
+  version: 2.0.2
+  resolution: "react-virtualized-auto-sizer@npm:2.0.2"
+  peerDependencies:
+    react: ^18.0.0 || ^19.0.0
+    react-dom: ^18.0.0 || ^19.0.0
+  checksum: 10c0/61c24a1cb17277b4fb571acb3be47f34d011968191680e75c4b7ff8c9b6c9ee5c60a939b8cc8559d3c7ae1ca1fd6c2aa6d7a0d9c134bfdff7e9efadaa2bdaefa
+  languageName: node
+  linkType: hard
+
+"react-virtualized-auto-sizer@npm:^1.0.6":
   version: 1.0.26
   resolution: "react-virtualized-auto-sizer@npm:1.0.26"
   peerDependencies:

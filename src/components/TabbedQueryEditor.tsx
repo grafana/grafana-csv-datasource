@@ -1,9 +1,9 @@
 import { css } from '@emotion/css';
 import { TimeRange } from '@grafana/data';
-import { CodeEditor, InfoBox, InlineField, InlineFieldRow, Input, RadioButtonGroup, useTheme } from '@grafana/ui';
+import { Alert, CodeEditor, InlineField, InlineFieldRow, Input, RadioButtonGroup, useTheme } from '@grafana/ui';
 import { DataSource } from 'datasource';
 import React, { useState } from 'react';
-import AutoSizer from 'react-virtualized-auto-sizer';
+import { AutoSizer } from 'react-virtualized-auto-sizer';
 import { CSVQuery, Pair } from '../types';
 import { KeyValueEditor } from './KeyValueEditor';
 import { PathEditor } from './PathEditor';
@@ -131,23 +131,23 @@ export const TabbedQueryEditor = ({ query, onChange, onRunQuery, fieldsTab, expe
           </InlineFieldRow>
           <InlineFieldRow>
             <AutoSizer
-              disableHeight
               className={css`
                 margin-bottom: ${theme.spacing.sm};
               `}
-            >
-              {(size) => (
-                <CodeEditor
-                  value={q.body || ''}
-                  language={bodyType}
-                  width={size.width}
-                  height="200px"
-                  showMiniMap={false}
-                  showLineNumbers={true}
-                  onBlur={onBodyChange}
-                />
-              )}
-            </AutoSizer>
+              ChildComponent={(size) => {
+                return (
+                  <CodeEditor
+                    value={q.body || ''}
+                    language={bodyType}
+                    width={size.width}
+                    height="200px"
+                    showMiniMap={false}
+                    showLineNumbers={true}
+                    onBlur={onBodyChange}
+                  />
+                );
+              }}
+            />
           </InlineFieldRow>
         </>
       ),
@@ -173,18 +173,18 @@ export const TabbedQueryEditor = ({ query, onChange, onRunQuery, fieldsTab, expe
         </InlineFieldRow>
       )}
 
-      {q.method === 'GET' && q.body && (
-        <InfoBox severity="warning" style={{ maxWidth: '700px', whiteSpace: 'normal' }}>
+      {(q.method === 'GET' || !q.method) && q.body && (
+        <Alert title="GET Requests with body" severity="warning" style={{ maxWidth: '700px', whiteSpace: 'normal' }}>
           {"GET requests can't have a body. The body you've defined will be ignored."}
-        </InfoBox>
+        </Alert>
       )}
 
       {(q.headers ?? []).map(([key, _]) => key.toLowerCase()).find((_) => sensitiveHeaders.includes(_)) && (
-        <InfoBox severity="warning" style={{ maxWidth: '700px', whiteSpace: 'normal' }}>
+        <Alert title="Sensitive headers" severity="warning" style={{ maxWidth: '700px', whiteSpace: 'normal' }}>
           {
             "It looks like you're adding credentials in the header. Since queries are stored unencrypted, it's strongly recommended that you add any secrets to the data source config instead."
           }
-        </InfoBox>
+        </Alert>
       )}
 
       {tabs[tabIndex].content}
