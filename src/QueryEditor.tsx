@@ -1,5 +1,5 @@
 import { QueryEditorProps } from '@grafana/data';
-import { InfoBox, InlineField, InlineFieldRow, InlineSwitch, Switch } from '@grafana/ui';
+import { Alert, InlineField, InlineFieldRow, InlineSwitch, Switch } from '@grafana/ui';
 import { FieldEditor } from 'components/FieldEditor';
 import { TabbedQueryEditor } from 'components/TabbedQueryEditor';
 import { DataSource } from 'datasource';
@@ -30,12 +30,12 @@ export const QueryEditor = (props: Props) => {
       }
       experimentalTab={
         <>
-          <InfoBox severity="warning" style={{ maxWidth: '700px', whiteSpace: 'normal' }}>
+          <Alert title="Experimental Featues" severity="warning" style={{ maxWidth: '700px', whiteSpace: 'normal' }}>
             <p>
               {`The features listed here are experimental. They might change or be removed without notice. In the tooltip for
           each feature, there's a link to a pull request where you can submit feedback for that feature.`}
             </p>
-          </InfoBox>
+          </Alert>
           <InlineFieldRow>
             <InlineField
               label="Enable regular expressions"
