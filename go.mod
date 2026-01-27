@@ -2,7 +2,7 @@ module github.com/grafana/grafana-csv-datasource
 
 go 1.25.5
 
-require github.com/grafana/grafana-plugin-sdk-go v0.285.0
+require github.com/grafana/grafana-plugin-sdk-go v0.286.0
 
 require (
 	github.com/BurntSushi/toml v1.5.0 // indirect
