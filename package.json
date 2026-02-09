@@ -79,7 +79,7 @@
     "react-virtualized-auto-sizer": "2.0.2",
     "replace-in-file-webpack-plugin": "1.0.6",
     "sass": "1.97.2",
-    "sass-loader": "16.0.6",
+    "sass-loader": "16.0.7",
     "semver": "7.7.3",
     "style-loader": "4.0.0",
     "swc-loader": "0.2.7",
