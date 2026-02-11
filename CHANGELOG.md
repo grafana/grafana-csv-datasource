@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.8.0
+
+🚀 Update dependencies for react-19 upgrade
+
 ## 0.7.4
 
 🐛 Update various dependency versions
