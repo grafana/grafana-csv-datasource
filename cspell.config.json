@@ -10,6 +10,7 @@
     "provisioning/**",
     "src/dashboards/**",
     "yarn.lock",
+    "renovate.json",
     "go.sum",
     "mage_output_file.go"
   ],
