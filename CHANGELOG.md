@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.8.1
+
+⚙️ Chore: Frontend and backend dependency updates
+
 ## 0.8.0
 
 🚀 Update dependencies for react-19 upgrade
