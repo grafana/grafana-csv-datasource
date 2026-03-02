@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.8.2
+
+⚙️ Updated backend/go version to 1.26.0 from 1.25.6 which resolves CVE-2025-68121
+
+⚙️ Updated frontend & backend dependencies
+
 ## 0.8.1
 
 ⚙️ Chore: Frontend and backend dependency updates
