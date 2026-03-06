@@ -14,10 +14,7 @@ services:
       wiremock:
         condition: service_started
     environment:
-      # set endpoint override env vars here so the plugin routes
-      # all traffic through WireMock.
-      # example:
-      #   MY_API_ENDPOINT: http://wiremock:8080
+      CSV_DATASOURCE_URL: http://wiremock:8080/datasets/natural-gas/main/data/daily.csv
 
   wiremock:
     image: wiremock/wiremock:3x

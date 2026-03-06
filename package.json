@@ -20,7 +20,9 @@
     "test:ci": "jest --passWithNoTests --maxWorkers 4",
     "typecheck": "tsc --noEmit",
     "server:record": "find wiremock/mappings -name '*.json' ! -name 'proxy-*' -delete 2>/dev/null; rm -f wiremock/__files/* 2>/dev/null; bash -c 'trap \"node tools/sanitize-stubs.js\" EXIT; docker compose -f e2e/docker-compose.record.yaml up --build'",
-    "server:replay": "docker compose -f e2e/docker-compose.replay.yaml up --build -d"
+    "server:replay": "docker compose -f e2e/docker-compose.replay.yaml up --build -d",
+    "e2e:record": "CSV_DATASOURCE_URL=http://wiremock:8080/datasets/natural-gas/main/data/daily.csv playwright test",
+    "e2e:replay": "CSV_DATASOURCE_URL=http://wiremock:8080/datasets/natural-gas/main/data/daily.csv playwright test"
   },
   "homepage": "https://grafana.com/plugins/marcusolsson-csv-datasource",
   "bugs": "https://github.com/grafana/grafana-csv-datasource/issues",

@@ -4,7 +4,7 @@ datasources:
     type: marcusolsson-csv-datasource
     isDefault: true
     editable: true
-    url: https://raw.githubusercontent.com/datasets/natural-gas/main/data/daily.csv
+    url: $CSV_DATASOURCE_URL
     jsonData:
       storage: http
 
