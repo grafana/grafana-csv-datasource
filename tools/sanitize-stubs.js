@@ -10,15 +10,21 @@ const STRIP_FIELDS = ['ClientToken', 'clientToken', 'RequestToken', 'requestToke
 
 let modified = 0;
 for (const file of fs.readdirSync(MAPPINGS_DIR)) {
-  if (!file.endsWith('.json') || file.startsWith('proxy-')) continue;
+  if (!file.endsWith('.json') || file.startsWith('proxy-')) {
+    continue;
+  }
   const filePath = path.join(MAPPINGS_DIR, file);
   const stub = JSON.parse(fs.readFileSync(filePath, 'utf-8'));
   const patterns = stub.request?.bodyPatterns;
-  if (!Array.isArray(patterns)) continue;
+  if (!Array.isArray(patterns)) {
+    continue;
+  }
 
   let changed = false;
   for (const pattern of patterns) {
-    if (!pattern.equalToJson) continue;
+    if (!pattern.equalToJson) {
+      continue;
+    }
     try {
       const body = JSON.parse(pattern.equalToJson);
       for (const field of STRIP_FIELDS) {
@@ -27,7 +33,9 @@ for (const file of fs.readdirSync(MAPPINGS_DIR)) {
           changed = true;
         }
       }
-      if (changed) pattern.equalToJson = JSON.stringify(body);
+      if (changed) {
+        pattern.equalToJson = JSON.stringify(body);
+      }
     } catch {}
   }
   if (changed) {
@@ -35,4 +43,6 @@ for (const file of fs.readdirSync(MAPPINGS_DIR)) {
     modified++;
   }
 }
-if (modified) console.log('sanitized ' + modified + ' stub(s)');
+if (modified) {
+  console.log('sanitized ' + modified + ' stub(s)');
+}
