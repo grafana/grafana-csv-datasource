@@ -1,0 +1,28 @@
+# Docker Compose override for REPLAY mode.
+# WireMock serves previously recorded API stubs.
+# No real API credentials are needed.
+#
+# usage:
+#   docker compose -f e2e/docker-compose.replay.yaml up -d --build
+
+services:
+  grafana:
+    extends:
+      file: ../.config/docker-compose-base.yaml
+      service: grafana
+    depends_on:
+      wiremock:
+        condition: service_started
+    environment:
+      # set endpoint override env vars here so the plugin routes
+      # all traffic through WireMock.
+      # example:
+      #   MY_API_ENDPOINT: http://wiremock:8080
+
+  wiremock:
+    image: wiremock/wiremock:3x
+    volumes:
+      - ../wiremock:/home/wiremock
+    ports:
+      - '8080:8080'
+    command: ['--verbose']
