@@ -15,6 +15,7 @@ services:
         condition: service_started
     environment:
       CSV_DATASOURCE_URL: http://wiremock:8080/datasets/natural-gas/main/data/daily.csv
+      GF_PLUGIN_ALLOW_LOCAL_MODE: true
 
   wiremock:
     image: wiremock/wiremock:3x
