@@ -41,6 +41,7 @@
     "Tilman",
     "typecheck",
     "uncollapse",
-    "uplot"
+    "uplot",
+    "wiremock"
   ]
 }
