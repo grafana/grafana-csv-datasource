@@ -1,0 +1,36 @@
+{
+  "id" : "fdb1d7f6-72da-3739-82c5-3dcb867d12b2",
+  "request" : {
+    "url" : "/datasets/natural-gas/main/data/daily.csv",
+    "method" : "GET"
+  },
+  "response" : {
+    "status" : 200,
+    "bodyFileName" : "body-datasets-natural-gas-main-data-daily.csv-uiG3g.txt",
+    "headers" : {
+      "X-Cache" : "HIT",
+      "Access-Control-Allow-Origin" : "*",
+      "X-Content-Type-Options" : "nosniff",
+      "Source-Age" : "0",
+      "Date" : "Fri, 06 Mar 2026 08:07:03 GMT",
+      "X-Timer" : "S1772784423.386000,VS0,VE119",
+      "Via" : "1.1 varnish",
+      "Accept-Ranges" : "bytes",
+      "X-Frame-Options" : "deny",
+      "Strict-Transport-Security" : "max-age=31536000",
+      "Cache-Control" : "max-age=300",
+      "ETag" : "\"d0a249268b7a49cd669fcebe532260d0cb968eb2a83cf56cd1060d94a0df8a98\"",
+      "X-Served-By" : "cache-bma-essb1270034-BMA",
+      "Content-Security-Policy" : "default-src 'none'; style-src 'unsafe-inline'; sandbox",
+      "Vary" : "Authorization,Accept-Encoding",
+      "Expires" : "Fri, 06 Mar 2026 08:12:03 GMT",
+      "Cross-Origin-Resource-Policy" : "cross-origin",
+      "X-XSS-Protection" : "1; mode=block",
+      "X-Cache-Hits" : "0",
+      "X-Fastly-Request-ID" : "0b4d3087169b813068fa1143078c10ff216908b5",
+      "X-GitHub-Request-Id" : "19D2:2426DB:116B65:2BA644:69AA815C",
+      "Content-Type" : "text/plain; charset=utf-8"
+    }
+  },
+  "uuid" : "fdb1d7f6-72da-3739-82c5-3dcb867d12b2"
+}
