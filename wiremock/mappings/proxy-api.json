@@ -1,0 +1,10 @@
+{
+  "priority": 100,
+  "request": {
+    "urlPathPattern": "/.*",
+    "method": "ANY"
+  },
+  "response": {
+    "proxyBaseUrl": "https://raw.githubusercontent.com"
+  }
+}
