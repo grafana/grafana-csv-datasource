@@ -4,11 +4,10 @@ import { dirname } from 'node:path';
 
 const pluginE2eAuth = `${dirname(require.resolve('@grafana/plugin-e2e'))}/auth`;
 
-/**
- * Read environment variables from file.
- * https://github.com/motdotla/dotenv
- */
-// require('dotenv').config();
+// set default for CSV_DATASOURCE_URL so readProvisionedDataSource can resolve $CSV_DATASOURCE_URL
+// in provisioning YAML when the env var is not explicitly set (e.g. running outside Docker).
+process.env.CSV_DATASOURCE_URL ??=
+  'https://raw.githubusercontent.com/datasets/natural-gas/main/data/daily.csv';
 
 /**
  * See https://playwright.dev/docs/test-configuration.

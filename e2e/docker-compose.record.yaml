@@ -1,0 +1,32 @@
+# Docker Compose override for RECORDING mode.
+# WireMock acts as a recording reverse proxy. The plugin talks to WireMock
+# (via endpoint overrides in jsonData), WireMock forwards to the real
+# API via proxy stubs and saves request/response pairs as stubs.
+#
+# Requires real API credentials. Set them via env vars before starting.
+#
+# usage:
+#   docker compose -f e2e/docker-compose.record.yaml up --build
+
+services:
+  grafana:
+    extends:
+      file: ../.config/docker-compose-base.yaml
+      service: grafana
+    depends_on:
+      wiremock:
+        condition: service_started
+    environment:
+      CSV_DATASOURCE_URL: http://wiremock:8080/datasets/natural-gas/main/data/daily.csv
+      GF_PLUGIN_ALLOW_LOCAL_MODE: true
+
+  wiremock:
+    image: wiremock/wiremock:3x
+    command:
+      - --record-mappings
+      - --verbose
+      - --supported-proxy-encodings=identity
+    volumes:
+      - ../wiremock:/home/wiremock
+    ports:
+      - '8080:8080'

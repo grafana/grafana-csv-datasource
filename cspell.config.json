@@ -13,7 +13,9 @@
     "renovate.json",
     "package.json",
     "go.sum",
-    "mage_output_file.go"
+    "mage_output_file.go",
+    "tools/**",
+    "wiremock/**"
   ],
   "words": [
     "changesets",
@@ -26,14 +28,20 @@
     "instancemgmt",
     "Marcus",
     "MarcusOlsson",
+    "Almaz",
     "nolint",
     "Olsson",
     "prismjs",
+    "Rawdha",
+    "Russom",
     "staticcheck",
     "subresource",
+    "Tahan",
     "testdata",
+    "Tilman",
     "typecheck",
     "uncollapse",
-    "uplot"
+    "uplot",
+    "wiremock"
   ]
 }
