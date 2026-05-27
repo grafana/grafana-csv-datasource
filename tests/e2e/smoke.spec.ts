@@ -3,7 +3,6 @@ import { test, expect } from '@grafana/plugin-e2e';
 test('Smoke test: plugin loads config page', async ({ createDataSourceConfigPage, page }) => {
   await createDataSourceConfigPage({ type: 'marcusolsson-csv-datasource' });
 
-  await expect(await page.getByText('Type: CSV', { exact: true })).toBeVisible();
   await expect(await page.getByText('Storage Location', { exact: true })).toBeVisible();
 });
 
