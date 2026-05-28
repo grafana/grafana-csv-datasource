@@ -1,6 +1,6 @@
 {
   "name": "grafana-csv-datasource",
-  "version": "0.8.2",
+  "version": "1.0.0",
   "description": "A Grafana data source for loading CSV data",
   "keywords": [
     "grafana",
@@ -14,7 +14,7 @@
     "lint": "eslint --cache .",
     "lint:fix": "yarn run lint --fix && prettier --write --list-different .",
     "server": "docker compose up --build",
-    "sign": "npx --yes @grafana/sign-plugin@latest",
+    "sign": "npx --yes --ignore-scripts --package @grafana/sign-plugin@3.2.2 sign-plugin",
     "spellcheck": "cspell -c cspell.config.json \"**/*.{ts,tsx,js,go,md,mdx,yml,yaml,json,scss,css}\"",
     "test": "jest --watch --onlyChanged",
     "test:ci": "jest --passWithNoTests --maxWorkers 4",
