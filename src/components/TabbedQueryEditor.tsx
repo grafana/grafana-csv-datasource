@@ -1,6 +1,6 @@
 import { css } from '@emotion/css';
 import { TimeRange } from '@grafana/data';
-import { Alert, CodeEditor, InlineField, InlineFieldRow, Input, RadioButtonGroup, useTheme } from '@grafana/ui';
+import { Alert, CodeEditor, InlineField, InlineFieldRow, Input, RadioButtonGroup, useTheme2 } from '@grafana/ui';
 import { DataSource } from 'datasource';
 import React, { useState } from 'react';
 import { AutoSizer } from 'react-virtualized-auto-sizer';
@@ -27,7 +27,7 @@ interface Props {
 export const TabbedQueryEditor = ({ query, onChange, onRunQuery, fieldsTab, experimentalTab, datasource }: Props) => {
   const [bodyType, setBodyType] = useState('plaintext');
   const [tabIndex, setTabIndex] = useState(0);
-  const theme = useTheme();
+  const theme = useTheme2();
 
   const q = getQueryWithDefaults(query);
 
@@ -132,7 +132,7 @@ export const TabbedQueryEditor = ({ query, onChange, onRunQuery, fieldsTab, expe
           <InlineFieldRow>
             <AutoSizer
               className={css`
-                margin-bottom: ${theme.spacing.sm};
+                margin-bottom: ${theme.spacing(1)};
               `}
               ChildComponent={(size) => {
                 return (

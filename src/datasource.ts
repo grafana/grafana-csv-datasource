@@ -7,9 +7,10 @@ import {
   ScopedVars,
 } from '@grafana/data';
 import { DataSourceWithBackend, getTemplateSrv } from '@grafana/runtime';
+import { firstValueFrom, Observable } from 'rxjs';
+import { VariableSupport } from 'VariableSupport';
+import { trackRequest } from './tracking';
 import { CSVDataSourceOptions, CSVQuery } from './types';
-import { Observable } from 'rxjs';
-import { trackRequest } from 'tracking';
 
 export class DataSource extends DataSourceWithBackend<CSVQuery, CSVDataSourceOptions> {
   jsonData: CSVDataSourceOptions;
@@ -18,6 +19,7 @@ export class DataSource extends DataSourceWithBackend<CSVQuery, CSVDataSourceOpt
     super(instanceSettings);
 
     this.jsonData = instanceSettings.jsonData;
+    this.variables = new VariableSupport();
   }
 
   query(request: DataQueryRequest<CSVQuery>): Observable<DataQueryResponse> {
@@ -64,7 +66,7 @@ export class DataSource extends DataSourceWithBackend<CSVQuery, CSVDataSourceOpt
     let res: DataQueryResponse | undefined;
 
     try {
-      res = await this.query(request).toPromise();
+      res = await firstValueFrom(this.query(request));
     } catch (err) {
       return Promise.reject(err);
     }
@@ -73,6 +75,6 @@ export class DataSource extends DataSourceWithBackend<CSVQuery, CSVDataSourceOpt
       return [];
     }
 
-    return res ? (res.data[0] as DataFrame).fields[0].values.toArray().map((_) => ({ text: _.toString() })) : [];
+    return res ? Array.from((res.data[0] as DataFrame).fields[0].values).map((_) => ({ text: _.toString() })) : [];
   }
 }
