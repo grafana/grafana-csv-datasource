@@ -1,9 +1,9 @@
 import { SelectableValue } from '@grafana/data';
-import { InlineField, InlineFieldRow, InlineSwitch, Input, Select, Switch, TimeZonePicker } from '@grafana/ui';
+import { Combobox, InlineField, InlineFieldRow, InlineSwitch, Input, Switch, TimeZonePicker } from '@grafana/ui';
 import React, { FormEvent, useState } from 'react';
 import { CSVQuery, FieldSchema } from '../types';
-import { SchemaEditor } from './SchemaEditor';
 import { getQueryWithDefaults } from '../utils';
+import { SchemaEditor } from './SchemaEditor';
 
 interface Props {
   query: CSVQuery;
@@ -70,7 +70,7 @@ export const FieldEditor = ({ query, onChange, onRunQuery, limit, editorContext 
     <>
       <InlineFieldRow>
         <InlineField label="Delimiter" tooltip="Character used to separate columns">
-          <Select
+          <Combobox
             width={13}
             value={delimiterOptions.find((_) => _.value === delimiter)}
             onChange={onDelimiterChange}
@@ -81,7 +81,7 @@ export const FieldEditor = ({ query, onChange, onRunQuery, limit, editorContext 
           label="Decimal separator"
           tooltip="Character used to separate the integral part from the fractional part of numbers."
         >
-          <Select
+          <Combobox
             width={13}
             value={decimalSeparatorOptions.find((_) => _.value === decimalSeparator)}
             onChange={onDecimalSeparatorChange}

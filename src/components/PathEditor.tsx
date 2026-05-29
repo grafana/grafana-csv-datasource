@@ -1,4 +1,4 @@
-import { InlineField, InlineFieldRow, Input, Select } from '@grafana/ui';
+import { Combobox, InlineField, InlineFieldRow, Input } from '@grafana/ui';
 import React from 'react';
 
 interface Props {
@@ -12,7 +12,7 @@ export const PathEditor = ({ method, onMethodChange, path, onPathChange }: Props
   return (
     <InlineFieldRow>
       <InlineField>
-        <Select
+        <Combobox
           value={method}
           options={[
             { label: 'GET', value: 'GET' },
