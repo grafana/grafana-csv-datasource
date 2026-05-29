@@ -1,5 +1,5 @@
 import { Button, InlineFieldRow } from '@grafana/ui';
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { FieldSchema } from '../types';
 import { CSVQueryField } from './CSVQueryField';
 
@@ -10,50 +10,35 @@ interface Props {
 }
 
 export const SchemaEditor = ({ value, onChange, limit }: Props) => {
-  const [internalValue, setInternalValue] = useState(value);
-
-  useEffect(() => {
-    setInternalValue(value);
-  }, [value]);
+  const fields = value.length > 0 ? value : [{ name: '', type: 'string' }];
+  const canAddMore = !limit || fields.length < limit;
 
   const onFieldChange = (idx: number) => (fieldSchema: FieldSchema) => {
-    const res = internalValue.map((field, i) => (i === idx ? fieldSchema : field));
-    setInternalValue(res);
-    onChange(res);
-  };
-  const onAppendField = () => {
-    if (!limit || value.length < limit) {
-      const res = [...internalValue, { name: '', type: 'string' }];
-      setInternalValue(res);
-      onChange(res);
-    }
-  };
-  const onAddField = (idx: number) => {
-    if (!limit || value.length < limit) {
-      const res = [...internalValue.slice(0, idx + 1), { name: '', type: 'string' }, ...internalValue.slice(idx + 1)];
-      setInternalValue(res);
-      onChange(res);
-    }
-  };
-  const onRemoveField = (idx: number) => {
-    const res = internalValue.filter((_, i) => i !== idx);
-    setInternalValue(res);
+    const res = fields.map((field, i) => (i === idx ? fieldSchema : field));
     onChange(res);
   };
 
-  if (!internalValue.length) {
-    onAppendField();
-  }
+  const onAddField = (idx: number) => {
+    if (canAddMore) {
+      const res = [...fields.slice(0, idx + 1), { name: '', type: 'string' }, ...fields.slice(idx + 1)];
+      onChange(res);
+    }
+  };
+
+  const onRemoveField = (idx: number) => {
+    const res = fields.filter((_, i) => i !== idx);
+    onChange(res);
+  };
 
   return (
     <>
-      {internalValue.map((_, i) => (
+      {fields.map((_, i) => (
         <InlineFieldRow key={i}>
           <CSVQueryField field={_} onFieldChange={onFieldChange(i)} />
-          {(!limit || value.length < limit) && (
+          {canAddMore && (
             <Button variant="secondary" title="plus" onClick={() => onAddField(i)} icon="plus" aria-label="Add Field" />
           )}
-          {internalValue.length > 1 && (
+          {fields.length > 1 && (
             <Button
               variant="secondary"
               title="minus"

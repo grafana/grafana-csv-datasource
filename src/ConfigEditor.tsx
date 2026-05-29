@@ -1,7 +1,5 @@
+import { css } from '@emotion/css';
 import { DataSourcePluginOptionsEditorProps, GrafanaTheme2 } from '@grafana/data';
-import { Field, Input, RadioButtonGroup, useStyles2 } from '@grafana/ui';
-import React, { ChangeEvent } from 'react';
-import { CSVDataSourceOptions } from './types';
 import {
   AdvancedHttpSettings,
   Auth,
@@ -10,8 +8,9 @@ import {
   DataSourceDescription,
   convertLegacyAuthProps,
 } from '@grafana/plugin-ui';
-import { css } from '@emotion/css';
-import { Divider } from 'components/Divider';
+import { Divider, Field, Input, RadioButtonGroup, useStyles2 } from '@grafana/ui';
+import React, { ChangeEvent } from 'react';
+import { CSVDataSourceOptions } from './types';
 import { getOptionsWithDefaults } from './utils';
 
 interface Props extends DataSourcePluginOptionsEditorProps<CSVDataSourceOptions> {}
