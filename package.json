@@ -42,7 +42,7 @@
     "@changesets/cli": "2.31.0",
     "@emotion/css": "11.13.5",
     "@grafana/e2e-selectors": "13.1.0-25893932881",
-    "@grafana/eslint-config": "9.0.0",
+    "@grafana/eslint-config": "10.0.0",
     "@grafana/plugin-e2e": "3.8.0",
     "@grafana/tsconfig": "2.1.0",
     "@playwright/test": "1.60.0",
