@@ -1,0 +1,39 @@
+{
+  "ignorePaths": [
+    ".github/**",
+    "node_modules/**",
+    "website/node_modules/**",
+    "website/build/**",
+    "website/src/css/*.css",
+    "dist/**",
+    "coverage/**",
+    "provisioning/**",
+    "src/dashboards/**",
+    "yarn.lock",
+    "renovate.json",
+    "package.json",
+    "go.sum",
+    "mage_output_file.go"
+  ],
+  "words": [
+    "changesets",
+    "clsx",
+    "DataSource",
+    "DataSources",
+    "dompurify",
+    "Grafana",
+    "httpclient",
+    "instancemgmt",
+    "Marcus",
+    "MarcusOlsson",
+    "nolint",
+    "Olsson",
+    "prismjs",
+    "staticcheck",
+    "subresource",
+    "testdata",
+    "typecheck",
+    "uncollapse",
+    "uplot"
+  ]
+}

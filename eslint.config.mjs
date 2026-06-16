@@ -1,0 +1,44 @@
+import { defineConfig } from 'eslint/config';
+import baseConfig from './.config/eslint.config.mjs';
+import prettier from 'eslint-plugin-prettier';
+
+export default defineConfig([
+  {
+    ignores: [
+      '**/logs',
+      '**/*.log',
+      '**/npm-debug.log*',
+      '**/yarn-debug.log*',
+      '**/yarn-error.log*',
+      '**/.pnpm-debug.log*',
+      '**/node_modules/',
+      '**/pids',
+      '**/*.pid',
+      '**/*.seed',
+      '**/*.pid.lock',
+      '**/lib-cov',
+      '**/coverage',
+      '**/dist/',
+      '**/artifacts/',
+      '**/work/',
+      '**/test-results/',
+      '**/playwright-report/',
+      '**/blob-report/',
+      'playwright/.cache/',
+      'playwright/.auth/',
+      '**/.idea',
+      '**/.eslintcache',
+    ],
+  },
+  ...baseConfig,
+  {
+    plugins: {
+      prettier: prettier,
+    },
+
+    rules: {
+      'react-hooks/exhaustive-deps': 'off',
+      'prettier/prettier': 'error',
+    },
+  },
+]);
