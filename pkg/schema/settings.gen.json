@@ -1,0 +1,36 @@
+{
+  "spec": {
+    "type": "object",
+    "properties": {
+      "jsonData": {
+        "type": "object",
+        "properties": {
+          "queryParams": {
+            "description": "Add custom parameters to your queries.",
+            "type": "string",
+            "x-dsconfig-depends-on": "jsonData.storage == 'http'"
+          },
+          "storage": {
+            "description": "Where CSV data is read from: over HTTP or from a local file.",
+            "type": "string",
+            "default": "http",
+            "enum": [
+              "http",
+              "local"
+            ]
+          }
+        }
+      },
+      "url": {
+        "description": "HTTP endpoint (storage = http) or local file path (storage = local) for the CSV data.",
+        "type": "string"
+      }
+    }
+  },
+  "secureValues": [
+    {
+      "key": "basicAuthPassword",
+      "description": "Password used for HTTP Basic Authentication against the CSV endpoint."
+    }
+  ]
+}
