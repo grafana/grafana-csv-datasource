@@ -4,13 +4,13 @@ import (
 	"encoding/json"
 	"fmt"
 
+	"github.com/grafana/grafana-csv-datasource/pkg/models"
 	"github.com/grafana/grafana-plugin-sdk-go/backend"
 )
 
-type PluginSettings struct {
-	Storage     string `json:"storage"`
-	QueryParams string `json:"queryParams"`
-}
+// PluginSettings is the datasource settings model. The canonical definition
+// lives in pkg/models so it can be shared with the schema conformance tests.
+type PluginSettings = models.PluginSettings
 
 func LoadPluginSettings(source backend.DataSourceInstanceSettings) (*PluginSettings, error) {
 	settings := PluginSettings{}

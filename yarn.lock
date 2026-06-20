@@ -8151,6 +8151,7 @@ __metadata:
     webpack: "npm:5.107.2"
     webpack-cli: "npm:7.0.2"
     webpack-livereload-plugin: "npm:3.0.2"
+    webpack-merge: "npm:6.0.1"
     webpack-subresource-integrity: "npm:5.1.0"
     webpack-virtual-modules: "npm:0.6.2"
   languageName: unknown
@@ -13523,7 +13524,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"webpack-merge@npm:^6.0.1":
+"webpack-merge@npm:6.0.1, webpack-merge@npm:^6.0.1":
   version: 6.0.1
   resolution: "webpack-merge@npm:6.0.1"
   dependencies:
