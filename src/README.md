@@ -1,6 +1,7 @@
 # CSV data source for Grafana
 
-## (NOTE: this plugin is now in maintenance mode, no new features will be added. We recommend using the [Infinity data source plugin](https://grafana.com/grafana/plugins/yesoreyeram-infinity-datasource/) instead. If you want to get started quickly with CSV and Grafana, please read [How to Visualize CSV Data with Grafana](https://grafana.com/blog/2025/02/05/how-to-visualize-csv-data-with-grafana/), which uses the recommended approach.)
+> [!WARNING]
+> This plugin is in maintenance mode. It won't receive new features, and bug fixes aren't guaranteed. We recommend using the [Infinity data source](https://grafana.com/grafana/plugins/yesoreyeram-infinity-datasource/) instead. To get started quickly with CSV data in Grafana, refer to [How to visualize CSV data with Grafana](https://grafana.com/blog/2025/02/05/how-to-visualize-csv-data-with-grafana/).
 
 The Grafana CSV Datasource plugin is designed to load CSV data into Grafana, expanding your capabilities to visualize and analyze data stored in CSV (Comma-Separated Values) format. Whether you have log files, historical data, or other datasets in CSV format, this plugin streamlines the process of integrating this data into your Grafana dashboards.
 
