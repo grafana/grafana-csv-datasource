@@ -14,7 +14,7 @@ weight: 500
 ---
 
 {{< admonition type="warning" >}}
-This plugin will be deprecated on February 1, 2027. Until then, it will only receive critical security updates. We recommend using the [Infinity data source](https://grafana.com/grafana/plugins/yesoreyeram-infinity-datasource/) instead. To get started quickly with CSV data in Grafana, refer to [How to visualize CSV data with Grafana](https://grafana.com/blog/2025/02/05/how-to-visualize-csv-data-with-grafana/).
+This plugin is deprecated and will only receive critical security updates. Support will end on Feb 1, 2027. We recommend using the [Infinity data source](https://grafana.com/grafana/plugins/yesoreyeram-infinity-datasource/) instead. To get started quickly with CSV data in Grafana, refer to [How to visualize CSV data with Grafana](https://grafana.com/blog/2025/02/05/how-to-visualize-csv-data-with-grafana/).
 {{< /admonition >}}
 
 [Query variables](https://grafana.com/docs/grafana/latest/variables/variable-types/add-query-variable) let you extract data from a data source and use it to populate a dashboard variable.
