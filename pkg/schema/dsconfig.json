@@ -1,0 +1,84 @@
+{
+    "$schema": "https://raw.githubusercontent.com/grafana/dsconfig/refs/heads/main/dsconfig/schema.json",
+    "schemaVersion": "v1",
+    "pluginType": "marcusolsson-csv-datasource",
+    "pluginName": "CSV",
+    "docURL": "https://grafana.com/docs/plugins/marcusolsson-csv-datasource/latest/",
+    "fields": [
+        {
+            "id": "jsonData.storage",
+            "key": "storage",
+            "label": "Storage Location",
+            "description": "Where CSV data is read from: over HTTP or from a local file.",
+            "valueType": "string",
+            "target": "jsonData",
+            "defaultValue": "http",
+            "validations": [
+                {
+                    "type": "allowedValues",
+                    "values": [
+                        "http",
+                        "local"
+                    ]
+                }
+            ],
+            "ui": {
+                "component": "radio",
+                "options": [
+                    {
+                        "label": "HTTP",
+                        "value": "http"
+                    },
+                    {
+                        "label": "Local",
+                        "value": "local"
+                    }
+                ]
+            }
+        },
+        {
+            "id": "url",
+            "key": "url",
+            "label": "URL or Path",
+            "description": "HTTP endpoint (storage = http) or local file path (storage = local) for the CSV data.",
+            "valueType": "string",
+            "target": "root"
+        },
+        {
+            "id": "jsonData.queryParams",
+            "key": "queryParams",
+            "label": "Custom query parameters",
+            "description": "Add custom parameters to your queries.",
+            "valueType": "string",
+            "target": "jsonData",
+            "dependsOn": "jsonData.storage == 'http'"
+        },
+        {
+            "id": "secureJsonData.basicAuthPassword",
+            "key": "basicAuthPassword",
+            "label": "Password",
+            "description": "Password used for HTTP Basic Authentication against the CSV endpoint.",
+            "valueType": "string",
+            "target": "secureJsonData",
+            "dependsOn": "jsonData.storage == 'http'"
+        }
+    ],
+    "groups": [
+        {
+            "id": "storage",
+            "title": "Storage",
+            "fieldRefs": [
+                "jsonData.storage"
+            ]
+        },
+        {
+            "id": "connection",
+            "title": "Connection",
+            "fieldRefs": [
+                "url",
+                "jsonData.queryParams",
+                "secureJsonData.basicAuthPassword"
+            ]
+        }
+    ]
+}

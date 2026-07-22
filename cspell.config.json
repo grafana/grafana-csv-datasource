@@ -13,7 +13,8 @@
     "renovate.json",
     "package.json",
     "go.sum",
-    "mage_output_file.go"
+    "mage_output_file.go",
+    "**/*_test.go"
   ],
   "words": [
     "changesets",
@@ -21,6 +22,8 @@
     "DataSource",
     "DataSources",
     "dompurify",
+    "dsconfig",
+    "dsschema",
     "Grafana",
     "httpclient",
     "instancemgmt",
@@ -28,6 +31,7 @@
     "MarcusOlsson",
     "nolint",
     "Olsson",
+    "pluginschema",
     "prismjs",
     "staticcheck",
     "subresource",

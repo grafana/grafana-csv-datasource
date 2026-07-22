@@ -1,6 +1,6 @@
 {
   "name": "grafana-csv-datasource",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A Grafana data source for loading CSV data",
   "keywords": [
     "grafana",
@@ -8,8 +8,8 @@
   ],
   "license": "Apache-2.0",
   "scripts": {
-    "build": "webpack -c ./.config/webpack/webpack.config.ts --env production",
-    "dev": "webpack -w -c ./.config/webpack/webpack.config.ts --env development",
+    "build": "webpack -c ./webpack.config.ts --env production",
+    "dev": "webpack -w -c ./webpack.config.ts --env development",
     "e2e": "playwright test",
     "lint": "eslint --cache .",
     "lint:fix": "yarn run lint --fix && prettier --write --list-different .",
@@ -91,6 +91,7 @@
     "webpack": "5.108.4",
     "webpack-cli": "7.2.1",
     "webpack-livereload-plugin": "3.0.2",
+    "webpack-merge": "6.0.1",
     "webpack-subresource-integrity": "5.1.0",
     "webpack-virtual-modules": "0.6.2"
   },
