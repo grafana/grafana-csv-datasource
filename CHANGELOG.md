@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.0.1
+
+🛡️ Resolved CVEs
+📝 Docs: Marked plugin deprecated, support ends February 1, 2027
+📝 Docs: Updated maintenance mode message
+⚙️ Updated frontend & backend dependencies
+⚙️ Chore: Adopted shared reusable CI workflows and updated plugin-ci-workflows
+
 ## 1.0.0
 
 ⚙️ Updated frontend & backend dependencies
