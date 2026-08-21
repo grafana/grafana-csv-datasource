@@ -42,7 +42,7 @@
     "@changesets/cli": "2.31.1",
     "@emotion/css": "11.13.5",
     "@grafana/e2e-selectors": "13.2.0",
-    "@grafana/eslint-config": "9.0.0",
+    "@grafana/eslint-config": "10.0.0",
     "@grafana/plugin-e2e": "3.11.0",
     "@grafana/sign-plugin": "3.3.3",
     "@grafana/tsconfig": "2.2.0",
