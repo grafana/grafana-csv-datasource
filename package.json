@@ -12,7 +12,7 @@
     "dev": "webpack -w -c ./.config/webpack/webpack.config.ts --env development",
     "e2e": "playwright test",
     "lint": "eslint --cache .",
-    "lint:fix": "yarn run lint --fix && prettier --write --list-different .",
+    "lint:fix": "npm run lint -- --fix && prettier --write --list-different .",
     "server": "docker compose up --build",
     "sign": "npx --yes --ignore-scripts --package @grafana/sign-plugin@3.2.2 sign-plugin",
     "spellcheck": "cspell -c cspell.config.json \"**/*.{ts,tsx,js,go,md,mdx,yml,yaml,json,scss,css}\"",
@@ -28,22 +28,22 @@
     "url": "https://grafana.com"
   },
   "dependencies": {
-    "@grafana/data": "13.1.1",
-    "@grafana/i18n": "13.1.1",
+    "@grafana/data": "13.2.0",
+    "@grafana/i18n": "13.2.0",
     "@grafana/plugin-ui": "0.17.3",
-    "@grafana/runtime": "13.1.1",
-    "@grafana/schema": "13.1.1",
-    "@grafana/ui": "13.1.1",
-    "react": "18.3.1",
-    "react-dom": "18.3.1"
+    "@grafana/runtime": "13.2.0",
+    "@grafana/schema": "13.2.0",
+    "@grafana/ui": "13.2.0",
+    "react": "19.2.8",
+    "react-dom": "19.2.8"
   },
   "devDependencies": {
     "@babel/core": "8.0.1",
     "@changesets/cli": "2.31.1",
     "@emotion/css": "11.13.5",
-    "@grafana/e2e-selectors": "13.1.1",
+    "@grafana/e2e-selectors": "13.2.0",
     "@grafana/eslint-config": "9.0.0",
-    "@grafana/plugin-e2e": "3.10.0",
+    "@grafana/plugin-e2e": "3.11.0",
     "@grafana/sign-plugin": "3.3.3",
     "@grafana/tsconfig": "2.2.0",
     "@playwright/test": "1.61.1",
@@ -58,8 +58,8 @@
     "@types/jest": "30.0.0",
     "@types/lodash": "4.17.24",
     "@types/node": "25.9.5",
-    "@types/react": "18.3.31",
-    "@types/react-dom": "18.3.7",
+    "@types/react": "19.2.18",
+    "@types/react-dom": "19.2.4",
     "@typescript-eslint/eslint-plugin": "8.64.0",
     "@typescript-eslint/parser": "8.64.0",
     "copy-webpack-plugin": "14.0.0",
@@ -95,8 +95,9 @@
     "webpack-subresource-integrity": "5.1.0",
     "webpack-virtual-modules": "0.6.2"
   },
-  "packageManager": "yarn@4.17.1",
   "engines": {
-    "node": ">=24"
-  }
+    "node": ">=24",
+    "npm": ">=11.16.0"
+  },
+  "packageManager": "npm@11.18.0"
 }
