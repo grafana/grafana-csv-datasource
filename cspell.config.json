@@ -9,7 +9,7 @@
     "coverage/**",
     "provisioning/**",
     "src/dashboards/**",
-    "yarn.lock",
+    "package-lock.json",
     "renovate.json",
     "package.json",
     "go.sum",
