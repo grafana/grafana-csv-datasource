@@ -17,3 +17,4 @@ jobs:
       id-token: write
     with:
       plugin-version-suffix: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.sha || '' }}
+      golangci-lint-version: '2.13.2' # TODO: remove this pinned version once the plugin-ci-workflows bumps thier version. This version is requird for golang 1.27
