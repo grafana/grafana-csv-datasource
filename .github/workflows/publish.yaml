@@ -36,6 +36,7 @@ jobs:
       branch: ${{ github.event.inputs.branch }}
       environment: ${{ github.event.inputs.environment }}
       docs-only: ${{ fromJSON(github.event.inputs.docs-only) }}
+      golangci-lint-version: '2.13.2' # TODO: remove this pinned version once the plugin-ci-workflows bumps thier version. This version is requird for golang 1.27
       # Scope for the plugin when publishing it to the catalog.
       # Choose between:
       # - 'universal': on-prem + cloud (default)
