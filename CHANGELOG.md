@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.0.3
+
+🛡️ Resolved CVEs
+
+⚙️ Updated frontend dependencies (brace-expansion, basic-ftp, qs)
+
 ## 1.0.2
 
 ⚙️ golang version updated from 1.26.5 to 1.27.1

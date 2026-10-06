@@ -1,6 +1,6 @@
 {
   "name": "grafana-csv-datasource",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "A Grafana data source for loading CSV data",
   "keywords": [
     "grafana",
@@ -94,6 +94,9 @@
     "webpack-livereload-plugin": "3.0.2",
     "webpack-subresource-integrity": "5.1.0",
     "webpack-virtual-modules": "0.6.2"
+  },
+  "overrides": {
+    "basic-ftp": "6.2.1"
   },
   "engines": {
     "node": ">=24",
