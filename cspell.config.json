@@ -34,6 +34,7 @@
     "testdata",
     "typecheck",
     "uncollapse",
-    "uplot"
+    "uplot",
+    "dsconfig"
   ]
 }
