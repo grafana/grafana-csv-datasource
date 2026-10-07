@@ -1,0 +1,97 @@
+{
+  "$schema": "https://raw.githubusercontent.com/grafana/dsconfig/refs/tags/dsconfig/v0.0.13/dsconfig/schema.json",
+  "schemaVersion": "v1",
+  "pluginType": "marcusolsson-csv-datasource",
+  "pluginName": "CSV",
+  "docURL": "https://grafana.com/docs/plugins/marcusolsson-csv-datasource/latest/",
+  "baseFields": [
+    {
+      "from": "plugin_sdk_settings",
+      "exclude": [
+        "plugin_sdk_settings.access",
+        "plugin_sdk_settings.withCredentials",
+        "plugin_sdk_settings.sigV4Auth"
+      ],
+      "patch": {
+        "plugin_sdk_settings.url": {
+          "description": "HTTP storage: the URL of the CSV server. Local storage: the path to the CSV file or directory.",
+          "placeholder": "http://localhost:8080"
+        }
+      }
+    }
+  ],
+  "fields": [
+    {
+      "id": "jsonData_storage",
+      "key": "storage",
+      "label": "Storage Location",
+      "description": "Where the CSV is read from: over HTTP, or from the local file system.",
+      "valueType": "string",
+      "target": "jsonData",
+      "defaultValue": "http",
+      "validations": [
+        {
+          "type": "allowedValues",
+          "values": [
+            "http",
+            "local"
+          ]
+        }
+      ],
+      "ui": {
+        "component": "radio",
+        "options": [
+          {
+            "label": "HTTP",
+            "value": "http"
+          },
+          {
+            "label": "Local",
+            "value": "local"
+          }
+        ]
+      }
+    },
+    {
+      "id": "jsonData_queryParams",
+      "key": "queryParams",
+      "label": "Custom query parameters",
+      "description": "Query parameters added to every HTTP request. HTTP storage only.",
+      "valueType": "string",
+      "target": "jsonData",
+      "dependsOn": "jsonData_storage == 'http'",
+      "ui": {
+        "component": "input",
+        "placeholder": "limit=100"
+      }
+    }
+  ],
+  "groups": [
+    {
+      "id": "storage",
+      "title": "Storage",
+      "order": 1,
+      "fieldRefs": [
+        "jsonData_storage"
+      ]
+    },
+    {
+      "id": "additional-settings",
+      "title": "Additional settings",
+      "order": 2,
+      "optional": true,
+      "fieldRefs": [
+        "jsonData_queryParams"
+      ]
+    }
+  ],
+  "instructions": [
+    {
+      "msg": "Set jsonData.storage to 'http' (default) or 'local'. The root url is the server URL for http and the file path for local. Authentication, TLS and headers apply to http only.",
+      "tags": [
+        "llm",
+        "connection"
+      ]
+    }
+  ]
+}

@@ -34,3 +34,24 @@ If you'd like to contribute code to this project, please follow these steps:
 5. Create a pull request (PR) to the `main` branch of this repository. Please provide a detailed description of your changes in the PR.
 6. Be prepared to address any feedback or requested changes during the review process.
 7. Once your PR is approved, it will be merged, and your contribution will be part of the datasource.
+
+### Data source configuration schema
+
+`pkg/schema/dsconfig.json` is the source of truth for the data source's configuration (fields, storage location, validation). Its format is documented in [`grafana/dsconfig`](https://github.com/grafana/dsconfig/tree/main/dsconfig). The `$schema` URL is pinned; bump it together with `github.com/grafana/dsconfig/schema` in `go.mod`.
+
+| File in `pkg/schema/` | Description                                                                 |
+| --------------------- | --------------------------------------------------------------------------- |
+| `dsconfig.json`       | Source of truth, **edit this**                                              |
+| `dsconfig_test.go`    | Conformance wiring, `SecureKeys`, and `settingsJSONModel` (SDK-read keys)   |
+| `*.gen.json`          | Generated, **never hand-edit**; the build copies them into `dist/schema/`   |
+
+The HTTP fields (URL, auth, TLS, headers, timeout, cookies) come from the shared `plugin_sdk_settings` pack declared under `baseFields`. Only `storage` and `queryParams` are declared here.
+
+To add a setting:
+
+1. Declare the field in `dsconfig.json` and add its id to `groups[].fieldRefs`. Ids follow `<target>_<key>`.
+2. Add the matching field, with the same json tag, to `PluginSettings` in `pkg/models/settings.go`. Keys the SDK reads go in `settingsJSONModel`. Secrets need no struct field; add the key to `SecureKeys`.
+3. Run `go generate ./pkg/schema/...` and commit the generated files.
+4. Run `go test ./pkg/schema/...`.
+
+If the conformance suite fails: `SchemaArtifactInSync` means regenerate; `JSONDataMatchesStruct` / `JSONDataTypesMatchStruct` mean the schema and the struct disagree; `SecureValuesMatchLoadSettings` means the schema's secrets and `SecureKeys` disagree.
