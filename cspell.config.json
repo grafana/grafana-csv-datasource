@@ -35,6 +35,8 @@
     "typecheck",
     "uncollapse",
     "uplot",
-    "dsconfig"
+    "dsconfig",
+    "struct",
+    "Struct"
   ]
 }
