@@ -87,7 +87,7 @@
   ],
   "instructions": [
     {
-      "msg": "Set jsonData.storage to 'http' (default) or 'local'. The root url is the server URL for http and the file path for local. Authentication, TLS and headers apply to http only.",
+      "msg": "Set jsonData.storage to 'http' (default) or 'local'. The root url is the server URL for http and the file path for local. Authentication, TLS and headers apply to http only. Local mode is disabled by default: it requires `[plugin.marcusolsson-csv-datasource] allow_local_mode = true` in Grafana's configuration, otherwise requests fail with 'local mode has been disabled by your administrator' even with a valid path. Local mode is not available in Grafana Cloud.",
       "tags": [
         "llm",
         "connection"
