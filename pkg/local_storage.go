@@ -7,13 +7,14 @@ import (
 	"path/filepath"
 	"strings"
 
+	"github.com/grafana/grafana-csv-datasource/pkg/models"
 	"github.com/grafana/grafana-plugin-sdk-go/backend"
 	"github.com/grafana/grafana-plugin-sdk-go/backend/log"
 )
 
 type localStorage struct {
 	settings       backend.DataSourceInstanceSettings
-	customSettings *PluginSettings
+	customSettings *models.PluginSettings
 	query          queryModel
 }
 

@@ -4,16 +4,12 @@ import (
 	"encoding/json"
 	"fmt"
 
+	"github.com/grafana/grafana-csv-datasource/pkg/models"
 	"github.com/grafana/grafana-plugin-sdk-go/backend"
 )
 
-type PluginSettings struct {
-	Storage     string `json:"storage"`
-	QueryParams string `json:"queryParams"`
-}
-
-func LoadPluginSettings(source backend.DataSourceInstanceSettings) (*PluginSettings, error) {
-	settings := PluginSettings{}
+func LoadPluginSettings(source backend.DataSourceInstanceSettings) (*models.PluginSettings, error) {
+	settings := models.PluginSettings{}
 	err := json.Unmarshal(source.JSONData, &settings)
 	if err != nil {
 		return nil, fmt.Errorf("could not unmarshal PluginSettings json: %w", err)
