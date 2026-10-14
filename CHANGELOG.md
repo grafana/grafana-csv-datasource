@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.0.4
+
+### Patch Changes
+
+🐛 Added datasource config schema
+
 ## 1.0.3
 
 🛡️ Resolved CVEs
