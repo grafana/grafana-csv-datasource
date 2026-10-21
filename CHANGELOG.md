@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.0.5
+
+### Patch Changes
+
+⚙️ Pin golangci-lint to 2.15.0 in development dependencies and CI/CD pipelines
+
 ## 1.0.4
 
 ### Patch Changes
