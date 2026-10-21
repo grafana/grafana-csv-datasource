@@ -16,6 +16,8 @@
     "mage_output_file.go"
   ],
   "words": [
+    "golangci",
+    "GOPATH",
     "changesets",
     "clsx",
     "DataSource",
