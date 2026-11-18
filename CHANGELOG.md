@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.0.8
+
+### Patch Changes
+
+🐛 Security: Update frontend dependencies to fix CVEs
+🐛 Security: bump moment and fast-uri to patched versions
+
 ## 1.0.7
 
 ### Patch Changes
